@@ -1,0 +1,63 @@
+# Unity固有のビルド成果物、キャッシュ、ログは除外
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Mm]emoryCaptures/
+/[Rr]ecordings/
+/[Uu]ser[Ss]ettings/
+
+# ビルド生成ファイル
+*.apk
+*.aab
+*.unitypackage
+*.app
+
+# IDE/エディタ設定ファイル（必要に応じて調整）
+.vs/
+.gradle/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.mdb
+*.pdb
+
+# ログファイル
+*.log
+
+# Crashレポートなど
+sysinfo.txt
+mono_crash.*
+
+# 一時ファイルやバックアップファイル
+*.tmp
+*.bak
+*.swp
+
+# アセットストアの自動インポートファイル（必要に応じて）
+# /Assets/AssetStoreTools*
+
+# キャッシュや自動生成ファイルで容量が大きくなるもの
+/[Aa]ssets/AddressableAssetsData/
+/[Aa]ssets/StreamingAssets/aa*
+
+# Assets配下は基本的に除外（すべて無視）
+Assets/**
+
+# ただし.csファイルは追跡対象にする（除外解除）
+!Assets/**/*.cs
+!Assets/**/*.cs.meta
+
+# pngファイルとpng.metaは除外（Assets配下すべて）
+Assets/**/*.png
+Assets/**/*.png.meta
+
+# 非公開フォルダ全体を無視
+Assets/NonPublic/
