@@ -5,6 +5,7 @@ public class Player : MonoBehaviour
 {
     public float PlayerHp = 100f;
 
+    [SerializeField] private float HitDamageOnfloor = 1f;
     [SerializeField] private float Defaultgravity = 10f;
     [SerializeField] private float Lightgravity = 7f;
     [SerializeField] private float AddRunforceply;
@@ -189,7 +190,10 @@ public class Player : MonoBehaviour
         isRunningHitDamageCoroutine = true;
         while ((IsRed && IstouchRed) || (IsBlue && IstouchBlue) || (IsGreen && IstouchGreen))
         {
-            PlayerHp -= 1f;
+           
+            PlayerHp -= HitDamageOnfloor;
+           
+            Debug.Log($"残りHP: {PlayerHp}");
             if (PlayerHp <= 0)
             {
                 Debug.Log("プレイヤーは死んだ");
