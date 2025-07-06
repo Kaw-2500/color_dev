@@ -18,7 +18,7 @@ public class WindyFadeout : MonoBehaviour
         if (spriteRenderer == null)
         {
             Debug.LogError("WindyFadeout: SpriteRendererがありません。Windyプレハブに必ずアタッチしてください。");
-            // 無理に動作させず安全に破棄
+            // 無理に動作させず安全に即時に破棄
             Destroy(gameObject, fadeDuration);
         }
     }
