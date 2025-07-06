@@ -15,14 +15,14 @@ public class WindyFadeout : MonoBehaviour
 
    GameObject plyobj; // プレイヤーの参照
 
-private Playeroperate playercs;
+    private Playeroperate playercs;
 
     public void SetFadeDuration()
     {
         if (fadeAnimationClip != null)
         {
             fadeDuration = fadeAnimationClip.length;
-            Debug.Log($"WindyFadeout: fadeAnimationClipの長さは {fadeDuration} 秒です。");
+            //Debug.Log($"WindyFadeout: fadeAnimationClipの長さは {fadeDuration} 秒です。");
         }
         else
         {
@@ -88,7 +88,7 @@ private Playeroperate playercs;
     {
         if (collision.gameObject.CompareTag("Player"))
         {   
-            Debug.Log("WindyFadeout: プレイヤーに衝突しました。ダメージを送信します。");
+            //Debug.Log("WindyFadeout: プレイヤーに衝突しました。ダメージを送信します。");
             SendDamage();
         }
     }

@@ -11,6 +11,7 @@ TagManager:
   - Attack
   - Greenfloor
   - Enemy
+  - Windy
   layers:
   - Default
   - TransparentFX
