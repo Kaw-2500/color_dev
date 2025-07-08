@@ -4,7 +4,7 @@
 public class WindyFadeout : MonoBehaviour
 {
     private SpriteRenderer spriteRenderer;
-    private float fadeDuration;//すぐに上書きされるので初期値は不要
+    private float fadeDuration;//animationclipに上書きされます
     private float timer = 0f;
     private GameObject WIndy;
 
@@ -33,6 +33,7 @@ public class WindyFadeout : MonoBehaviour
         if (fadeAnimationClip != null)
         {
             fadeDuration = fadeAnimationClip.length;
+            Debug.Log($"WindyFadeout: fadeAnimationClipの長さは {fadeDuration} 秒です。");
         }
         else
         {
