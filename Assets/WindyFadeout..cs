@@ -37,8 +37,8 @@ public class WindyFadeout : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("WindyFadeout: fadeAnimationClipがセットされていません。デフォルト値2秒を使用します。");
-            fadeDuration = 2f;  // 適当なデフォルト値
+            Debug.LogWarning("WindyFadeout: fadeAnimationClipがセットされていません。スーパークラスの値を参照します。");
+            // fadeDuration はすでに外部から設定済みの値を使います
         }
     }
 

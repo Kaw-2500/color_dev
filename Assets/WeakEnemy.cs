@@ -7,11 +7,11 @@ public class WeakEnemy : MonoBehaviour
 
     private PlayerRelativePosition playerRelativePosition; // 追加: enumで管理
 
-   public float attackRange = 1.5f; // 攻撃範囲
+    public float attackRange = 1.5f; // 攻撃範囲
     [SerializeField] private float chaseRange = 20f; // 追跡範囲
     [SerializeField] private float weakEnemyMaxSpeed = 5f; // 弱い敵の最高速度
     [SerializeField] private float moveForce = 10f; //加速度
-    [SerializeField] private EnemyState currentState = EnemyState.Idle; // 現在の状態
+    [SerializeField] public EnemyState currentState = EnemyState.Idle; // 現在の状態
 
     [SerializeField] private float RightRayLength = 0.5f; // 右側のレイの長さ
     [SerializeField] private float LeftRayLength = 0.5f; // 左側のレイの長さ   
@@ -28,7 +28,7 @@ public class WeakEnemy : MonoBehaviour
         currentState = EnemyState.Idle;
     }
 
-    private enum EnemyState
+    public enum EnemyState
     {
         Idle,
         Climb,
@@ -205,10 +205,11 @@ public class WeakEnemy : MonoBehaviour
         Debug.DrawRay(UnderLeftRay.origin, UnderLeftRay.direction * LeftRayLength, Color.blue);   //左下
     }
 
-    void Attack()   
+    public EnemyState GetCurrentState()   
     {
-
+        return currentState; // 現在の状態を返すメソッド
     }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Redfloor" ||
