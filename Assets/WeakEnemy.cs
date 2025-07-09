@@ -217,7 +217,7 @@ public class WeakEnemy : MonoBehaviour
             collision.gameObject.tag == "Greenfloor" || 
             collision.gameObject.tag == "naturalfloor")
         {
-            isGround = true;
+        
         }
     }
 
@@ -228,7 +228,7 @@ public class WeakEnemy : MonoBehaviour
             collision.gameObject.tag == "Greenfloor" ||
             collision.gameObject.tag == "naturalfloor")
         {
-            isGround = false;
+          
         }
     }
 }
