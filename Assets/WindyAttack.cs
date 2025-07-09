@@ -5,10 +5,9 @@ public class WindyAttack : MonoBehaviour
 {
     [SerializeField] private WeakEnemy weakEnemy; // 参照先の敵
     [SerializeField] private GameObject WindyPrefab; // 風弾プレハブ
-
-    [SerializeField] private float fadeDuration = 2f; // 透明になるまでの時間
     [SerializeField] private float attackInterval = 2f; // 攻撃間隔
     [SerializeField] private float windySpeed = 10f; // 風弾の速度
+    [SerializeField]private float InstantiatePositionX = 0f; // 風弾の生成位置X座標の微調整
 
     private float timer = 0f;
 
@@ -32,6 +31,8 @@ public class WindyAttack : MonoBehaviour
 
         timer += Time.deltaTime;
 
+        if(weakEnemy.GetCurrentState() != WeakEnemy.EnemyState.Attack) return;
+
         if (timer >= attackInterval)
         {
             timer = 0f;
@@ -41,11 +42,13 @@ public class WindyAttack : MonoBehaviour
 
     private void AttackWindy()
     {
-        // プレイヤーの相対位置に基づき攻撃方向を判定
-        CheckPlayerDirection();
+        CheckPlayerDirection();//Xpos微調整メソッドはこのメソッドに依存しているので必ず先に呼び出す必要があります。
 
         // 風弾の生成
         GameObject windyInstance = Instantiate(WindyPrefab, weakEnemy.transform.position, Quaternion.identity);
+
+        Xposfinetuning(windyInstance);
+        // プレイヤーの位置を確認して攻撃方向を決定
 
         Rigidbody2D rb = windyInstance.GetComponent<Rigidbody2D>();
         if (rb == null)
@@ -63,7 +66,7 @@ public class WindyAttack : MonoBehaviour
         WindyFadeout fadeout = windyInstance.GetComponent<WindyFadeout>();
         if (fadeout != null)
         {
-            fadeout.SetFadeDuration(fadeDuration);
+            fadeout.SetFadeDuration();
         }
         else
         {
@@ -92,8 +95,23 @@ public class WindyAttack : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("WindyAttack: プレイヤーの位置が不明です。攻撃方向を決定できません。");
-            return;
+            Debug.LogWarning("WindyAttack: プレイヤーの位置が不明です。攻撃方向を決定できません。左と仮定");
+         isPlayerRight = false; 
         }
+    }
+
+    private void Xposfinetuning(GameObject wind)
+    {
+        wind.transform.localScale = new Vector3(isPlayerRight ? 1 : -1, 1, 1);
+
+         if (InstantiatePositionX == 0f)
+        {
+            Debug.LogWarning("WindyAttack: InstantiatePositionXが0です。Scaleが1以上と仮定します");
+            InstantiatePositionX = 1f; 
+        }
+            wind.transform.position = new Vector2(
+            wind.transform.position.x + (isPlayerRight ? InstantiatePositionX : -InstantiatePositionX),
+            wind.transform.position.y
+        );
     }
 }

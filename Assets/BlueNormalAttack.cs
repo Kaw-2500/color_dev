@@ -88,8 +88,8 @@ public class BlueNormalAttack : MonoBehaviour
             Startpos = transform.position;
         }
 
-        if (Stucktimer >= 1)
-        {
+        if (Stucktimer <= 1) return;
+        
             Lastpos = transform.position; // 現在の位置を取得
 
             if (Vector2.Distance(Startpos, Lastpos) < 0.02f)
@@ -103,7 +103,7 @@ public class BlueNormalAttack : MonoBehaviour
             {     
                 Stucktimer = 0; // タイマーをリセット
             }
-        }
+        
 
     }
 
