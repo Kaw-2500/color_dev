@@ -5,8 +5,6 @@ public class WindyAttack : MonoBehaviour
 {
     [SerializeField] private WeakEnemy weakEnemy; // 参照先の敵
     [SerializeField] private GameObject WindyPrefab; // 風弾プレハブ
-
-    [SerializeField] private float fadeDuration = 2f; // 透明になるまでの時間
     [SerializeField] private float attackInterval = 2f; // 攻撃間隔
     [SerializeField] private float windySpeed = 10f; // 風弾の速度
     [SerializeField]private float InstantiatePositionX = 0f; // 風弾の生成位置X座標の微調整
@@ -33,11 +31,6 @@ public class WindyAttack : MonoBehaviour
 
         timer += Time.deltaTime;
 
-
-
-
-
-
         if(weakEnemy.GetCurrentState() != WeakEnemy.EnemyState.Attack) return;
 
         if (timer >= attackInterval)
@@ -49,14 +42,10 @@ public class WindyAttack : MonoBehaviour
 
     private void AttackWindy()
     {
-
-
         CheckPlayerDirection();//Xpos微調整メソッドはこのメソッドに依存しているので必ず先に呼び出す必要があります。
-
 
         // 風弾の生成
         GameObject windyInstance = Instantiate(WindyPrefab, weakEnemy.transform.position, Quaternion.identity);
-
 
         Xposfinetuning(windyInstance);
         // プレイヤーの位置を確認して攻撃方向を決定
@@ -77,7 +66,7 @@ public class WindyAttack : MonoBehaviour
         WindyFadeout fadeout = windyInstance.GetComponent<WindyFadeout>();
         if (fadeout != null)
         {
-            fadeout.SetFadeDuration(fadeDuration);
+            fadeout.SetFadeDuration();
         }
         else
         {
@@ -113,17 +102,13 @@ public class WindyAttack : MonoBehaviour
 
     private void Xposfinetuning(GameObject wind)
     {
-      
-
-
         wind.transform.localScale = new Vector3(isPlayerRight ? 1 : -1, 1, 1);
 
          if (InstantiatePositionX == 0f)
         {
-            Debug.LogWarning("WindyAttack: InstantiatePositionXが0です。生成元オブジェクトと座標が被っている可能性があります");
-            return;
+            Debug.LogWarning("WindyAttack: InstantiatePositionXが0です。Scaleが1以上と仮定します");
+            InstantiatePositionX = 1f; 
         }
-
             wind.transform.position = new Vector2(
             wind.transform.position.x + (isPlayerRight ? InstantiatePositionX : -InstantiatePositionX),
             wind.transform.position.y

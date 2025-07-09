@@ -6,13 +6,21 @@ public class WindyFadeout : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private float fadeDuration;//animationclipに上書きされます
     private float timer = 0f;
-    private GameObject WIndy;
 
     [SerializeField] private AnimationClip fadeAnimationClip;  
 
-    public void SetFadeDuration(float duration)
+    public void SetFadeDuration()
     {
-        fadeDuration = duration;
+        if (fadeAnimationClip != null)
+        {
+            fadeDuration = fadeAnimationClip.length;
+            Debug.Log($"WindyFadeout: fadeAnimationClipの長さは {fadeDuration} 秒です。");
+        }
+        else
+        {
+            Debug.LogWarning("WindyFadeout: fadeAnimationClipがセットされていません。0.5秒と仮定します。");
+            fadeDuration = 0.5f; 
+        }
     }
 
 
@@ -28,17 +36,6 @@ public class WindyFadeout : MonoBehaviour
             Debug.LogError("WindyFadeout: SpriteRendererが見つかりません。Windyプレハブに必ずアタッチしてください。");
             Destroy(gameObject);
             return;
-        }
-
-        if (fadeAnimationClip != null)
-        {
-            fadeDuration = fadeAnimationClip.length;
-            Debug.Log($"WindyFadeout: fadeAnimationClipの長さは {fadeDuration} 秒です。");
-        }
-        else
-        {
-            Debug.LogWarning("WindyFadeout: fadeAnimationClipがセットされていません。スーパークラスの値を参照します。");
-            // fadeDuration はすでに外部から設定済みの値を使います
         }
     }
 
