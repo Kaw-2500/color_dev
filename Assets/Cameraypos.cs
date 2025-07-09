@@ -4,9 +4,9 @@ public class Camerapos : MonoBehaviour
 {
     public Transform playerTransform;
     [SerializeField]
-    float camerahight = 5f; // playerï¿½ï¿½yï¿½ï¿½ï¿½Wï¿½ï¿½ï¿½ï¿½Ç‚ê‚¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê’uï¿½ÉƒJï¿½ï¿½ï¿½ï¿½ï¿½ï¿½uï¿½ï¿½ï¿½ï¿½
+    float camerahight = 5f; // player‚ÌyÀ•W‚©‚ç‚Ç‚ê‚¾‚¯‚‚¢ˆÊ’u‚ÉƒJƒƒ‰‚ğ’u‚­‚©
     [SerializeField]
-    float cameradistance = 5f; // playerï¿½ï¿½xï¿½ï¿½ï¿½Wï¿½ï¿½ï¿½ï¿½Ç‚ê‚¾ï¿½ï¿½ï¿½ï¿½ï¿½ê‚½ï¿½Ê’uï¿½ÉƒJï¿½ï¿½ï¿½ï¿½ï¿½ï¿½uï¿½ï¿½ï¿½ï¿½
+    float cameradistance = 5f; // player‚ÌxÀ•W‚©‚ç‚Ç‚ê‚¾‚¯—£‚ê‚½ˆÊ’u‚ÉƒJƒƒ‰‚ğ’u‚­‚©
 
     public GameObject player;
     [SerializeField]private Player script;

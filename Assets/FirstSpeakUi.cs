@@ -12,7 +12,7 @@ public class FirstSpeakUi : MonoBehaviour
     [SerializeField] private Image panelImage;
     [SerializeField] private GameObject GameMain;
 
-    [SerializeField] private float darkExpandSeconds = 0.4f; //é»’ãŒä¸­å¤®ã‹ã‚‰æŒ‡å®šã‚¹ã‚±ãƒ¼ãƒ«ã¾ã§åºƒãŒã‚‹æ™‚é–“
+    [SerializeField] private float darkExpandSeconds = 0.4f; // Šg‘å‚É‚©‚¯‚éŠÔi•bj
 
 
     [SerializeField] private GameObject RedUI;
@@ -35,7 +35,7 @@ public class FirstSpeakUi : MonoBehaviour
     [SerializeField] private int SeimeiGenerate = 3;
     [SerializeField] private int JyonetuGenerate = 4;
     [SerializeField] private int DarkGenerate = 5;
-    [SerializeField] private int DarkExpandGenerate = 6; // ï¿½_ï¿½[ï¿½Nï¿½ÌŠgï¿½ï¿½Jï¿½nï¿½ÌƒJï¿½Eï¿½ï¿½ï¿½g
+    [SerializeField] private int DarkExpandGenerate = 6; // ƒ_[ƒN‚ÌŠg‘åŠJn‚ÌƒJƒEƒ“ƒg
 
     [SerializeField] private int DestroyThreeColorBackground = 6;
     [SerializeField] private int DestroyMititaIro = 2;
@@ -75,22 +75,22 @@ public class FirstSpeakUi : MonoBehaviour
         Jyonetu?.SetActive(false);
         Dark?.SetActive(false);
 
-        GetAudio(); // ï¿½ï¿½ï¿½ï¿½ï¿½Ìæ“¾ï¿½Æİ’ï¿½
+        GetAudio(); // ‰¹º‚Ìæ“¾‚Æİ’è
     }
 
     private void GetAudio()
     {
 
-        // AudioSourceï¿½æ“¾ï¿½iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ“¾ï¿½È‚ï¿½j
+        // AudioSourceæ“¾i‚à‚µ–¢æ“¾‚È‚çj
         if (SundaAoAudio == null) SundaAoAudio = SundaAo.GetComponent<AudioSource>();
         if (SeimeiAudio == null) SeimeiAudio = Seimei.GetComponent<AudioSource>();
         if (JyonetuAudio == null) JyonetuAudio = Jyonetu.GetComponent<AudioSource>();
             if (MititaIroAudio == null) MititaIroAudio = MititaIro.GetComponent<AudioSource>();
 
-        // PlayerPrefsï¿½ï¿½ï¿½ç‰¹ï¿½Ê‚ï¿½ï¿½æ“¾ï¿½iï¿½È‚ï¿½ï¿½ï¿½ï¿½0.5ï¿½j
+        // PlayerPrefs‚©‚ç‰¹—Ê‚ğæ“¾i‚È‚¯‚ê‚Î0.5j
         float savedVolume = PlayerPrefs.GetFloat("SoundVolume", 0.5f);
 
-        // AudioSourceï¿½É”ï¿½ï¿½f
+        // AudioSource‚É”½‰f
         if (SundaAoAudio != null) SundaAoAudio.volume = savedVolume;
         if (SeimeiAudio != null) SeimeiAudio.volume = savedVolume;
         if (JyonetuAudio != null) JyonetuAudio.volume = savedVolume;
@@ -146,55 +146,55 @@ public class FirstSpeakUi : MonoBehaviour
 
         if (NowDialogFirstCount == RedUIGenerate)
         {
-            Debug.Log("ï¿½ï¿½UIï¿½ï¿½ï¿½tï¿½Fï¿½[ï¿½hï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½");
+            Debug.Log("ÔUI‚ğƒtƒF[ƒhƒCƒ“‚µ‚Ü‚·");
             StartCoroutine(ColorFadeIn(RedUI, new Color(1f, 0f, 0f)));
 
         }
         if (NowDialogFirstCount == BlueUIGenerate)
         {
-            Debug.Log("ï¿½ï¿½UIï¿½ï¿½ï¿½tï¿½Fï¿½[ï¿½hï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½");
+            Debug.Log("ÂUI‚ğƒtƒF[ƒhƒCƒ“‚µ‚Ü‚·");
             StartCoroutine(ColorFadeIn(BlueUI, new Color(0f, 0f, 1f)));
 
         }
         if (NowDialogFirstCount == GreenUIGenerate)
         {
-            Debug.Log("ï¿½ï¿½UIï¿½ï¿½ï¿½tï¿½Fï¿½[ï¿½hï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½");
+            Debug.Log("—ÎUI‚ğƒtƒF[ƒhƒCƒ“‚µ‚Ü‚·");
             StartCoroutine(ColorFadeIn(GreenUI, new Color(0f, 1f, 0f)));
 
         }
         if (NowDialogFirstCount == MititaIroGenerate)
         {
-            Debug.Log("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Fï¿½ï¿½ï¿½tï¿½Fï¿½[ï¿½hï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½");
+            Debug.Log("–‚¿‚½F‚ğƒtƒF[ƒhƒCƒ“‚µ‚Ü‚·");
             StartCoroutine(FadeInImage(MititaIro));
-            PlayAndStop(MititaIroAudio, 0.7f); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Fï¿½Ì‰ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äï¿½
+            PlayAndStop(MititaIroAudio, 0.7f); // –‚¿‚½F‚Ì‰¹º‚ğÄ¶
         }
         if (NowDialogFirstCount == SundaAoGenerate)
         {
-            Debug.Log("ï¿½ï¿½ï¿½ñ‚¾Â‚ï¿½ï¿½tï¿½Fï¿½[ï¿½hï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½");
+            Debug.Log("Ÿ‚ñ‚¾Â‚ğƒtƒF[ƒhƒCƒ“‚µ‚Ü‚·");
             StartCoroutine(FadeInImage(SundaAo));
-            PlayAndStop(SundaAoAudio, 0.7f); // ï¿½Ï‚ñ‚¾Â–ì‰¹ï¿½ï¿½
+            PlayAndStop(SundaAoAudio, 0.7f); // Ï‚ñ‚¾Â–ì‰¹—Ê
         }
         if (NowDialogFirstCount == SeimeiGenerate)
         {
-            Debug.Log("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½Fï¿½[ï¿½hï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½");
+            Debug.Log("¶–½‚ğƒtƒF[ƒhƒCƒ“‚µ‚Ü‚·");
             StartCoroutine(FadeInImage(Seimei));
-            PlayAndStop(SeimeiAudio, 0.7f); // ï¿½ï¿½ï¿½ï¿½ï¿½Ì‰ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äï¿½
+            PlayAndStop(SeimeiAudio, 0.7f); // ¶–½‚Ì‰¹º‚ğÄ¶
         }
         if (NowDialogFirstCount == JyonetuGenerate)
         {
-            Debug.Log("ï¿½ï¿½Mï¿½ï¿½ï¿½tï¿½Fï¿½[ï¿½hï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½");
+            Debug.Log("î”M‚ğƒtƒF[ƒhƒCƒ“‚µ‚Ü‚·");
             StartCoroutine(FadeInImage(Jyonetu));
-            PlayAndStop(JyonetuAudio, 0.7f); // ï¿½ï¿½Mï¿½Ì‰ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äï¿½
+            PlayAndStop(JyonetuAudio, 0.7f); // î”M‚Ì‰¹º‚ğÄ¶
         }
         if (NowDialogFirstCount == DarkGenerate)
         {
-            Debug.Log("ï¿½_ï¿½[ï¿½Nï¿½ï¿½ï¿½tï¿½Fï¿½[ï¿½hï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½");
+            Debug.Log("ƒ_[ƒN‚ğƒtƒF[ƒhƒCƒ“‚µ‚Ü‚·");
             StartCoroutine(FadeInImage(Dark));
         }
 
         if (NowDialogFirstCount == DarkExpandGenerate)
         {
-            Debug.Log("ï¿½_ï¿½[ï¿½Nï¿½ï¿½ï¿½gï¿½å‚µï¿½Ü‚ï¿½");
+            Debug.Log("ƒ_[ƒN‚ğŠg‘å‚µ‚Ü‚·");
             StartCoroutine(ExpandDarkToFullScreen());
         }
 
@@ -204,19 +204,19 @@ public class FirstSpeakUi : MonoBehaviour
         }
         if (NowDialogFirstCount == DestroyMititaIro)
         {
-            Debug.Log("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Fï¿½ï¿½ï¿½\ï¿½ï¿½ï¿½É‚ï¿½ï¿½Ü‚ï¿½");
+            Debug.Log("–‚¿‚½F‚ğ”ñ•\¦‚É‚µ‚Ü‚·");
 
-            MititaIro.SetActive(false); // ï¿½Â‚ï¿½ï¿½Fï¿½Ìƒtï¿½Fï¿½[ï¿½hï¿½Cï¿½ï¿½ï¿½Ìˆ×‘ï¿½ï¿½ï¿½\ï¿½ï¿½
+            MititaIro.SetActive(false); // Â‚¢F‚ÌƒtƒF[ƒhƒCƒ“‚Ìˆ×‘¦”ñ•\¦
         }
         if (NowDialogFirstCount == DestroyFirstDark)
         {
-            Debug.Log("ï¿½_ï¿½[ï¿½Nï¿½ï¿½ï¿½tï¿½Fï¿½[ï¿½hï¿½Aï¿½Eï¿½gï¿½ï¿½ï¿½Ü‚ï¿½");
+            Debug.Log("ƒ_[ƒN‚ğƒtƒF[ƒhƒAƒEƒg‚µ‚Ü‚·");
             StartCoroutine(FadeOutImage(Dark));
         }
 
         if (NowDialogFirstCount == DestoryThreeColors)
         {
-            Debug.Log("ï¿½Oï¿½FUIï¿½ï¿½ï¿½tï¿½Fï¿½[ï¿½hï¿½Aï¿½Eï¿½gï¿½ï¿½ï¿½Ü‚ï¿½");
+            Debug.Log("OFUI‚ğƒtƒF[ƒhƒAƒEƒg‚µ‚Ü‚·");
             StartCoroutine(FadeOutImage(RedUI));
             StartCoroutine(FadeOutImage(BlueUI));
             StartCoroutine(FadeOutImage(GreenUI));
@@ -224,7 +224,7 @@ public class FirstSpeakUi : MonoBehaviour
 
         if (NowDialogFirstCount == AppearanceThreeColors)
         {
-            Debug.Log("ï¿½Oï¿½FUIï¿½ï¿½ï¿½ï¿½ï¿½Ô‚Éƒtï¿½Fï¿½[ï¿½hï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½");
+            Debug.Log("OFUI‚ğ‡”Ô‚ÉƒtƒF[ƒhƒCƒ“‚µ‚Ü‚·");
             StartCoroutine(ShowThreeColorsWithWaits());
         }
 
@@ -287,11 +287,11 @@ public class FirstSpeakUi : MonoBehaviour
 
     private IEnumerator ShowThreeColorsWithWaits()
     {
-        PlayAndStop(SeimeiAudio, 0.7f); // ï¿½ï¿½ï¿½ï¿½ï¿½Ì‰ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äï¿½
+        PlayAndStop(SeimeiAudio, 0.7f); // ¶–½‚Ì‰¹º‚ğÄ¶
         yield return StartCoroutine(FadeInImage(GreenUI));
 
         yield return StartCoroutine(WaitSeconds(0.05f));
-        PlayAndStop(SundaAoAudio, 0.7f); // ï¿½ï¿½ï¿½ñ‚¾Â‚Ì‰ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äï¿½
+        PlayAndStop(SundaAoAudio, 0.7f); // Ÿ‚ñ‚¾Â‚Ì‰¹º‚ğÄ¶
         yield return StartCoroutine(FadeInImage(BlueUI));
 
         yield return StartCoroutine(WaitSeconds(0.05f));
@@ -302,7 +302,7 @@ public class FirstSpeakUi : MonoBehaviour
 
     private IEnumerator FadeOutThreeColorsBackground()
     {
-        yield return new WaitForSeconds(0.3f); // ï¿½ï¿½ï¿½ï¿½ï¿½Lï¿½ï¿½ï¿½ï¿½Ì‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò‚ï¿½
+        yield return new WaitForSeconds(0.3f); // •‚ªL‚ª‚é‚Ì‚ğ­‚µ‘Ò‚Â
 
         Coroutine fade1 = StartCoroutine(FadeOutImage(SundaAo));
         Coroutine fade2 = StartCoroutine(FadeOutImage(Seimei));
@@ -310,15 +310,15 @@ public class FirstSpeakUi : MonoBehaviour
 
     }
 
-    [SerializeField] private float DarkexpandScale = 10f;  // ï¿½gï¿½ï¿½Iï¿½ï¿½ï¿½Xï¿½Pï¿½[ï¿½ï¿½ï¿½iï¿½ï¿½F10ï¿½{ï¿½j
+    [SerializeField] private float DarkexpandScale = 10f;  // Šg‘åI—¹ƒXƒP[ƒ‹i—áF10”{j
 
     private IEnumerator ExpandDarkToFullScreen()
     {
         Dark.SetActive(true);
         RectTransform rt = Dark.GetComponent<RectTransform>();
 
-        Vector3 startScale = new Vector3(2f, 2f, 1f);  // ï¿½Jï¿½nï¿½Xï¿½Pï¿½[ï¿½ï¿½
-        Vector3 endScale = new Vector3(10f, 7f, 1f);   // ï¿½Iï¿½ï¿½ï¿½Xï¿½Pï¿½[ï¿½ï¿½
+        Vector3 startScale = new Vector3(2f, 2f, 1f);  // ŠJnƒXƒP[ƒ‹
+        Vector3 endScale = new Vector3(10f, 7f, 1f);   // I—¹ƒXƒP[ƒ‹
 
         rt.localScale = startScale;
 
@@ -332,7 +332,7 @@ public class FirstSpeakUi : MonoBehaviour
             yield return null;
         }
 
-        rt.localScale = endScale;  // ï¿½ÅIï¿½Xï¿½Pï¿½[ï¿½ï¿½ï¿½ÅŠmï¿½ï¿½
+        rt.localScale = endScale;  // ÅIƒXƒP[ƒ‹‚ÅŠm’è
     }
 
     private void PlayAndStop(AudioSource source, float stopAfterSeconds)
@@ -355,7 +355,7 @@ public class FirstSpeakUi : MonoBehaviour
     {
         if (!source.enabled) source.enabled = true;
 
-        yield return null; // ï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½fï¿½Ò‚ï¿½
+        yield return null; // —LŒø‰»”½‰f‘Ò‚¿
         source.Stop();
         source.Play();
 
@@ -370,84 +370,84 @@ public class FirstSpeakUi : MonoBehaviour
 
     private IEnumerator StopAudioAfterSeconds(AudioSource source, float delay)
     {
-        Debug.Log($"StopAudioAfterSeconds: {delay}ï¿½bï¿½ï¿½É’ï¿½~ï¿½\ï¿½ï¿½B");
+        Debug.Log($"StopAudioAfterSeconds: {delay}•bŒã‚É’â~—\’èB");
         yield return new WaitForSeconds(delay);
 
         if (source != null)
         {
             if (source.isPlaying)
             {
-                Debug.Log($"StopAudioAfterSeconds: AudioSource '{source.gameObject.name}' ï¿½ï¿½ï¿½~ï¿½ï¿½ï¿½Ü‚ï¿½ï¿½B");
+                Debug.Log($"StopAudioAfterSeconds: AudioSource '{source.gameObject.name}' ‚ğ’â~‚µ‚Ü‚·B");
                 source.Stop();
             }
             else
             {
-                Debug.Log($"StopAudioAfterSeconds: AudioSource '{source.gameObject.name}' ï¿½ÍŠï¿½ï¿½É’ï¿½~ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½Ü‚ï¿½ï¿½B");
+                Debug.Log($"StopAudioAfterSeconds: AudioSource '{source.gameObject.name}' ‚ÍŠù‚É’â~‚µ‚Ä‚¢‚Ü‚·B");
             }
         }
         else
         {
-            Debug.LogWarning("StopAudioAfterSeconds: AudioSourceï¿½ï¿½ï¿½jï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½Ü‚ï¿½ï¿½B");
+            Debug.LogWarning("StopAudioAfterSeconds: AudioSource‚ª”jŠü‚³‚ê‚Ä‚¢‚Ü‚·B");
         }
     }
 
 
 
     /*
-    Element 1 ï¿½ï¿½ï¿½Eï¿½ÍAï¿½ï¿½ï¿½Â‚ÄFï¿½Å–ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½B
+    Element 1 ¢ŠE‚ÍA‚©‚Â‚ÄF‚Å–‚¿‚Ä‚¢‚½B
 
-//ï¿½ÂAï¿½ÔAï¿½Î‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ‘œï¿½\ï¿½ï¿½ï¿½@
+//ÂAÔA—Î‚ª¬‚´‚Á‚½‰æ‘œ•\¦@
 
-Element 2 ï¿½ï¿½Íï¿½ï¿½ñ‚¾ÂA
+Element 2 ‹ó‚ÍŸ‚ñ‚¾ÂA
 
-//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ‘œï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-//ï¿½ï¿½ï¿½ï¿½ï¿½Éï¿½ FadeIN
+//¬‚´‚Á‚½‰æ‘œ‘¦Á‚µ
+//¶‘¤‚ÉÂ FadeIN
 
-Element 3 ï¿½Xï¿½Íï¿½ï¿½ï¿½ï¿½Ì—ÎA
+Element 3 X‚Í¶–½‚Ì—ÎA
 
-//ï¿½^ï¿½ñ’†‚É—ï¿½ F IN
+//^‚ñ’†‚É—Î F IN
 
-Element 4 ï¿½ï¿½nï¿½Íï¿½Mï¿½ÌÔ‚É”Rï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½B
+Element 4 ‘å’n‚Íî”M‚ÌÔ‚É”R‚¦‚Ä‚¢‚½B
 
-//ï¿½Eï¿½ÉÔ‚ï¿½  IN
+//‰E‚ÉÔ‚ğ  IN
 
-Element 5 ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½éï¿½\ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‚½ï¿½B
+Element 5 ‚¾‚ªA‚ ‚é\\•‚ªŒ»‚ê‚½B
 
-//ï¿½^ï¿½ñ’†‚ÉŠÛ‚ï¿½ï¿½ï¿½
+//^‚ñ’†‚ÉŠÛ‚¢•
 
-Element 6 ï¿½ï¿½ï¿½ï¿½ÍFï¿½ï¿½ï¿½ï¿½ç‚¢ï¿½A
+Element 6 ‚»‚ê‚ÍF‚ğ‹ò‚ç‚¢A
 
-//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê‘Sï¿½Ì‚ÉLï¿½ï¿½ï¿½ï¿½  ï¿½ï¿½ï¿½Xï¿½ï¿½
+//•‚ª‰æ–Ê‘S‘Ì‚ÉL‚ª‚é  ™X‚É
 
-Element 7 ï¿½Ó–ï¿½ï¿½ï¿½Dï¿½ï¿½ï¿½A
+Element 7 ˆÓ–¡‚ğ’D‚¢A
 
 //No Action
 
-Element 8 ï¿½ï¿½ï¿½Eï¿½ï¿½"ï¿½Pï¿½ï¿½"ï¿½Éï¿½ï¿½ßã‚°ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+Element 8 ¢ŠE‚ğ"’P’²"‚Éõ‚ßã‚°‚Ä‚¢‚Á‚½B
 
-//ï¿½ï¿½Ê‚Ì‰æ‘œï¿½ï¿½Sï¿½Äï¿½ï¿½ï¿½ï¿½Ä^ï¿½ï¿½ï¿½ï¿½ï¿½É‚ï¿½ï¿½ï¿½  
+//‰æ–Ê‚Ì‰æ‘œ‚ğ‘S‚ÄÁ‚µ‚Ä^‚Á•‚É‚·‚é  
 
-Element 9 ï¿½Oï¿½ï¿½ï¿½Fï¿½ÆŒÄ‚Î‚ï¿½é‘¶ï¿½İ‚ï¿½ï¿½ï¿½ï¿½ÍAï¿½ï¿½ï¿½ÉRï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½ï¿½ï¿½B
+Element 9 OŒ´F‚ÆŒÄ‚Î‚ê‚é‘¶İ‚½‚¿‚ÍA•‚ÉR‚¨‚¤‚Æ‚µ‚½B
 
-//ï¿½ï¿½Ä‚ÉÂAï¿½ÔAï¿½Î‚Ìï¿½ï¿½ï¿½ï¿½`ï¿½ï¿½ï¿½tï¿½Bï¿½[ï¿½hï¿½Cï¿½ï¿½
+//ˆêÄ‚ÉÂAÔA—Î‚Ì³•ûŒ`‚ªƒtƒB[ƒhƒCƒ“
 
-Element 10 ï¿½ï¿½ï¿½ï¿½ï¿½Í‹yï¿½Î‚ï¿½ï¿½Aï¿½Ş‚ï¿½Í•ï¿½ï¿½ó‚³‚ï¿½A
+Element 10 ‚¾‚ª—Í‹y‚Î‚¸A”Ş‚ç‚Í••ˆó‚³‚êA
 
-//ï¿½ÂAï¿½ÔAï¿½Î‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//ÂAÔA—Î‚ªÁ‚¦‚é
 
-Element 11 ï¿½ï¿½ï¿½Eï¿½ÍÃï¿½Æ‹ï¿½ï¿½ï¿½ï¿½É•ï¿½ï¿½ï¿½ï¿½ï¿½B
+Element 11 ¢ŠE‚ÍÃâ‚Æ‹•–³‚É•¢‚í‚ê‚éB
 
-//ï¿½^ï¿½ï¿½ï¿½ï¿½
+//^‚Á•
 
-Element 12 ï¿½cï¿½ï¿½ï¿½ï¿½ï¿½Äï¿½ï¿½Aï¿½Yï¿½ï¿½ï¿½ê‚½ï¿½Fï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½Ä‚Ñ–Ú‚ï¿½ï¿½oï¿½Ü‚ï¿½ï¿½B
+Element 12 c‚»‚µ‚Ä¡A–Y‚ê‚ç‚ê‚½F‚½‚¿‚ªAÄ‚Ñ–Ú‚ğŠo‚Ü‚·B
 
-//ï¿½Â‚ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½Éƒtï¿½Bï¿½[ï¿½hï¿½Cï¿½ï¿½
-//0.1ï¿½Ò‹@
-//ï¿½Ô‚ï¿½ï¿½^ï¿½ñ’†@0.2,,,,
-//0.1ï¿½Ò‹@
-//ï¿½ï¿½
+//Â‚ªA¶‘¤‚ÉƒtƒB[ƒhƒCƒ“
+//0.1‘Ò‹@
+//Ô‚ª^‚ñ’†@0.2,,,,
+//0.1‘Ò‹@
+//—Î
 
-Element 13 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß‚ï¿½ï¿½Aï¿½ï¿½ï¿½ß‚ï¿½ï¿½ï¿½ï¿½ß‚ï¿½ï¿½B
+Element 13 ‘ˆ‚¤‚½‚ß‚©Aæ‚è–ß‚·‚½‚ß‚©B
     */
 
 }
