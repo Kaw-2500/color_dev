@@ -90,6 +90,7 @@ public class WindyFadeout : MonoBehaviour
         {   
             //Debug.Log("WindyFadeout: プレイヤーに衝突しました。ダメージを送信します。");
             SendDamage();
+            playercs.HitWindEffectDamage(); // ヒットエフェクトを発火
         }
     }
 

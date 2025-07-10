@@ -216,7 +216,7 @@ public class Playeroperate : MonoBehaviour
         Debug.Log($"残りHP: {PlayerHp}");
     }
 
-     void HitWindEffectDamage()
+    public void HitWindEffectDamage()
     {
         if (Isfly) return; // 風で浮いてるときはreturn
 
@@ -270,11 +270,7 @@ public class Playeroperate : MonoBehaviour
                 StartCoroutine(HitDamageGrond());
         }
 
-        if(collision.CompareTag("Windy"))
-        {
-            Debug.Log("風の攻撃を受けた！");
-            HitWindEffectDamage();
-        }
+     
     }
 
     private void OnTriggerStay2D(Collider2D collision)
