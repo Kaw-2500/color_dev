@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class ChargeBar : MonoBehaviour
 {
     [SerializeField] private Slider chargeSlider;
-    [SerializeField] private Player player;
+    [SerializeField] private Playeroperate player;
     [SerializeField] private Image backgroundImage;
 
     [SerializeField] private float RedCooltime = 5f;
@@ -19,7 +19,7 @@ public class ChargeBar : MonoBehaviour
     {
         if (player == null)
         {
-            player = GameObject.Find("Player")?.GetComponent<Player>();
+            player = GameObject.Find("Player")?.GetComponent<Playeroperate>();
         }
 
         if (chargeSlider != null)

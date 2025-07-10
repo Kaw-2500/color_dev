@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Playeroperate : MonoBehaviour
 {
     public float PlayerHp = 100f;
 
@@ -203,6 +203,12 @@ public class Player : MonoBehaviour
             yield return new WaitForSeconds(1f);
         }
         isRunningHitDamageCoroutine = false;
+    }
+
+    public void Hitdamage(float HitDamage)
+    {
+        PlayerHp -= HitDamage;
+        Debug.Log($"残りHP: {PlayerHp}");
     }
 
 

@@ -27,7 +27,7 @@ public class BlueNormalAttack : MonoBehaviour
         Playerobj = GameObject.Find("Player");
 
 
-        rb2d = GetComponent<Rigidbody2D>();
+        rb2d = GetComponent<Rigidbody2D>(); 
         Stucktimer = 0; // タイマーをリセット
         transform.position = new Vector2(transform.position.x + 1.5f, transform.position.y); // プレイヤーとの距離を調整  
 
@@ -125,7 +125,10 @@ public class BlueNormalAttack : MonoBehaviour
         {
 
         }
-        else if (collision.gameObject.tag == "Redfloor" || collision.gameObject.tag == "Bluefloor" || collision.gameObject.tag == "Greenfloor" || collision.gameObject.tag == "naturalfloor")
+        else if (collision.gameObject.tag == "Redfloor" ||
+            collision.gameObject.tag == "Bluefloor" ||
+            collision.gameObject.tag == "Greenfloor" ||
+            collision.gameObject.tag == "naturalfloor")
         {
 
         }

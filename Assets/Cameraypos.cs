@@ -9,15 +9,15 @@ public class Camerapos : MonoBehaviour
     float cameradistance = 5f; // playerのx座標からどれだけ離れた位置にカメラを置くか
 
     public GameObject player;
-    [SerializeField]private Player script;
+    [SerializeField]private Playeroperate script;
 
     void Start()
     {
-        script = player.GetComponent<Player>();
+        script = player.GetComponent<Playeroperate>();
 
         if (playerTransform == null)
         {
-            Debug.LogError("Player Transform is not assigned.");
+            Debug.LogError("Playeroperate Transform is not assigned.");
         }
     }
 

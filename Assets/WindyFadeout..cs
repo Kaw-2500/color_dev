@@ -7,7 +7,15 @@ public class WindyFadeout : MonoBehaviour
     private float fadeDuration;//animationclipに上書きされます
     private float timer = 0f;
 
-    [SerializeField] private AnimationClip fadeAnimationClip;  
+    [SerializeField] private float DamageAmount = 10f; 
+
+    [SerializeField] private AnimationClip fadeAnimationClip;
+
+    private bool isAttacked = false; // 攻撃したかどうか
+
+   GameObject plyobj; // プレイヤーの参照
+
+private Playeroperate playercs;
 
     public void SetFadeDuration()
     {
@@ -19,8 +27,11 @@ public class WindyFadeout : MonoBehaviour
         else
         {
             Debug.LogWarning("WindyFadeout: fadeAnimationClipがセットされていません。0.5秒と仮定します。");
-            fadeDuration = 0.5f; 
+            fadeDuration = 0.5f;
         }
+
+     
+
     }
 
 
@@ -33,7 +44,23 @@ public class WindyFadeout : MonoBehaviour
         }
         if (spriteRenderer == null)
         {
-            Debug.LogError("WindyFadeout: SpriteRendererが見つかりません。Windyプレハブに必ずアタッチしてください。");
+            Debug.LogError("WindyFadeout: SpriteRendererが見つかりません。");
+            Destroy(gameObject);
+            return;
+        }
+
+        plyobj = GameObject.FindGameObjectWithTag("Player");
+        if (plyobj == null)
+        {
+            Debug.LogError("WindyFadeout: Playerタグがついたオブジェクトが見つかりません。");
+            Destroy(gameObject);
+            return;
+        }
+
+        playercs = plyobj.GetComponent<Playeroperate>();
+        if (playercs == null)
+        {
+            Debug.LogError("WindyFadeout: Playeroperate コンポーネントが見つかりません。");
             Destroy(gameObject);
             return;
         }
@@ -56,4 +83,23 @@ public class WindyFadeout : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {   
+            Debug.Log("WindyFadeout: プレイヤーに衝突しました。ダメージを送信します。");
+            SendDamage();
+        }
+    }
+
+   void  SendDamage()
+    {
+        if(playercs == null || playercs.PlayerHp <= 0 || isAttacked) return;
+
+        playercs.Hitdamage(DamageAmount);
+        
+        isAttacked = true; // 攻撃済みフラグを立てる
+    }
+
 }
