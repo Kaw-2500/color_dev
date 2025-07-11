@@ -12,7 +12,7 @@ public class PlayerBase : MonoBehaviour
     [SerializeField] private Talksystem talksystem;
 
     public bool IsColorChangeCool = false;
-    public bool IsFinishedColorChangeCool = false;
+    public bool IsFinishedColorChangeCool = true;
 
     private Rigidbody2D rb2d;
     private SpriteRenderer spriteRenderer;
@@ -118,7 +118,7 @@ public class PlayerBase : MonoBehaviour
             IsGround = false;
 
 
-            //IsJump = true;  // �n�ʂ��痣�ꂽ��W�����v��Ԃɖ߂�
+     
         }
     }
     private bool IsFloorTag(Collider2D collision)

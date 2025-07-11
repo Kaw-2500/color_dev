@@ -10,7 +10,6 @@ public class PlayerColorManager : MonoBehaviour
         Green
     }
 
-
     [SerializeField] private PlayerColorDataExtended redData;
     [SerializeField] private PlayerColorDataExtended blueData;
     [SerializeField] private PlayerColorDataExtended greenData;
@@ -51,6 +50,8 @@ public class PlayerColorManager : MonoBehaviour
         if (currentState == newState) return;
 
         currentState = newState;
+        Debug.Log($"Color: {GetCurrentData().displayColor}");
+
 
         // 色をここで変えている！！！
         playerSpriteRenderer.color = GetUnityColor(newState);
