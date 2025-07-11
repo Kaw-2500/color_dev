@@ -55,10 +55,6 @@ Assets/**
 !Assets/**/*.cs
 !Assets/**/*.cs.meta
 
-# PlayerScript/data以下はすべて追跡対象にする
-!Assets/PlayerScript/data/
-!Assets/PlayerScript/data/**
-
 # pngファイルとpng.metaは除外（Assets配下すべて）
 Assets/**/*.png
 Assets/**/*.png.meta
