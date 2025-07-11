@@ -48,12 +48,16 @@ mono_crash.*
 /[Aa]ssets/AddressableAssetsData/
 /[Aa]ssets/StreamingAssets/aa*
 
-# Assets配下は基本的に除外（すべて無視）
+# Assets配下は基本的に除外
 Assets/**
 
-# ただし.csファイルは追跡対象にする（除外解除）
+# ただし.csファイルと.cs.metaファイルは追跡対象
 !Assets/**/*.cs
 !Assets/**/*.cs.meta
+
+# PlayerScript/data以下はすべて追跡対象にする
+!Assets/PlayerScript/data/
+!Assets/PlayerScript/data/**
 
 # pngファイルとpng.metaは除外（Assets配下すべて）
 Assets/**/*.png
