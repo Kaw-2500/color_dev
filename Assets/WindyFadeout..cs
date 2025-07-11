@@ -7,13 +7,13 @@ public class WindyFadeout : MonoBehaviour
     private float fadeDuration;//animationclipに上書きされます
     private float timer = 0f;
 
-    [SerializeField] private float DamageAmount = 10f; 
+    [SerializeField] private float DamageAmount = 10f;
 
     [SerializeField] private AnimationClip fadeAnimationClip;
 
     private bool isAttacked = false; // 攻撃したかどうか
 
-   GameObject plyobj; // プレイヤーの参照
+    GameObject plyobj; // プレイヤーの参照
 
     private Playeroperate playercs;
 
@@ -30,7 +30,7 @@ public class WindyFadeout : MonoBehaviour
             fadeDuration = 0.5f;
         }
 
-     
+
 
     }
 
@@ -87,19 +87,19 @@ public class WindyFadeout : MonoBehaviour
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
-        {   
+        {
             //Debug.Log("WindyFadeout: プレイヤーに衝突しました。ダメージを送信します。");
             SendDamage();
             playercs.HitWindEffectDamage(); // ヒットエフェクトを再生
         }
     }
 
-   void  SendDamage()
+    void SendDamage()
     {
-        if(playercs == null || playercs.PlayerHp <= 0 || isAttacked) return;
+        if (playercs == null || playercs.PlayerHp <= 0 || isAttacked) return;
 
         playercs.Hitdamage(DamageAmount);
-        
+
         isAttacked = true; // 攻撃済みフラグを立てる
     }
 
