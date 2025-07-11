@@ -15,7 +15,7 @@ public class WeakEnemy : MonoBehaviour
 
     [SerializeField] private float RightRayLength = 0.5f; // 右側のレイの長さ
     [SerializeField] private float LeftRayLength = 0.5f; // 左側のレイの長さ   
-    private bool isGround = false; // 地面にいるかどうかのフラグ
+ 
 
     [SerializeField] private bool isClimbing = false; // クライミング状態かどうかのフラグ  フラグ確認のためにシリアライズしています
     bool isWallUnder;
@@ -217,7 +217,7 @@ public class WeakEnemy : MonoBehaviour
             collision.gameObject.tag == "Greenfloor" || 
             collision.gameObject.tag == "naturalfloor")
         {
-            isGround = true;
+        
         }
     }
 
@@ -228,7 +228,7 @@ public class WeakEnemy : MonoBehaviour
             collision.gameObject.tag == "Greenfloor" ||
             collision.gameObject.tag == "naturalfloor")
         {
-            isGround = false;
+          
         }
     }
 }

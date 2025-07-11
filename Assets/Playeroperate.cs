@@ -1,9 +1,13 @@
 using System.Collections;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Playeroperate : MonoBehaviour
 {
     public float PlayerHp = 100f;
+
+    [SerializeField] private float flywindHorizontalAmount = 3f; // X軸吹き飛ばし量
+    [SerializeField] private float flywindVerticalAmount = 5f;   // Y軸吹き飛ばし量
+
 
     [SerializeField] private float HitDamageOnfloor = 1f;
     [SerializeField] private float Defaultgravity = 10f;
@@ -53,6 +57,7 @@ public class Player : MonoBehaviour
 
     private PlayerColorState ColorPlayer = PlayerColorState.Red;
 
+    bool Isfly = false;
     private enum PlayerColorState
     {
         Green,
@@ -205,6 +210,48 @@ public class Player : MonoBehaviour
         isRunningHitDamageCoroutine = false;
     }
 
+    public void Hitdamage(float HitDamage)
+    {
+        PlayerHp -= HitDamage;
+        Debug.Log($"残りHP: {PlayerHp}");
+    }
+
+    public void HitWindEffectDamage()
+    {
+        if (Isfly) return; // 風で浮いてるときはreturn
+
+        Isfly = true; // 風で吹き飛ばされる状態にする
+        rb2d.AddForce(new Vector2(0, flywindVerticalAmount), ForceMode2D.Impulse); // 風のダメージで上に吹き飛ばす
+       
+     GameObject wind = GameObject.FindGameObjectWithTag("Windy");
+        if (wind == null)
+        {
+            Debug.LogWarning("WindyAttack: Windyタグがついたオブジェクトが見つかりません。");
+        }
+        if (wind.transform.position.x > transform.position.x)
+        {
+       
+            Debug.Log("風が右側にいるので右方向に力を加えます。");
+            rb2d.AddForce(new Vector2(-Mathf.Abs(flywindHorizontalAmount), 0), ForceMode2D.Impulse);
+        }
+        else
+        {
+          
+            Debug.Log("風が左側にいるので左方向に力を加えます。");
+            rb2d.AddForce(new Vector2(Mathf.Abs(flywindHorizontalAmount), 0), ForceMode2D.Impulse);
+        }
+
+        // 一定時間後にIsflyをリセットするコルーチン開始
+        StartCoroutine(ResetIsFlyAfterDelay(0.5f));
+    }
+
+    private IEnumerator ResetIsFlyAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        Isfly = false;
+    }
+
+
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -222,6 +269,8 @@ public class Player : MonoBehaviour
             if (!isRunningHitDamageCoroutine)
                 StartCoroutine(HitDamageGrond());
         }
+
+     
     }
 
     private void OnTriggerStay2D(Collider2D collision)
