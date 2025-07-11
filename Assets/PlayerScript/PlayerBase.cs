@@ -6,7 +6,8 @@ public class PlayerBase : MonoBehaviour
     [SerializeField] PlayerMove playerMove;
     [SerializeField] PlayerHitDamage playerHitDamage;
     [SerializeField] PlayerAttack playerAttack;
-    [SerializeField] private InputManager inputManager; 
+    [SerializeField] private InputManager inputManager;
+    [SerializeField] CheckPlayerstatus checkPlayerStatus;
 
     [SerializeField] private Talksystem talksystem;
 
@@ -16,25 +17,25 @@ public class PlayerBase : MonoBehaviour
     private Rigidbody2D rb2d;
     private SpriteRenderer spriteRenderer;
 
-    private bool IsGround = false;
-    private bool IsJump = false;
+   [SerializeField] private bool IsGround = true;
+   [SerializeField] private bool IsJump = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb2d = GetComponent<Rigidbody2D>();
-        if (rb2d == null) Debug.Log("Player‚Érigidbody2d‚ğƒAƒ^ƒbƒ`‚µ‚Ä‚­‚¾‚³‚¢");
+        if (rb2d == null) Debug.Log("Playerï¿½ï¿½rigidbody2dï¿½ï¿½ï¿½Aï¿½^ï¿½bï¿½`ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 
         spriteRenderer = GetComponent<SpriteRenderer>();
-        if (spriteRenderer == null) Debug.Log("Player‚ÉSpriteRenderer‚ğƒAƒ^ƒbƒ`‚µ‚Ä‚­‚¾‚³‚¢");
-
-
+        if (spriteRenderer == null) Debug.Log("Playerï¿½ï¿½SpriteRendererï¿½ï¿½ï¿½Aï¿½^ï¿½bï¿½`ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
     }
 
     // Update is called once per frame
     void Update()
     {
-        TryColorChange(); 
+        TryColorChange();
+
+        IsJump = Mathf.Abs(rb2d.linearVelocity.y) > 0.05f; //é–¾å€¤ã‚’è¨­å®šã—ã¦ã€yè»¸ã®é€Ÿåº¦ãŒå°ã•ã„å ´åˆã¯ã‚¸ãƒ£ãƒ³ãƒ—ã—ã¦ã„ãªã„ã¨åˆ¤æ–­ã™ã‚‹
     }
     private void FixedUpdate()
     {
@@ -42,11 +43,13 @@ public class PlayerBase : MonoBehaviour
     }
     void TryMove()
     {
-        if (talksystem.isTalking == true) return;
+        if (talksystem != null && talksystem.isTalking) return;
 
-        float input = inputManager.Horizontal; // InputManager‚©‚çæ“¾
+        float input = inputManager.Horizontal; // InputManagerï¿½ï¿½ï¿½ï¿½æ“¾
 
-        var data = playerColorManager.GetCurrentData(); //ColorManager‚©‚çŒ»İ‚Ìƒf[ƒ^‚ğæ“¾
+        var data = playerColorManager.GetCurrentData();
+
+        TryJump(data); 
 
         if (input != 0 && Mathf.Abs(rb2d.linearVelocity.x) < data.maxSpeed)
         {
@@ -60,18 +63,22 @@ public class PlayerBase : MonoBehaviour
             );
         }
 
-           if (!IsGround || IsJump) return;
-           if (inputManager.JumpPress)
-           {
-               IsJump = true;
-               IsGround = false;
-
-               playerMove.PlayerJump(
-               data.jumpForce,
-               rb2d
-               );
-            }
         
+    }
+
+    void TryJump(PlayerColorDataExtended data)
+    {
+        if (!IsGround) return;
+        if (inputManager.JumpPress)
+        {
+            IsJump = true;
+            IsGround = false;
+
+            playerMove.PlayerJump(
+            data.jumpForce,
+            rb2d
+            );
+        }
     }
 
     void TryColorChange()
@@ -80,7 +87,8 @@ public class PlayerBase : MonoBehaviour
         if (IsColorChangeCool || !IsFinishedColorChangeCool) return;
 
         if (inputManager.ChangeToRed)
-            playerColorManager.ChangeColor(PlayerColorManager.PlayerColorState.Red);
+        playerColorManager.ChangeColor(PlayerColorManager.PlayerColorState.Red);
+
         else if (inputManager.ChangeToBlue)
             playerColorManager.ChangeColor(PlayerColorManager.PlayerColorState.Blue);
         else if (inputManager.ChangeToGreen)
@@ -90,8 +98,17 @@ public class PlayerBase : MonoBehaviour
     {
         if (IsFloorTag(collision))
         {
-            IsJump = false;
+            //IsJump = false;
             IsGround = true;
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)//ï¿½Xï¿½eï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½ÆAisflyï¿½ï¿½ï¿½ï¿½è‚­falseï¿½É‚È‚ï¿½È‚ï¿½
+    {
+        if (IsFloorTag(collision))
+        {
+            IsGround = true;
+            //IsJump = false; // ï¿½nï¿½Ê‚É‚ï¿½ï¿½ï¿½Ô‚ÍƒWï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½Ô‚Å‚Í‚È‚ï¿½
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
@@ -99,12 +116,14 @@ public class PlayerBase : MonoBehaviour
         if (IsFloorTag(collision))
         {
             IsGround = false;
-            IsJump = true;  // ’n–Ê‚©‚ç—£‚ê‚½‚çƒWƒƒƒ“ƒvó‘Ô‚É–ß‚·
+
+
+            //IsJump = true;  // ï¿½nï¿½Ê‚ï¿½ï¿½ç—£ï¿½ê‚½ï¿½ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½Ô‚É–ß‚ï¿½
         }
     }
     private bool IsFloorTag(Collider2D collision)
     {
-        string[] floorTags = { "Redfloor", "Bluefloor", "Greenfloor", "naturalfloor" };//°‚Ìƒ^ƒO‘‚â‚µ‚½‚ç‚±‚±‚ğ‚¢‚¶‚é
+        string[] floorTags = { "Redfloor", "Bluefloor", "Greenfloor", "naturalfloor" };//ï¿½ï¿½ï¿½Ìƒ^ï¿½Oï¿½ï¿½ï¿½â‚µï¿½ï¿½ï¿½ç‚±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         foreach (var tag in floorTags)
         {
             if (collision.CompareTag(tag)) return true;

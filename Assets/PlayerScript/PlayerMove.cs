@@ -27,7 +27,6 @@ public class PlayerMove : MonoBehaviour
 
     public void PlayerJump(float jumpForce, Rigidbody2D rb2d)
     {
-        
             rb2d.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
         
     }
