@@ -10,11 +10,8 @@ public class PlayerBase : MonoBehaviour
 
     [SerializeField] private Talksystem talksystem;
 
-    [SerializeField] private PlayerColorDataExtended redData;
-    [SerializeField] private PlayerColorDataExtended blueData;
-    [SerializeField] private PlayerColorDataExtended greenData;
-
-    private PlayerColorDataExtended currentColorData;
+    public bool IsColorChangeCool = false;
+    public bool IsFinishedColorChangeCool = false;
 
     private Rigidbody2D rb2d;
     private SpriteRenderer spriteRenderer;
@@ -31,12 +28,13 @@ public class PlayerBase : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer == null) Debug.Log("PlayerにSpriteRendererをアタッチしてください");
 
+
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        TryColorChange(); 
     }
     private void FixedUpdate()
     {
@@ -48,29 +46,45 @@ public class PlayerBase : MonoBehaviour
 
         float input = inputManager.Horizontal; // InputManagerから取得
 
-        if (input != 0 && Mathf.Abs(rb2d.linearVelocity.x) < currentColorData.maxSpeed)
+        var data = playerColorManager.GetCurrentData(); //ColorManagerから現在のデータを取得
+
+        if (input != 0 && Mathf.Abs(rb2d.linearVelocity.x) < data.maxSpeed)
         {
             playerMove.HandleMove(
-                        currentColorData.runForce,
-                        currentColorData.maxSpeed,
-                        currentColorData.jumpForce,
-                        currentColorData.gravityScale,
-                        rb2d,
-                        input
-                        );
+                data.runForce,
+                data.maxSpeed,
+                data.jumpForce,
+                data.gravityScale,
+                rb2d,
+                input
+            );
         }
-          
-        if (!IsGround || IsJump) return;
-        if (inputManager.JumpPress)
-        {
-            IsJump = true;
-            IsGround = false;
 
-            playerMove.PlayerJump(
-                 currentColorData.jumpForce,
-                 rb2d
-                 );
-        }
+           if (!IsGround || IsJump) return;
+           if (inputManager.JumpPress)
+           {
+               IsJump = true;
+               IsGround = false;
+
+               playerMove.PlayerJump(
+               data.jumpForce,
+               rb2d
+               );
+            }
+        
+    }
+
+    void TryColorChange()
+    {
+        if (talksystem != null && talksystem.isTalking) return;
+        if (IsColorChangeCool || !IsFinishedColorChangeCool) return;
+
+        if (inputManager.ChangeToRed)
+            playerColorManager.ChangeColor(PlayerColorManager.PlayerColorState.Red);
+        else if (inputManager.ChangeToBlue)
+            playerColorManager.ChangeColor(PlayerColorManager.PlayerColorState.Blue);
+        else if (inputManager.ChangeToGreen)
+            playerColorManager.ChangeColor(PlayerColorManager.PlayerColorState.Green);
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {

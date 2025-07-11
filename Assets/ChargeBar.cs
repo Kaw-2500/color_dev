@@ -4,7 +4,10 @@ using UnityEngine.UI;
 public class ChargeBar : MonoBehaviour
 {
     [SerializeField] private Slider chargeSlider;
-    [SerializeField] private Playeroperate player;
+
+    [SerializeField] private Playeroperate playerOperate; // Playeroperate参照（リファクタ前の保険）
+    [SerializeField] private PlayerBase playerBase;       // PlayerBase参照（リファクタ後対応）
+
     [SerializeField] private Image backgroundImage;
 
     [SerializeField] private float RedCooltime = 5f;
@@ -17,14 +20,19 @@ public class ChargeBar : MonoBehaviour
 
     void Start()
     {
-        if (player == null)
+        if (playerOperate == null)
         {
-            player = GameObject.Find("Player")?.GetComponent<Playeroperate>();
+            playerOperate = GameObject.Find("Player")?.GetComponent<Playeroperate>();
+        }
+
+        if (playerBase == null)
+        {
+            playerBase = GameObject.Find("Player")?.GetComponent<PlayerBase>();
         }
 
         if (chargeSlider != null)
         {
-            chargeSlider.value = 0f; // 最初はスライダー空
+            chargeSlider.value = 0f; // 最初は空
         }
     }
 
@@ -34,12 +42,13 @@ public class ChargeBar : MonoBehaviour
 
         if (chargeCoolTime <= 0f)
         {
-            Debug.LogWarning("クールタイムが0");
+            Debug.LogWarning("ChargeBar: クールタイムが0以下です。");
             return;
         }
 
         timer += Time.deltaTime;
-        float value = Mathf.Clamp(1f - (timer / chargeCoolTime), 0f, 1f);//絶対値を用いて0以下になることを防ぐ
+        float value = Mathf.Clamp01(1f - (timer / chargeCoolTime));
+
         if (chargeSlider != null)
         {
             chargeSlider.value = value;
@@ -47,30 +56,37 @@ public class ChargeBar : MonoBehaviour
 
         if (value <= 0f)
         {
-            player.IsColorChangeCoolTime = false; // クールタイム終了時にプレイヤーのフラグを更新
             isCooling = false;
-            if (player != null)
+
+            if (playerOperate != null)
             {
-                player.IsFinishColorChangeCoolTime = true;
+                playerOperate.IsColorChangeCoolTime = false;
+                playerOperate.IsFinishColorChangeCoolTime = true;
+            }
+
+            if (playerBase != null)
+            {
+                playerBase.IsColorChangeCool = false;
+                playerBase.IsFinishedColorChangeCool = true;
             }
         }
     }
 
-    public void ChangeCoolTime(string changeColorName)
+    public void ChangeCoolTime(PlayerColorManager.PlayerColorState color)
     {
-        switch (changeColorName)
+        switch (color)
         {
-            case "Green":
-                SetColorAndCooltime(new Color(0.5f, 1f, 0.5f), GreenCooltime);
-                break;
-            case "Blue":
-                SetColorAndCooltime(new Color(0.5f, 0.5f, 1f), BlueCooltime);
-                break;
-            case "Red":
+            case PlayerColorManager.PlayerColorState.Red:
                 SetColorAndCooltime(new Color(1f, 0.5f, 0.5f), RedCooltime);
                 break;
+            case PlayerColorManager.PlayerColorState.Blue:
+                SetColorAndCooltime(new Color(0.5f, 0.5f, 1f), BlueCooltime);
+                break;
+            case PlayerColorManager.PlayerColorState.Green:
+                SetColorAndCooltime(new Color(0.5f, 1f, 0.5f), GreenCooltime);
+                break;
             default:
-                Debug.LogWarning("三原色以外の色がバーcsに入ってる: " + changeColorName);
+                Debug.LogWarning("ChargeBar: 不正な色が指定されました: " + color);
                 break;
         }
     }
@@ -81,16 +97,26 @@ public class ChargeBar : MonoBehaviour
         {
             backgroundImage.color = color;
         }
+
         chargeCoolTime = cooltime;
         timer = 0f;
         isCooling = true;
+
         if (chargeSlider != null)
         {
             chargeSlider.value = 1f;
         }
-        if (player != null)
+
+        if (playerOperate != null)
         {
-            player.IsFinishColorChangeCoolTime = false; // クールタイム開始時はfalseに戻す
+            playerOperate.IsFinishColorChangeCoolTime = false;
+            playerOperate.IsColorChangeCoolTime = true;
+        }
+
+        if (playerBase != null)
+        {
+            playerBase.IsFinishedColorChangeCool = false;
+            playerBase.IsColorChangeCool = true;
         }
     }
 }
