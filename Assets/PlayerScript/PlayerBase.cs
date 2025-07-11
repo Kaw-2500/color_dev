@@ -6,6 +6,7 @@ public class PlayerBase : MonoBehaviour
     [SerializeField] PlayerMove playerMove;
     [SerializeField] PlayerHitDamage playerHitDamage;
     [SerializeField] PlayerAttack playerAttack;
+    [SerializeField] private InputManager inputManager; 
 
     [SerializeField] private Talksystem talksystem;
 
@@ -30,7 +31,6 @@ public class PlayerBase : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer == null) Debug.Log("PlayerにSpriteRendererをアタッチしてください");
 
-
     }
 
     // Update is called once per frame
@@ -46,13 +46,12 @@ public class PlayerBase : MonoBehaviour
     {
         if (talksystem.isTalking == true) return;
 
-
-        float input = (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) ? 1f :
-                   (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) ? -1f : 0f;//inputの値で、加速度を左右に分けます。
+        float input = inputManager.Horizontal; // InputManagerから取得
 
         if (input != 0 && Mathf.Abs(rb2d.linearVelocity.x) < currentColorData.maxSpeed)
         {
-            playerMove.HandleMove(currentColorData.runForce,
+            playerMove.HandleMove(
+                        currentColorData.runForce,
                         currentColorData.maxSpeed,
                         currentColorData.jumpForce,
                         currentColorData.gravityScale,
@@ -61,10 +60,8 @@ public class PlayerBase : MonoBehaviour
                         );
         }
           
-
-
         if (!IsGround || IsJump) return;
-        if ((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)))
+        if (inputManager.JumpPress)
         {
             IsJump = true;
             IsGround = false;
