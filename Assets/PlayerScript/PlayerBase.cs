@@ -46,12 +46,21 @@ public class PlayerBase : MonoBehaviour
     {
         if (talksystem.isTalking == true) return;
 
-        playerMove.HandleMove(currentColorData.runForce,
-            currentColorData.maxSpeed,
-            currentColorData.jumpForce,
-            currentColorData.gravityScale,
-            rb2d
-            );
+
+        float input = (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) ? 1f :
+                   (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) ? -1f : 0f;//inputの値で、加速度を左右に分けます。
+
+        if (input != 0 && Mathf.Abs(rb2d.linearVelocity.x) < currentColorData.maxSpeed)
+        {
+            playerMove.HandleMove(currentColorData.runForce,
+                        currentColorData.maxSpeed,
+                        currentColorData.jumpForce,
+                        currentColorData.gravityScale,
+                        rb2d,
+                        input
+                        );
+        }
+          
 
 
         if (!IsGround || IsJump) return;
