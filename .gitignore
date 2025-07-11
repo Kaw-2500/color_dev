@@ -55,6 +55,9 @@ Assets/**
 !Assets/**/*.cs
 !Assets/**/*.cs.meta
 
+!Assets/PlayerScript/
+!Assets/PlayerScript/**
+
 # pngファイルとpng.metaは除外（Assets配下すべて）
 Assets/**/*.png
 Assets/**/*.png.meta
