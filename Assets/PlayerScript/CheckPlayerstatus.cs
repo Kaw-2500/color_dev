@@ -59,7 +59,7 @@ public class CheckPlayerstatus : MonoBehaviour
         return float.NaN;
     }
 
-    public bool CheckNearFloor(float groundYpos)
+    public bool CheckNearFloor(float groundYpos)//0.7以上のamountじゃないと、プレイヤーに当たっていて地面に当たらないからisgroundがfalseになる
     {
         if (playerTransform == null)
         {
@@ -68,6 +68,11 @@ public class CheckPlayerstatus : MonoBehaviour
         }
 
         float distanceToGround = Mathf.Abs(playerTransform.position.y - groundYpos);
+        if(NearGroundamount < 0.7f)
+        {
+            Debug.LogWarning("CheckPlayerstatus: NearGroundamountが0.6以下です。地面に当たらない可能性があります。");
+        }
         return distanceToGround <= NearGroundamount;
+
     }
 }

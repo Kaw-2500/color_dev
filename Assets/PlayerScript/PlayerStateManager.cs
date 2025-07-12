@@ -28,10 +28,10 @@ public class PlayerStateManager : MonoBehaviour
 
         if (nearGround)
         {
-            IsJump = false;
             IsGround = true;
+            IsJump = false;
         }
-        else if (velocityY < -0.05f)
+        else
         {
             IsGround = false;
         }
