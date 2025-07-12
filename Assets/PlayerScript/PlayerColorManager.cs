@@ -34,14 +34,14 @@ public class PlayerColorManager : MonoBehaviour
         ApplyColor();
     }
 
-    public PlayerColorDataExtended GetCurrentData()
+    public PlayerColorDataExtended GetCurrentData()//これを呼ぶと今の色のデータを返してくれる
     {
         return currentState switch
         {
             PlayerColorState.Red => redData,
             PlayerColorState.Blue => blueData,
             PlayerColorState.Green => greenData,
-            _ => throw new ArgumentOutOfRangeException()
+            _ => throw new ArgumentOutOfRangeException()// 色切り替えはゲームの根底に関わるので、例外が来たらクラッシュさせる
         };
     }
 
@@ -55,7 +55,7 @@ public class PlayerColorManager : MonoBehaviour
         if (chargeBar != null)
         {
             var data = GetCurrentData();
-            chargeBar.ChangeCoolTime(newState, data.chargeCoolTime);
+            chargeBar.ChangeCoolTime(newState, data.chargeCoolTime,data.displayColor);
             IsColorChangeCool = true;
             // クール完了時にChargeBar側からPlayerColorManager.ResetColorChangeCool()を呼ぶ想定
         }
@@ -74,7 +74,7 @@ public class PlayerColorManager : MonoBehaviour
         return currentState;
     }
 
-    public void ResetColorChangeCool()
+    public void ResetColorChangeCool()//statemanagerに入れない、理由は色の挙動にしか関わらないから。
     {
         IsColorChangeCool = false;
     }
