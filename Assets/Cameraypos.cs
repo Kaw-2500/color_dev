@@ -36,7 +36,7 @@ public class Camerapos : MonoBehaviour
 
     void FollowPlayerYOnly()
     {
-        float targetGroundY = playerBase.groundypos;
+        float targetGroundY = playerBase.GroundYpos;
         if (float.IsNaN(targetGroundY))
         {
             targetGroundY = playerTransform.position.y; // フォールバック

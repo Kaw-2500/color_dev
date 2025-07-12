@@ -1,144 +1,140 @@
-using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 
 public class PlayerBase : MonoBehaviour
 {
-    [SerializeField] PlayerColorManager playerColorManager;
-    [SerializeField] PlayerMove playerMove;
-    [SerializeField] PlayerHitDamage playerHitDamage;
-    [SerializeField] PlayerAttack playerAttack;
+    [SerializeField] private PlayerColorManager playerColorManager;
+    [SerializeField] private PlayerMove playerMove;
+    [SerializeField] private PlayerHitDamage playerHitDamage;
+    [SerializeField] private PlayerAttack playerAttack;
     [SerializeField] private InputManager inputManager;
-    [SerializeField] CheckPlayerstatus checkPlayerStatus;
-
+    [SerializeField] private CheckPlayerstatus checkPlayerStatus;
     [SerializeField] private Talksystem talksystem;
-
-    public float groundypos = 0f; 
-
-    public bool IsColorChangeCool = false;
 
     private Rigidbody2D rb2d;
     private SpriteRenderer spriteRenderer;
 
-   [SerializeField] private bool IsGround = true;
-   [SerializeField] private bool IsJump = false;
+    // 状態フラグ（プロパティで外部アクセス可）
+    public bool IsColorChangeCool { get; set; } = false;
 
-    public float GroundYpos;
- 
-    bool NearGround = false; // 近接判定のフラグ
+    public bool IsGround { get; private set; } = true;
+    public bool IsJump { get; private set; } = false;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public float GroundYpos { get; private set; } = 0f;
+
     void Start()
     {
         rb2d = GetComponent<Rigidbody2D>();
-        if (rb2d == null) Debug.Log("Player��rigidbody2d���A�^�b�`���Ă�������");
+        if (rb2d == null) Debug.LogError("PlayerBase: Rigidbody2Dがアタッチされていません。");
 
         spriteRenderer = GetComponent<SpriteRenderer>();
-        if (spriteRenderer == null) Debug.Log("Player��SpriteRenderer���A�^�b�`���Ă�������");
+        if (spriteRenderer == null) Debug.LogError("PlayerBase: SpriteRendererがアタッチされていません。");
+
+        if (playerColorManager == null) Debug.LogError("PlayerBase: PlayerColorManagerを設定してください。");
+        if (playerMove == null) Debug.LogError("PlayerBase: PlayerMoveを設定してください。");
+        if (inputManager == null) Debug.LogError("PlayerBase: InputManagerを設定してください。");
+        if (checkPlayerStatus == null) Debug.LogError("PlayerBase: CheckPlayerstatusを設定してください。");
+        if (talksystem == null) Debug.LogError("PlayerBase: Talksystemを設定してください。");
     }
 
-    // Update is called once per frame
     void Update()
     {
-        TryColorChange();
-     
-       groundypos = checkPlayerStatus.GroundYposCheck(); 
+        if (talksystem.isTalking) return;
 
-        NearGround = checkPlayerStatus.CheckNearFloor(groundypos);
-        IsJump = Mathf.Abs(rb2d.linearVelocity.y) > 0.05f; //閾値を設定して、y軸の速度が小さい場合はジャンプしていないと判断する
-        if ((NearGround))
+        UpdateGroundStatus();
+
+        if (!IsColorChangeCool)
         {
-            IsJump = false;
-            IsGround = true; // 近接判定で地面にいると判断
+            TryColorChange();
         }
     }
-    private void FixedUpdate()
+
+    void FixedUpdate()
     {
+        if (talksystem.isTalking) return;
+
         TryMove();
     }
-    void TryMove()
-    {
-        if (talksystem != null && talksystem.isTalking) return;
 
-        float input = inputManager.Horizontal; // InputManagerから
+    private void UpdateGroundStatus()
+    {
+        GroundYpos = checkPlayerStatus.GroundYposCheck();
+
+        bool nearGround = checkPlayerStatus.CheckNearFloor(GroundYpos);
+
+        IsJump = Mathf.Abs(rb2d.linearVelocity.y) > 0.05f;
+
+        if (nearGround)
+        {
+            IsJump = false;
+            IsGround = true;
+        }
+        else if (!nearGround && rb2d.linearVelocity.y < 0)
+        {
+            IsGround = false;
+        }
+    }
+
+    private void TryMove()
+    {
+        float input = inputManager.Horizontal;
 
         var data = playerColorManager.GetCurrentData();
 
-        TryJump(data); 
+        TryJump(data);
 
-        if (input != 0 && Mathf.Abs(rb2d.linearVelocity.x) < data.maxSpeed)
+        if (input != 0f && Mathf.Abs(rb2d.linearVelocity.x) < data.maxSpeed)
         {
-            playerMove.HandleMove(
-                data.runForce,
-                data.maxSpeed,
-                data.jumpForce,
-                data.gravityScale,
-                rb2d,
-                input
-            );
-        }        
+            playerMove.HandleMove(data.runForce, data.maxSpeed, data.jumpForce, data.gravityScale, rb2d, input);
+        }
     }
 
-    void TryJump(PlayerColorDataExtended data)
+    private void TryJump(PlayerColorDataExtended data)
     {
         if (!IsGround) return;
+
         if (inputManager.JumpPress)
         {
             IsJump = true;
             IsGround = false;
-
-            playerMove.PlayerJump(
-            data.jumpForce,
-            rb2d
-            );
+            playerMove.PlayerJump(data.jumpForce, rb2d);
         }
     }
 
-    void TryColorChange()
+    private void TryColorChange()
     {
-        if (talksystem != null && talksystem.isTalking) return;
-        if (IsColorChangeCool) return;
-
         var data = playerColorManager.GetCurrentData();
 
         if (inputManager.ChangeToRed)
-        playerColorManager.ChangeColor(PlayerColorManager.PlayerColorState.Red,data.chargeCoolTime);
-
+            playerColorManager.ChangeColor(PlayerColorManager.PlayerColorState.Red, data.chargeCoolTime);
         else if (inputManager.ChangeToBlue)
-            playerColorManager.ChangeColor(PlayerColorManager.PlayerColorState.Blue,data.chargeCoolTime);
+            playerColorManager.ChangeColor(PlayerColorManager.PlayerColorState.Blue, data.chargeCoolTime);
         else if (inputManager.ChangeToGreen)
-            playerColorManager.ChangeColor(PlayerColorManager.PlayerColorState.Green,data.chargeCoolTime);
+            playerColorManager.ChangeColor(PlayerColorManager.PlayerColorState.Green, data.chargeCoolTime);
     }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (IsFloorTag(collision))
-        {
-            //IsJump = false;
             IsGround = true;
-        }
     }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (IsFloorTag(collision))
-        {
             IsGround = true;
-           
-        }
     }
+
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (IsFloorTag(collision))
-        {
             IsGround = false;
-        }
     }
+
     private bool IsFloorTag(Collider2D collision)
     {
-        string[] floorTags = { "Redfloor", "Bluefloor", "Greenfloor", "naturalfloor" };
-        foreach (var tag in floorTags)
-        {
-            if (collision.CompareTag(tag)) return true;
-        }
-        return false;
+        return collision.CompareTag("Redfloor") ||
+               collision.CompareTag("Bluefloor") ||
+               collision.CompareTag("Greenfloor") ||
+               collision.CompareTag("naturalfloor");
     }
 }

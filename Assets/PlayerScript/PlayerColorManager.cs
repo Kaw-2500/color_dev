@@ -14,25 +14,22 @@ public class PlayerColorManager : MonoBehaviour
     [SerializeField] private PlayerColorDataExtended blueData;
     [SerializeField] private PlayerColorDataExtended greenData;
 
-    private SpriteRenderer spriteRenderer;
+    [SerializeField] private SpriteRenderer playerSpriteRenderer;
+    [SerializeField] private ChargeBar chargeBar;
 
     private PlayerColorState currentState;
 
-      [Header("色データと参照")]
-    public SpriteRenderer playerSpriteRenderer;
-    public ChargeBar chargeBar;
-
     void Start()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        if (spriteRenderer == null)
-        {
-            Debug.LogError("SpriteRenderer is not found on this GameObject.");
-            return;
-        }
-        
-           currentState = PlayerColorState.Red;// 初期状態をRedに設定
-}
+        if (playerSpriteRenderer == null)
+            playerSpriteRenderer = GetComponent<SpriteRenderer>();
+
+        if (playerSpriteRenderer == null)
+            Debug.LogError("PlayerColorManager: SpriteRendererがありません");
+
+        currentState = PlayerColorState.Red;
+        ApplyColor();
+    }
 
     public PlayerColorDataExtended GetCurrentData()
     {
@@ -41,28 +38,27 @@ public class PlayerColorManager : MonoBehaviour
             PlayerColorState.Red => redData,
             PlayerColorState.Blue => blueData,
             PlayerColorState.Green => greenData,
-            _ => throw new ArgumentOutOfRangeException()//ゲームの根底に関わるので、ここに到達した場合、例外を投げる
+            _ => throw new ArgumentOutOfRangeException()
         };
     }
 
-    public void ChangeColor(PlayerColorState newState,float chargetime)
+    public void ChangeColor(PlayerColorState newState, float chargeTime)
     {
         if (currentState == newState) return;
 
         currentState = newState;
-        Debug.Log($"Color: {GetCurrentData().displayColor}");
+        ApplyColor();
 
-
-        // 色をここで変えている！！！
-        playerSpriteRenderer.color = GetUnityColor(newState);
-
-        // クールタイム開始
-        chargeBar.ChangeCoolTime(newState,chargetime);
+        if (chargeBar != null)
+            chargeBar.ChangeCoolTime(newState, chargeTime);
     }
 
-    private Color GetUnityColor(PlayerColorState color)
+    private void ApplyColor()
     {
-        return GetCurrentData().displayColor; // SOのdisplayColorを返すだけで済む
+        if (playerSpriteRenderer != null)
+        {
+            playerSpriteRenderer.color = GetCurrentData().displayColor;
+        }
     }
 
     public PlayerColorState GetCurrentState()
