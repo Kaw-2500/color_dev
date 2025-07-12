@@ -14,7 +14,6 @@ public class PlayerBase : MonoBehaviour
     public float groundypos = 0f; 
 
     public bool IsColorChangeCool = false;
-    public bool IsFinishedColorChangeCool = true;
 
     private Rigidbody2D rb2d;
     private SpriteRenderer spriteRenderer;
@@ -96,7 +95,7 @@ public class PlayerBase : MonoBehaviour
     void TryColorChange()
     {
         if (talksystem != null && talksystem.isTalking) return;
-        if (IsColorChangeCool || !IsFinishedColorChangeCool) return;
+        if (IsColorChangeCool) return;
 
         if (inputManager.ChangeToRed)
         playerColorManager.ChangeColor(PlayerColorManager.PlayerColorState.Red);

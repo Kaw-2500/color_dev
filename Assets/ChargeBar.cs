@@ -20,10 +20,10 @@ public class ChargeBar : MonoBehaviour
 
     void Start()
     {
-        if (playerOperate == null)
-        {
-            playerOperate = GameObject.Find("Player")?.GetComponent<Playeroperate>();
-        }
+        //if (playerOperate == null)
+        //{
+        //    playerOperate = GameObject.Find("Player")?.GetComponent<Playeroperate>();
+        //}
 
         if (playerBase == null)
         {
@@ -58,16 +58,16 @@ public class ChargeBar : MonoBehaviour
         {
             isCooling = false;
 
-            if (playerOperate != null)
-            {
-                playerOperate.IsColorChangeCoolTime = false;
-                playerOperate.IsFinishColorChangeCoolTime = true;
-            }
+            //if (playerOperate != null)
+            //{
+            //    playerOperate.IsColorChangeCoolTime = false;
+            //    playerOperate.IsFinishColorChangeCoolTime = true;
+            //}
 
             if (playerBase != null)
             {
                 playerBase.IsColorChangeCool = false;
-                playerBase.IsFinishedColorChangeCool = true;
+             
             }
         }
     }
@@ -107,15 +107,14 @@ public class ChargeBar : MonoBehaviour
             chargeSlider.value = 1f;
         }
 
-        if (playerOperate != null)
-        {
-            playerOperate.IsFinishColorChangeCoolTime = false;
-            playerOperate.IsColorChangeCoolTime = true;
-        }
+        //if (playerOperate != null)
+        //{
+        //    playerOperate.IsFinishColorChangeCoolTime = false;
+        //    playerOperate.IsColorChangeCoolTime = true;
+        //}
 
         if (playerBase != null)
         {
-            playerBase.IsFinishedColorChangeCool = false;
             playerBase.IsColorChangeCool = true;
         }
     }
