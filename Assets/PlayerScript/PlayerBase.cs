@@ -11,6 +11,8 @@ public class PlayerBase : MonoBehaviour
 
     [SerializeField] private Talksystem talksystem;
 
+    public float groundypos = 0f; 
+
     public bool IsColorChangeCool = false;
     public bool IsFinishedColorChangeCool = true;
 
@@ -19,6 +21,10 @@ public class PlayerBase : MonoBehaviour
 
    [SerializeField] private bool IsGround = true;
    [SerializeField] private bool IsJump = false;
+
+    public float GroundYpos;
+ 
+    bool NearGround = false; // 近接判定のフラグ
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -34,8 +40,16 @@ public class PlayerBase : MonoBehaviour
     void Update()
     {
         TryColorChange();
+     
+       groundypos = checkPlayerStatus.GroundYposCheck(); 
 
+        NearGround = checkPlayerStatus.CheckNearFloor(groundypos);
         IsJump = Mathf.Abs(rb2d.linearVelocity.y) > 0.05f; //閾値を設定して、y軸の速度が小さい場合はジャンプしていないと判断する
+        if ((NearGround))
+        {
+            IsJump = false;
+            IsGround = true; // 近接判定で地面にいると判断
+        }
     }
     private void FixedUpdate()
     {
@@ -45,7 +59,7 @@ public class PlayerBase : MonoBehaviour
     {
         if (talksystem != null && talksystem.isTalking) return;
 
-        float input = inputManager.Horizontal; // InputManager����擾
+        float input = inputManager.Horizontal; // InputManagerから
 
         var data = playerColorManager.GetCurrentData();
 
@@ -61,9 +75,7 @@ public class PlayerBase : MonoBehaviour
                 rb2d,
                 input
             );
-        }
-
-        
+        }        
     }
 
     void TryJump(PlayerColorDataExtended data)
@@ -103,12 +115,12 @@ public class PlayerBase : MonoBehaviour
         }
     }
 
-    private void OnTriggerStay2D(Collider2D collision)//�X�e�C�����Ȃ��ƁAisfly����肭false�ɂȂ�Ȃ�
+    private void OnTriggerStay2D(Collider2D collision)
     {
         if (IsFloorTag(collision))
         {
             IsGround = true;
-            //IsJump = false; // �n�ʂɂ���Ԃ̓W�����v��Ԃł͂Ȃ�
+           
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
@@ -123,7 +135,7 @@ public class PlayerBase : MonoBehaviour
     }
     private bool IsFloorTag(Collider2D collision)
     {
-        string[] floorTags = { "Redfloor", "Bluefloor", "Greenfloor", "naturalfloor" };//���̃^�O���₵���炱����������
+        string[] floorTags = { "Redfloor", "Bluefloor", "Greenfloor", "naturalfloor" };
         foreach (var tag in floorTags)
         {
             if (collision.CompareTag(tag)) return true;
