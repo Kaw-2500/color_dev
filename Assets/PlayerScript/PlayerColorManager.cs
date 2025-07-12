@@ -34,8 +34,11 @@ public class PlayerColorManager : MonoBehaviour
             Debug.LogError("PlayerColorManager: SpriteRendererがありません");
 
         currentState = PlayerColorState.Red;
-        ChangeColor(currentState);// 初期状態をRedに設定
+        GetCurrentData(); // 初期状態のデータを取得しておく
         ApplyColor();
+        Debug.Log("Start時のjumpForce: " + GetCurrentData().jumpForce);
+        Debug.Log("start時のgravity: " + GetCurrentData().gravityScale);
+        Debug.Log("sTARTじのJUMPFORCE: " + GetCurrentData().jumpForce);
     }
 
     public PlayerColorDataExtended GetCurrentData()//これを呼ぶと今の色のデータを返してくれる
@@ -82,4 +85,5 @@ public class PlayerColorManager : MonoBehaviour
     {
         IsColorChangeCool = false;
     }
+
 }
