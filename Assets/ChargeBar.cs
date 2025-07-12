@@ -50,23 +50,9 @@ public class ChargeBar : MonoBehaviour
         }
     }
 
-    public void ChangeCoolTime(PlayerColorManager.PlayerColorState color, float chargetime,Color displaycolor)
+    public void ChangeCoolTime(PlayerColorDataExtended data)
     {
-        switch (color)
-        {
-            case PlayerColorManager.PlayerColorState.Red:
-                SetColorAndCooltime(displaycolor, chargetime);
-                break;
-            case PlayerColorManager.PlayerColorState.Blue:
-                SetColorAndCooltime(displaycolor, chargetime);
-                break;
-            case PlayerColorManager.PlayerColorState.Green:
-                SetColorAndCooltime(displaycolor, chargetime);
-                break;
-            default:
-                Debug.LogWarning("ChargeBar: ïsê≥Ç»êFÇ™éwíËÇ≥ÇÍÇ‹ÇµÇΩ: " + color);
-                break;
-        }
+        SetColorAndCooltime(data.displayColor,data.chargeCoolTime);
     }
 
     private void SetColorAndCooltime(Color color, float cooltime)

@@ -55,7 +55,7 @@ public class PlayerColorManager : MonoBehaviour
         if (chargeBar != null)
         {
             var data = GetCurrentData();
-            chargeBar.ChangeCoolTime(newState, data.chargeCoolTime,data.displayColor);
+            chargeBar.ChangeCoolTime(data);
             IsColorChangeCool = true;
             // ƒN[ƒ‹Š®—¹‚ÉChargeBar‘¤‚©‚çPlayerColorManager.ResetColorChangeCool()‚ğŒÄ‚Ô‘z’è
         }
