@@ -1,6 +1,9 @@
 using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
+    //動作のみを行います。
+    //入力処理などはhandlerに任せます。
+    //このクラスの役目は、物理演算の直接的な操作のみです。
 {
     private Rigidbody2D rb2d;
 
@@ -12,7 +15,7 @@ public class PlayerMove : MonoBehaviour
         if (rb2d == null) Debug.LogError("PlayerMove: Rigidbody2D���A�^�b�`����Ă��܂���");
     }
 
-    public void HandleMove(float runForce, float maxSpeed, float gravityScale, float input)
+    public void HandleMove(float runForce, float maxSpeed, float gravityScale, float input)// input: -1 は左, 1 は右
     {
         rb2d.gravityScale = gravityScale;
 
@@ -24,6 +27,7 @@ public class PlayerMove : MonoBehaviour
 
     public void PlayerJump(float jumpForce)
     {
+        Debug.Log("PlayerMove: Player Jumping with force " + jumpForce);
         rb2d.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
     }
 }

@@ -1,6 +1,8 @@
 using UnityEngine;
 
 public class Camerapos : MonoBehaviour
+//Statemanagerから貰ったGroundYposと、シリアライズしたPlayerの座標と、カメラのtransformを使って、
+//Y座標と、x座標をそれぞれ計算で決めて、カメラの位置を決定するスクリプトです。
 {
     public Transform playerTransform;
     [SerializeField] float camerahight = 5f;

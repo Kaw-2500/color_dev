@@ -1,6 +1,8 @@
 using UnityEngine;
 
 public class CheckPlayerstatus : MonoBehaviour
+//floatbool型の値を管理し、他クラスに提供するクラス
+//あくまでも値のみを測定するだけで、条件分岐や、計算は他のクラスに任せます。
 {
     [SerializeField] private float NearGroundamount = 0.1f;
 
@@ -36,9 +38,12 @@ public class CheckPlayerstatus : MonoBehaviour
         {
             if (hit.collider == null) continue;
 
+            Debug.Log("Ray hit: " + hit.collider.name + " tag: " + hit.collider.tag);
+
             string tag = hit.collider.tag;
             if (tag == "Redfloor" || tag == "Bluefloor" || tag == "Greenfloor" || tag == "naturalfloor")
             {
+           
                 if (hit.point.y > highestY)
                 {
                     highestY = hit.point.y;

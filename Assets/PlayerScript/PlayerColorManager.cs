@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class PlayerColorManager : MonoBehaviour
 {
+    //色のデータを保持するクラスです。
+    //色のデータの処理を行い、色切り替えの条件分岐(PlayerInputHandlerの役目)、物理的な動作(PlayerInputhandler&moveの役目)は行いません。
+    //UIの処理はこのクラスの担当ですが、UIに渡すのはcurrentDataのみです。
     public enum PlayerColorState
     {
         Red,

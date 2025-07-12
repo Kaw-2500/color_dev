@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 
 public class InputManager : MonoBehaviour
+//ゲッターを用いて、入力を管理するクラスです。
+//動作、条件分岐などは一切行いません。それはPlayerInputHandler.csにて行います。
 {
     public float Horizontal { get; private set; }
     public bool JumpPress { get; private set; }

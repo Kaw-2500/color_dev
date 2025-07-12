@@ -2,10 +2,15 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class ChargeBar : MonoBehaviour
+
+//ColorManagaerから貰ったdataを元に、色とクールタイムを設定するUIです。
+//Sliderの値で、クールタイムが終わったかを示すIscolorCgangeCoolのみをColorManagerに渡します。
+//呼び出しは必ずPlayerColorManagerから行われます。
 {
     [SerializeField] private Slider chargeSlider;
     //[SerializeField] private PlayerBase playerBase;
     [SerializeField] private Image backgroundImage;
+    [SerializeField]PlayerColorManager  playerColorManager;
 
     private float chargeCoolTime = 0f;
     private float timer = 0f;
@@ -43,10 +48,7 @@ public class ChargeBar : MonoBehaviour
         if (value <= 0f)
         {
             isCooling = false;
-            //if (playerBase != null)
-            //{
-            //    playerBase.IsColorChangeCool = false;
-            //}
+            playerColorManager.ResetColorChangeCool();
         }
     }
 

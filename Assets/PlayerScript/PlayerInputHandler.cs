@@ -1,6 +1,8 @@
 using UnityEngine;
 
 public class PlayerInputHandler : MonoBehaviour
+
+//ここは、inputManagerからの入力を受け取り、条件分岐するクラスです。
 {
     [SerializeField] private InputManager inputManager;
     [SerializeField] private PlayerMove playerMove;
@@ -23,6 +25,7 @@ public class PlayerInputHandler : MonoBehaviour
 
         if (inputManager.JumpPress && playerStateManager.IsGround)
         {
+            Debug.Log("PlayerInputHandler: Jump Pressed");
             playerMove.PlayerJump(playerColorManager.GetCurrentData().jumpForce);
             playerStateManager.SetJumping();
         }
