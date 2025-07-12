@@ -1,8 +1,9 @@
 using UnityEngine;
 
 public class CheckPlayerstatus : MonoBehaviour
-//floatbool型の値を管理し、他クラスに提供するクラス
+//float,lbool型の値を管理し、他クラスに提供するクラス
 //あくまでも値のみを測定するだけで、条件分岐や、計算は他のクラスに任せます。
+//1行で終わらないif文や、数字の計算は行わないでください
 {
     [SerializeField] private float NearGroundamount = 0.1f;
 
@@ -43,7 +44,7 @@ public class CheckPlayerstatus : MonoBehaviour
             string tag = hit.collider.tag;
             if (tag == "Redfloor" || tag == "Bluefloor" || tag == "Greenfloor" || tag == "naturalfloor")
             {
-           
+
                 if (hit.point.y > highestY)
                 {
                     highestY = hit.point.y;
@@ -68,7 +69,7 @@ public class CheckPlayerstatus : MonoBehaviour
         }
 
         float distanceToGround = Mathf.Abs(playerTransform.position.y - groundYpos);
-        if(NearGroundamount < 0.7f)
+        if (NearGroundamount < 0.7f)
         {
             Debug.LogWarning("CheckPlayerstatus: NearGroundamountが0.6以下です。地面に当たらない可能性があります。");
         }

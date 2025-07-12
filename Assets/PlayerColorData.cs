@@ -10,11 +10,16 @@ public class PlayerColorDataExtended : ScriptableObject
     public float gravityScale;          // 重力倍率
     public float jumpForce;             // ジャンプ力
     public string colorName;            // 色の名前など
-    public float chargeCoolTime;       // クールタイム（秒）c
+    public float chargeCoolTime;        // クールタイム（秒
+    public float defensePower;          // 防御力
+    public float levity;                // ノックバック時のはじかれる強さ(軽さ)
 
     [Header("同色床からのダメージ量")]
     public float hitDamageOnFloor;      // 床によるダメージ量
 
     [Header("色特有の基本行動プレふぁぶ")]
     public GameObject attackEffectPrefab; // 攻撃エフェクトプレハブ
+
+   
+   
 }

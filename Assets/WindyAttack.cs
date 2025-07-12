@@ -74,9 +74,6 @@ public class WindyAttack : MonoBehaviour
     
             Destroy(windyInstance);
         }
-
-        // 必要に応じてスプライトの左右反転などなど、、、
-        //windyInstance.transform.localScale = new Vector3(isPlayerRight ? 1 : -1, 1, 1);
     }
 
     private void CheckPlayerDirection()
