@@ -5,7 +5,7 @@ public class CheckPlayerstatus : MonoBehaviour
     [SerializeField] private float NearGroundamount = 0.1f;
 
     [SerializeField] private GameObject player;
- [SerializeField]   private Transform playerTransform;
+    [SerializeField] private Transform playerTransform;
 
     void Start()
     {
@@ -13,7 +13,7 @@ public class CheckPlayerstatus : MonoBehaviour
             player = GameObject.FindWithTag("Player");
 
         if (player == null)
-            Debug.LogError("CheckPlayerstatus: PlayerãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“");
+            Debug.LogError("CheckPlayerstatus: Player‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ");
 
         if (player != null)
             playerTransform = player.transform;
@@ -50,7 +50,7 @@ public class CheckPlayerstatus : MonoBehaviour
         if (foundFloor)
             return highestY;
 
-        Debug.LogWarning("CheckPlayerstatus: åœ°é¢ã‚’æ¤œå‡ºã§ãã¾ã›ã‚“");
+        Debug.LogWarning("CheckPlayerstatus: ’n–Ê‚ğŒŸo‚Å‚«‚Ü‚¹‚ñ");
         return float.NaN;
     }
 
@@ -58,7 +58,7 @@ public class CheckPlayerstatus : MonoBehaviour
     {
         if (playerTransform == null)
         {
-            Debug.LogError("CheckPlayerstatus: playerTransformãŒæœªè¨­å®š");
+            Debug.LogError("CheckPlayerstatus: playerTransform‚ª–¢İ’è");
             return false;
         }
 

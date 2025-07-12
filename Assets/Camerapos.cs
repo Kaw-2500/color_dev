@@ -3,14 +3,14 @@ using UnityEngine;
 public class Camerapos : MonoBehaviour
 {
     public Transform playerTransform;
-    [SerializeField] float camerahight = 5f;     // Y軸の高さオフセット
-    [SerializeField] float cameradistance = 5f;  // プレイヤーのX座標からの横距離オフセット
-    [SerializeField] float cameraSmoothTime = 0.1f; // Y追従のスムーズ時間
+    [SerializeField] float camerahight = 5f;
+    [SerializeField] float cameradistance = 5f;
+    [SerializeField] float cameraSmoothTime = 0.1f;
 
     private float smoothY;
     private float velocityY;
 
-    [SerializeField] private PlayerBase playerBase;
+    [SerializeField] private PlayerStateManager playerStateManager;  
 
     void Start()
     {
@@ -19,13 +19,12 @@ public class Camerapos : MonoBehaviour
             Debug.LogError("PlayerTransform is not assigned.");
             return;
         }
-        if (playerBase == null)
+        if (playerStateManager == null)
         {
-            Debug.LogError("PlayerBase component is not assigned.");
+            Debug.LogError("PlayerStateManager is not assigned.");
             return;
         }
 
-        // 初期化
         smoothY = transform.position.y;
     }
 
@@ -36,19 +35,18 @@ public class Camerapos : MonoBehaviour
 
     void FollowPlayerYOnly()
     {
-        float targetGroundY = playerBase.GroundYpos;
+        float targetGroundY = playerStateManager.GroundYpos;
         if (float.IsNaN(targetGroundY))
         {
-            targetGroundY = playerTransform.position.y; // フォールバック
+            targetGroundY = playerTransform.position.y;
         }
 
-        // Y座標のみスムーズに追従
         smoothY = Mathf.SmoothDamp(smoothY, targetGroundY + camerahight, ref velocityY, cameraSmoothTime);
 
         Vector3 newPos = new Vector3(
-            playerTransform.position.x + cameradistance, // X座標はプレイヤー位置＋距離
+            playerTransform.position.x + cameradistance,
             smoothY,
-            transform.position.z // Z座標はカメラのまま
+            transform.position.z
         );
 
         transform.position = newPos;

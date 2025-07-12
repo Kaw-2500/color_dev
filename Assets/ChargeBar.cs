@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class ChargeBar : MonoBehaviour
 {
     [SerializeField] private Slider chargeSlider;
-    [SerializeField] private PlayerBase playerBase;
+    //[SerializeField] private PlayerBase playerBase;
     [SerializeField] private Image backgroundImage;
 
     private float chargeCoolTime = 0f;
@@ -13,11 +13,11 @@ public class ChargeBar : MonoBehaviour
 
     void Start()
     {
-        if (playerBase == null)
-        {
-            playerBase = GameObject.Find("Player")?.GetComponent<PlayerBase>();
-            if (playerBase == null) Debug.LogError("ChargeBar: PlayerBase‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñB");
-        }
+        //if (playerBase == null)
+        //{
+        //    //playerBase = GameObject.Find("Player")?.GetComponent<PlayerBase>();
+        //    if (playerBase == null) Debug.LogError("ChargeBar: PlayerBase‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñB");
+        //}
 
         if (chargeSlider != null)
         {
@@ -43,10 +43,10 @@ public class ChargeBar : MonoBehaviour
         if (value <= 0f)
         {
             isCooling = false;
-            if (playerBase != null)
-            {
-                playerBase.IsColorChangeCool = false;
-            }
+            //if (playerBase != null)
+            //{
+            //    playerBase.IsColorChangeCool = false;
+            //}
         }
     }
 
@@ -81,7 +81,7 @@ public class ChargeBar : MonoBehaviour
         if (chargeSlider != null)
             chargeSlider.value = 1f;
 
-        if (playerBase != null)
-            playerBase.IsColorChangeCool = true;
+        //if (playerBase != null)
+        //    playerBase.IsColorChangeCool = true;
     }
 }

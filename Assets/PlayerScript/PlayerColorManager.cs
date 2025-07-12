@@ -19,6 +19,8 @@ public class PlayerColorManager : MonoBehaviour
 
     private PlayerColorState currentState;
 
+    public bool IsColorChangeCool { get; private set; } = false;
+
     void Start()
     {
         if (playerSpriteRenderer == null)
@@ -28,6 +30,7 @@ public class PlayerColorManager : MonoBehaviour
             Debug.LogError("PlayerColorManager: SpriteRenderer‚ª‚ ‚è‚Ü‚¹‚ñ");
 
         currentState = PlayerColorState.Red;
+        ChangeColor(currentState);// ‰Šúó‘Ô‚ğRed‚Éİ’è
         ApplyColor();
     }
 
@@ -42,7 +45,7 @@ public class PlayerColorManager : MonoBehaviour
         };
     }
 
-    public void ChangeColor(PlayerColorState newState, float chargeTime)
+    public void ChangeColor(PlayerColorState newState)
     {
         if (currentState == newState) return;
 
@@ -50,7 +53,12 @@ public class PlayerColorManager : MonoBehaviour
         ApplyColor();
 
         if (chargeBar != null)
-            chargeBar.ChangeCoolTime(newState, chargeTime);
+        {
+            var data = GetCurrentData();
+            chargeBar.ChangeCoolTime(newState, data.chargeCoolTime);
+            IsColorChangeCool = true;
+            // ƒN[ƒ‹Š®—¹‚ÉChargeBar‘¤‚©‚çPlayerColorManager.ResetColorChangeCool()‚ğŒÄ‚Ô‘z’è
+        }
     }
 
     private void ApplyColor()
@@ -64,5 +72,10 @@ public class PlayerColorManager : MonoBehaviour
     public PlayerColorState GetCurrentState()
     {
         return currentState;
+    }
+
+    public void ResetColorChangeCool()
+    {
+        IsColorChangeCool = false;
     }
 }
