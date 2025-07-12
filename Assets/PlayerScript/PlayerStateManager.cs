@@ -17,7 +17,7 @@ public class PlayerStateManager : MonoBehaviour
     void Update()
     {
         UpdateGroundStatus();
-        Debug.Log(IsGround);
+     
     }
 
     private void UpdateGroundStatus()

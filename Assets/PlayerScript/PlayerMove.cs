@@ -27,7 +27,7 @@ public class PlayerMove : MonoBehaviour
 
     public void PlayerJump(float jumpForce)
     {
-        Debug.Log("PlayerMove: Player Jumping with force " + jumpForce);
+       
         rb2d.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
     }
 }

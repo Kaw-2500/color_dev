@@ -38,7 +38,7 @@ public class CheckPlayerstatus : MonoBehaviour
         {
             if (hit.collider == null) continue;
 
-            Debug.Log("Ray hit: " + hit.collider.name + " tag: " + hit.collider.tag);
+            //Debug.Log("Ray hit: " + hit.collider.name + " tag: " + hit.collider.tag);
 
             string tag = hit.collider.tag;
             if (tag == "Redfloor" || tag == "Bluefloor" || tag == "Greenfloor" || tag == "naturalfloor")

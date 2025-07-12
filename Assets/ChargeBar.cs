@@ -33,6 +33,8 @@ public class ChargeBar : MonoBehaviour
     void Update()
     {
         if (!isCooling) return;
+        
+
         if (chargeCoolTime <= 0f)
         {
             Debug.LogWarning("ChargeBar: クールタイムが0以下です。");
@@ -41,6 +43,8 @@ public class ChargeBar : MonoBehaviour
 
         timer += Time.deltaTime;
         float value = Mathf.Clamp01(1f - (timer / chargeCoolTime));
+
+      
 
         if (chargeSlider != null)
             chargeSlider.value = value;
