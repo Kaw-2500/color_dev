@@ -1,3 +1,4 @@
+using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 
 public class PlayerBase : MonoBehaviour
@@ -97,13 +98,15 @@ public class PlayerBase : MonoBehaviour
         if (talksystem != null && talksystem.isTalking) return;
         if (IsColorChangeCool) return;
 
+        var data = playerColorManager.GetCurrentData();
+
         if (inputManager.ChangeToRed)
-        playerColorManager.ChangeColor(PlayerColorManager.PlayerColorState.Red);
+        playerColorManager.ChangeColor(PlayerColorManager.PlayerColorState.Red,data.chargeCoolTime);
 
         else if (inputManager.ChangeToBlue)
-            playerColorManager.ChangeColor(PlayerColorManager.PlayerColorState.Blue);
+            playerColorManager.ChangeColor(PlayerColorManager.PlayerColorState.Blue,data.chargeCoolTime);
         else if (inputManager.ChangeToGreen)
-            playerColorManager.ChangeColor(PlayerColorManager.PlayerColorState.Green);
+            playerColorManager.ChangeColor(PlayerColorManager.PlayerColorState.Green,data.chargeCoolTime);
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -127,9 +130,6 @@ public class PlayerBase : MonoBehaviour
         if (IsFloorTag(collision))
         {
             IsGround = false;
-
-
-     
         }
     }
     private bool IsFloorTag(Collider2D collision)

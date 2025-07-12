@@ -10,9 +10,6 @@ public class ChargeBar : MonoBehaviour
 
     [SerializeField] private Image backgroundImage;
 
-    [SerializeField] private float RedCooltime = 5f;
-    [SerializeField] private float BlueCooltime = 3f;
-    [SerializeField] private float GreenCooltime = 2f;
 
     private float chargeCoolTime = 0f;
     private float timer = 0f;
@@ -72,18 +69,18 @@ public class ChargeBar : MonoBehaviour
         }
     }
 
-    public void ChangeCoolTime(PlayerColorManager.PlayerColorState color)
+    public void ChangeCoolTime(PlayerColorManager.PlayerColorState color,float chargetime)
     {
         switch (color)
         {
             case PlayerColorManager.PlayerColorState.Red:
-                SetColorAndCooltime(new Color(1f, 0.5f, 0.5f), RedCooltime);
+                SetColorAndCooltime(new Color(1f, 0.5f, 0.5f), chargetime);
                 break;
             case PlayerColorManager.PlayerColorState.Blue:
-                SetColorAndCooltime(new Color(0.5f, 0.5f, 1f), BlueCooltime);
+                SetColorAndCooltime(new Color(0.5f, 0.5f, 1f), chargetime);
                 break;
             case PlayerColorManager.PlayerColorState.Green:
-                SetColorAndCooltime(new Color(0.5f, 1f, 0.5f), GreenCooltime);
+                SetColorAndCooltime(new Color(0.5f, 1f, 0.5f), chargetime);
                 break;
             default:
                 Debug.LogWarning("ChargeBar: ïsê≥Ç»êFÇ™éwíËÇ≥ÇÍÇ‹ÇµÇΩ: " + color);

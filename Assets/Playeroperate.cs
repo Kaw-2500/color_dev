@@ -148,7 +148,7 @@ public class Playeroperate : MonoBehaviour
         isCurrentColor = true;
 
         ColorPlayer = newColor;
-        chargeBar.ChangeCoolTime(colorEnum); // enumで呼ぶ
+        //chargeBar.ChangeCoolTime(colorEnum); // enumで呼ぶ
         IsFinishColorChangeCoolTime = false;
         IsColorChangeCoolTime = true;
     }
@@ -195,9 +195,9 @@ public class Playeroperate : MonoBehaviour
         isRunningHitDamageCoroutine = true;
         while ((IsRed && IstouchRed) || (IsBlue && IstouchBlue) || (IsGreen && IstouchGreen))
         {
-           
+
             PlayerHp -= HitDamageOnfloor;
-           
+
             Debug.Log($"残りHP: {PlayerHp}");
             if (PlayerHp <= 0)
             {
@@ -216,27 +216,27 @@ public class Playeroperate : MonoBehaviour
         Debug.Log($"残りHP: {PlayerHp}");
     }
 
-   public  void HitWindEffectDamage()
+    public void HitWindEffectDamage()
     {
         if (Isfly) return; // 風で浮いてるときはreturn
 
         Isfly = true; // 風で吹き飛ばされる状態にする
         rb2d.AddForce(new Vector2(0, flywindVerticalAmount), ForceMode2D.Impulse); // 風のダメージで上に吹き飛ばす
-       
-     GameObject wind = GameObject.FindGameObjectWithTag("Windy");
+
+        GameObject wind = GameObject.FindGameObjectWithTag("Windy");
         if (wind == null)
         {
             Debug.LogWarning("WindyAttack: Windyタグがついたオブジェクトが見つかりません。");
         }
         if (wind.transform.position.x > transform.position.x)
         {
-       
+
             Debug.Log("風が右側にいるので右方向に力を加えます。");
             rb2d.AddForce(new Vector2(-Mathf.Abs(flywindHorizontalAmount), 0), ForceMode2D.Impulse);
         }
         else
         {
-          
+
             Debug.Log("風が左側にいるので左方向に力を加えます。");
             rb2d.AddForce(new Vector2(Mathf.Abs(flywindHorizontalAmount), 0), ForceMode2D.Impulse);
         }
@@ -260,7 +260,7 @@ public class Playeroperate : MonoBehaviour
         {
             IsJump = false;
             IsGround = true;
-          
+
 
             IstouchRed = collision.CompareTag("Redfloor");
             IstouchBlue = collision.CompareTag("Bluefloor");
@@ -270,7 +270,7 @@ public class Playeroperate : MonoBehaviour
                 StartCoroutine(HitDamageGrond());
         }
 
-     
+
     }
 
     private void OnTriggerStay2D(Collider2D collision)

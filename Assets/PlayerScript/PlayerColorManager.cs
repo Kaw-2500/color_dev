@@ -45,7 +45,7 @@ public class PlayerColorManager : MonoBehaviour
         };
     }
 
-    public void ChangeColor(PlayerColorState newState)
+    public void ChangeColor(PlayerColorState newState,float chargetime)
     {
         if (currentState == newState) return;
 
@@ -57,7 +57,7 @@ public class PlayerColorManager : MonoBehaviour
         playerSpriteRenderer.color = GetUnityColor(newState);
 
         // クールタイム開始
-        chargeBar.ChangeCoolTime(newState);
+        chargeBar.ChangeCoolTime(newState,chargetime);
     }
 
     private Color GetUnityColor(PlayerColorState color)
