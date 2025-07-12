@@ -42,6 +42,9 @@ public class PlayerHitDamage : MonoBehaviour
         // ‚«”ò‚Î‚µ‚Ì•¨—“I‚È—Í‚ğ‰Á‚¦‚é
         rb2d.AddForce(knockback, ForceMode2D.Impulse);
 
+        float torqueImpulse = knockback.x * -0.2f; //0.2‚ª‰ñ“]ŒW”‚ÌÅ“K‰ğ
+        rb2d.AddTorque(torqueImpulse, ForceMode2D.Impulse);
+
         playerStateManager.SetBlown(true);
         StartCoroutine(ResetBlown(0.5f));
     }

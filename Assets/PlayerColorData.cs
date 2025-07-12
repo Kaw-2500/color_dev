@@ -11,8 +11,8 @@ public class PlayerColorDataExtended : ScriptableObject
     public float jumpForce;             // ジャンプ力
     public string colorName;            // 色の名前など
     public float chargeCoolTime;        // クールタイム（秒
-    public float defensePower;          // 防御力
-    public float levity;                // ノックバック時のはじかれる強さ(軽さ)
+    public float defensePower;          // 防御力(0.3なら、ダメージを30%減少させる)
+    public float levity;                // ノックバック時のはじかれる強さ(軽さ)(1で通常、1.5で1.5倍の軽さ、0.5で半分の軽さ)
 
     [Header("同色床からのダメージ量")]
     public float hitDamageOnFloor;      // 床によるダメージ量
