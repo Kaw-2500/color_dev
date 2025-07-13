@@ -13,6 +13,7 @@ public class PlayerColorDataExtended : ScriptableObject
     public float chargeCoolTime;        // クールタイム（秒
     public float defensePower;          // 防御力(0.3なら、ダメージを30%減少させる)
     public float levity;                // ノックバック時のはじかれる強さ(軽さ)(1で通常、1.5で1.5倍の軽さ、0.5で半分の軽さ)
+    public float NormalAttackCoolTime; // 通常攻撃のクールタイム（秒）
 
     [Header("同色床からのダメージ量")]
     public float hitDamageOnFloor;      // 床によるダメージ量

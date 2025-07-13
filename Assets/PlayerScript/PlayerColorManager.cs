@@ -21,6 +21,8 @@ public class PlayerColorManager : MonoBehaviour
     [SerializeField] private SpriteRenderer playerSpriteRenderer;
     [SerializeField] private ChargeBar chargeBar;
 
+    [SerializeField] private PlayerAttackCooltimeManager playerAttackCooltimeManager;
+
     private PlayerColorState currentState;
 
     public bool IsColorChangeCool { get; private set; } = false;
@@ -57,6 +59,7 @@ public class PlayerColorManager : MonoBehaviour
         if (currentState == newState) return;
 
         currentState = newState;
+        playerAttackCooltimeManager.ResetCooldown(newState);
         ApplyColor();
 
         if (chargeBar != null)
@@ -84,6 +87,16 @@ public class PlayerColorManager : MonoBehaviour
     public void ResetColorChangeCool()//statemanagerに入れない、理由は色の挙動にしか関わらないから。
     {
         IsColorChangeCool = false;
+    }
+    public PlayerColorDataExtended GetDataByColor(PlayerColorState color)
+    {
+        return color switch
+        {
+            PlayerColorState.Red => redData,
+            PlayerColorState.Blue => blueData,
+            PlayerColorState.Green => greenData,
+            _ => throw new ArgumentOutOfRangeException(nameof(color), color, null)
+        };
     }
 
 }

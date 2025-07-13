@@ -11,6 +11,8 @@ public class InputManager : MonoBehaviour
     public bool ChangeToBlue { get; private set; }
     public bool ChangeToGreen { get; private set; }
 
+    public bool NormalAttack { get; private set; }
+
     void Update()
     {
         Horizontal = (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) ? 1f :
@@ -22,6 +24,7 @@ public class InputManager : MonoBehaviour
         ChangeToBlue = Input.GetKeyDown(KeyCode.Alpha2);
         ChangeToGreen = Input.GetKeyDown(KeyCode.Alpha3);
 
+        NormalAttack = Input.GetMouseButtonDown(0);
     }
 }
 

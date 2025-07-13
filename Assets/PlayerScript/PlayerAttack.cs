@@ -13,4 +13,10 @@ public class PlayerAttack : MonoBehaviour
     {
         
     }
+
+    public void normalAttack(GameObject AttackPrefab)
+    {
+        //‚¹‚¢‚¹‚¢‚¶‚Ìˆ—‚ğ‚±‚±‚ÅÀs
+        Instantiate(AttackPrefab, transform.position, Quaternion.identity);
+    }
 }

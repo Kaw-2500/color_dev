@@ -71,7 +71,7 @@ public class CheckPlayerstatus : MonoBehaviour
         float distanceToGround = Mathf.Abs(playerTransform.position.y - groundYpos);
         if (NearGroundamount < 0.7f)
         {
-            Debug.LogWarning("CheckPlayerstatus: NearGroundamountが0.6以下です。地面に当たらない可能性があります。");
+            Debug.LogWarning("CheckPlayerstatus: NearGroundamountが0.7未満です。地面に当たらない可能性があります。");
         }
         return distanceToGround <= NearGroundamount;
 

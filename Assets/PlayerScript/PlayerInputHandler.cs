@@ -8,10 +8,18 @@ public class PlayerInputHandler : MonoBehaviour
     [SerializeField] private PlayerMove playerMove;
     [SerializeField] private PlayerColorManager playerColorManager;
     [SerializeField] private PlayerStateManager playerStateManager;
+    [SerializeField] private PlayerAttack playerAttack;
+    [SerializeField] private PlayerAttackCooltimeManager playerAttackCooltimeManager;
 
     void Update()
     {
         if (playerStateManager.IsTalking) return;
+
+        if (inputManager.NormalAttack && !playerAttackCooltimeManager.IsOnCooldown(playerColorManager.GetCurrentState()))
+        {
+            playerAttack.normalAttack(playerColorManager.GetCurrentData().attackEffectPrefab);
+            playerAttackCooltimeManager.StartCooldown(playerColorManager.GetCurrentState());
+        }
 
         if (!playerColorManager.IsColorChangeCool)
         {

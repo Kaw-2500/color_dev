@@ -4,7 +4,7 @@ using UnityEngine.Rendering;
 public class BlueNormalAttack : MonoBehaviour
 {
 
-    [SerializeField] private EventManager eventManager; // EventManagerの参照  
+    //[SerializeField] private EventManager eventManager; // EventManagerの参照  
 
 
     Rigidbody2D rb2d;
@@ -15,6 +15,8 @@ public class BlueNormalAttack : MonoBehaviour
     [SerializeField] float destroyTime = 5f;
     private GameObject Playerobj;
 
+
+    [SerializeField] float startxpos;
     bool Isstuckcheck;
     private Vector2 Lastpos;
     private Vector2 Startpos;
@@ -24,27 +26,14 @@ public class BlueNormalAttack : MonoBehaviour
     void Start()
     {
 
-        Playerobj = GameObject.Find("Player");
+        Playerobj = GameObject.FindWithTag("Player"); // プレイヤーオブジェクトを取得
 
 
         rb2d = GetComponent<Rigidbody2D>(); 
         Stucktimer = 0; // タイマーをリセット
-        transform.position = new Vector2(transform.position.x + 1.5f, transform.position.y); // プレイヤーとの距離を調整  
-
-      
-
-        eventManager = GameObject.Find("EventManager").GetComponent<EventManager>();
-        if (eventManager == null)
-        {
-            Debug.LogError("EventManager not found in the scene.");
-        }
-        else
-        {
-            //eventManager.IsPlAttack = true; // プレイヤーの攻撃状態を設定
-        }
+        transform.position = new Vector2(transform.position.x + startxpos, transform.position.y); // プレイヤーとの距離を調整  
+       
     }
-
-    // Update is called once per frame
     void Update()
     {
         transform.transform.localRotation = Quaternion.Euler(0, 0, 0); // 回転をリセット
