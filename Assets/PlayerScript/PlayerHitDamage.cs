@@ -1,12 +1,18 @@
-using System.Collections;
+ï»¿using System.Collections;
 using UnityEditor;
 using UnityEngine;
+using static PlayerColorManager;
+using static PlayerStateManager;
 
 public class PlayerHitDamage : MonoBehaviour
 {
     [SerializeField] PlayerStateManager playerStateManager;
     [SerializeField] private PlayerColorManager playerColorManager;
     private GameObject player;
+
+    [SerializeField] private float groundDamageInterval = 4; // åºŠãƒ€ãƒ¡ãƒ¼ã‚¸ã®ã‚¿ã‚¤ãƒãƒ¼
+
+    private float groundDamageTimer = 0f; // â† ã‚¯ãƒ©ã‚¹ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã«ç§»å‹•
 
     Rigidbody2D rb2d;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -20,7 +26,7 @@ public class PlayerHitDamage : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        TryHitGroundDamage();
     }
 
     public void OnHitDamage(float damage)
@@ -36,13 +42,13 @@ public class PlayerHitDamage : MonoBehaviour
 
         levity = playerColorManager.GetCurrentData().levity;
 
-        knockback.x *= levity; // •—‚Ì‚«”ò‚Î‚µ—Í‚ÉŒy‚³‚ğ”½‰f
-        knockback.y *= levity; // •—‚Ì‚«”ò‚Î‚µ—Í‚ÉŒy‚³‚ğ”½‰f
+        knockback.x *= levity; // é¢¨ã®å¹ãé£›ã°ã—åŠ›ã«è»½ã•ã‚’åæ˜ 
+        knockback.y *= levity; // é¢¨ã®å¹ãé£›ã°ã—åŠ›ã«è»½ã•ã‚’åæ˜ 
 
-        // ‚«”ò‚Î‚µ‚Ì•¨—“I‚È—Í‚ğ‰Á‚¦‚é
+        // å¹ãé£›ã°ã—ã®ç‰©ç†çš„ãªåŠ›ã‚’åŠ ãˆã‚‹
         rb2d.AddForce(knockback, ForceMode2D.Impulse);
 
-        float torqueImpulse = knockback.x * -0.2f; //0.2‚ª‰ñ“]ŒW”‚ÌÅ“K‰ğ
+        float torqueImpulse = knockback.x * -0.2f; //0.2ãŒå›è»¢ä¿‚æ•°ã®æœ€é©è§£
         rb2d.AddTorque(torqueImpulse, ForceMode2D.Impulse);
 
         playerStateManager.SetBlown(true);
@@ -54,5 +60,43 @@ public class PlayerHitDamage : MonoBehaviour
         yield return new WaitForSeconds(delay);
         playerStateManager.SetBlown(false);
     }
+
+    private void TryHitGroundDamage()
+    {
+        if (playerStateManager.IsDead) return; // æ­»äº¡æ™‚ã¯ã‚¹ã‚­ãƒƒãƒ—
+        if (!playerStateManager.IsGround) return;
+
+        var currentColor = playerColorManager.GetCurrentState();
+        var groundColor = playerStateManager.CurrentTouchGroundColor;
+
+        bool isSameColor = false;
+
+        switch (currentColor)
+        {
+            case PlayerColorState.Red:
+                isSameColor = groundColor == TouchGroundColor.red;
+                break;
+            case PlayerColorState.Blue:
+                isSameColor = groundColor == TouchGroundColor.blue;
+                break;
+            case PlayerColorState.Green:
+                isSameColor = groundColor == TouchGroundColor.green;
+                break;
+        }
+
+        if (!isSameColor)
+        {
+            groundDamageTimer = 0f;
+            return;
+        }
+
+        groundDamageTimer += Time.deltaTime;
+        if (groundDamageTimer < groundDamageInterval) return;
+
+        float damage = playerColorManager.GetCurrentData().hitDamageOnFloor;
+        playerStateManager.ApplyDamage(damage);
+        groundDamageTimer = 0f;
+    }
+
 
 }

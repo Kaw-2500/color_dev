@@ -76,4 +76,6 @@ public class CheckPlayerstatus : MonoBehaviour
         return distanceToGround <= NearGroundamount;
 
     }
+
+   
 }

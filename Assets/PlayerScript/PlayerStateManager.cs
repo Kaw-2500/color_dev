@@ -13,6 +13,13 @@ public class PlayerStateManager : MonoBehaviour
 
      PlayerbioState playerbioState = PlayerbioState.alive;
 
+    TouchGroundColor touchGroundColor = TouchGroundColor.natural;
+
+    public bool IsDead => playerbioState == PlayerbioState.dead;
+
+
+    public TouchGroundColor CurrentTouchGroundColor => touchGroundColor;
+
     [SerializeField]   public bool IsGround { get; private set; } = true;
     public bool IsJump { get; private set; } = false;
     public bool IsTalking => talksystem.isTalking;
@@ -22,10 +29,18 @@ public class PlayerStateManager : MonoBehaviour
     private bool isBlown = false;
     public bool IsBlown => isBlown;
 
-    enum PlayerbioState
+  public   enum PlayerbioState
     {
         alive,
         dead
+    }
+
+    public enum TouchGroundColor
+    {
+        natural,
+        red,
+        blue,
+        green
     }
 
     void Update()
@@ -84,4 +99,29 @@ public class PlayerStateManager : MonoBehaviour
     {
         isBlown = value;
     }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        string tag = collision.collider.tag;
+
+        if (tag == "Redfloor")
+            touchGroundColor = TouchGroundColor.red;
+        else if (tag == "Bluefloor")
+            touchGroundColor = TouchGroundColor.blue;
+        else if (tag == "Greenfloor")
+            touchGroundColor = TouchGroundColor.green;
+        else
+            touchGroundColor = TouchGroundColor.natural;
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        string tag = collision.collider.tag;
+
+        if (tag == "Redfloor" || tag == "Bluefloor" || tag == "Greenfloor")
+        {
+            touchGroundColor = TouchGroundColor.natural;
+        }
+    }
+
 }
