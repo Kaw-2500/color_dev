@@ -1,106 +1,76 @@
 ﻿using UnityEngine;
 
-// Windy（風弾）のフェードアウト処理
 public class WindyFadeout : MonoBehaviour
 {
     private SpriteRenderer spriteRenderer;
-    private float fadeDuration;//animationclipに上書きされます
+    private float fadeDuration;
     private float timer = 0f;
 
-    [SerializeField] private float DamageAmount = 10f; 
-
+    [SerializeField] private float damageAmount = 10f;
+    [SerializeField] private float knockbackForceX = 5f;
+    [SerializeField] private float knockbackForceY = 5f;
     [SerializeField] private AnimationClip fadeAnimationClip;
 
-    private bool isAttacked = false; // 攻撃したかどうか
+    private bool isAttacked = false;
 
-   GameObject plyobj; // プレイヤーの参照
+    private void Start()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        if (spriteRenderer == null) spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 
-    private Playeroperate playercs;
+        if (fadeAnimationClip != null)
+            fadeDuration = fadeAnimationClip.length;
+        else
+            fadeDuration = 0.5f;
+    }
 
+    private void Update()
+    {
+        if (spriteRenderer == null) return;
+
+        timer += Time.deltaTime;
+        float alpha = Mathf.Clamp01(1f - (timer / fadeDuration));
+        var c = spriteRenderer.color;
+        c.a = alpha;
+        spriteRenderer.color = c;
+
+        if (timer >= fadeDuration) Destroy(gameObject);
+    }
     public void SetFadeDuration()
     {
         if (fadeAnimationClip != null)
         {
             fadeDuration = fadeAnimationClip.length;
-            //Debug.Log($"WindyFadeout: fadeAnimationClipの長さは {fadeDuration} 秒です。");
         }
         else
         {
             Debug.LogWarning("WindyFadeout: fadeAnimationClipがセットされていません。0.5秒と仮定します。");
             fadeDuration = 0.5f;
         }
-
-     
-
     }
 
 
-    void Start()
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        if (spriteRenderer == null)
-        {
-            spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-        }
-        if (spriteRenderer == null)
-        {
-            Debug.LogError("WindyFadeout: SpriteRendererが見つかりません。");
-            Destroy(gameObject);
-            return;
-        }
+        if (isAttacked) return;
+        if (!collision.gameObject.CompareTag("Player")) return;
 
-        plyobj = GameObject.FindGameObjectWithTag("Player");
-        if (plyobj == null)
+        var hitDamage = collision.gameObject.GetComponent<PlayerHitDamage>();
+        if (hitDamage != null)
         {
-            Debug.LogError("WindyFadeout: Playerタグがついたオブジェクトが見つかりません。");
-            Destroy(gameObject);
-            return;
-        }
+            // 攻撃者（風）のX座標とプレイヤーのX座標を比較
+            float directionX = transform.position.x > collision.transform.position.x ? -1f : 1f;
 
-        playercs = plyobj.GetComponent<Playeroperate>();
-        if (playercs == null)
+            Vector2 knockback = new Vector2(directionX * Mathf.Abs(knockbackForceX), knockbackForceY);
+
+            hitDamage.OnHitDamage(damageAmount);
+            hitDamage.ApplyWindKnockback(knockback);
+
+            isAttacked = true;
+        }
+        else
         {
-            Debug.LogError("WindyFadeout: Playeroperate コンポーネントが見つかりません。");
-            Destroy(gameObject);
-            return;
+            Debug.LogWarning("WindyFadeout: PlayerHitDamage component not found on player.");
         }
     }
-
-    void Update()
-    {
-        if (spriteRenderer == null) return;
-
-        timer += Time.deltaTime;
-
-        float alpha = Mathf.Clamp01(1f - (timer / fadeDuration));
-
-        Color c = spriteRenderer.color;
-        c.a = alpha;
-        spriteRenderer.color = c;
-
-        if (timer >= fadeDuration)
-        {
-            Destroy(gameObject);
-        }
-    }
-
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {   
-            //Debug.Log("WindyFadeout: プレイヤーに衝突しました。ダメージを送信します。");
-            SendDamage();
-            playercs.HitWindEffectDamage(); // ヒットエフェクトを発火
-        }
-    }
-
-   void  SendDamage()
-    {
-        if(playercs == null || playercs.PlayerHp <= 0 || isAttacked) return;
-
-        playercs.Hitdamage(DamageAmount);
-        
-        isAttacked = true; // 攻撃済みフラグを立てる
-    }
-
 }

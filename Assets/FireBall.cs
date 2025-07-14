@@ -5,6 +5,7 @@ public class Fireball : MonoBehaviour
 
     [SerializeField] private EventManager eventManager; // EventManagerの参照  
 
+    [SerializeField]private float startxpos = 0.9f; // プレイヤーとの距離を調整するためのX座標の微調整
 
     public float speed = 10f;
 
@@ -16,7 +17,7 @@ public class Fireball : MonoBehaviour
     void Start()
     {
         rb2d = GetComponent<Rigidbody2D>();
-        transform.position = new Vector2(transform.position.x + 0.9f, transform.position.y); // プレイヤーとの距離を調整
+        transform.position = new Vector2(transform.position.x + startxpos, transform.position.y); // プレイヤーとの距離を調整
 
       
 

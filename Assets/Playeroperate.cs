@@ -130,29 +130,29 @@ public class Playeroperate : MonoBehaviour
 
     private void changeColor()
     {
-        if (!IsFinishColorChangeCoolTime) return;
-
         if (Input.GetKeyDown(KeyCode.Alpha1))
-            TryChangeColor(PlayerColorState.Red, Color.red, "Red", ref IsRed);
+            TryChangeColor(PlayerColorState.Red, Color.red, PlayerColorManager.PlayerColorState.Red, ref IsRed);
         if (Input.GetKeyDown(KeyCode.Alpha2))
-            TryChangeColor(PlayerColorState.Blue, Color.blue, "Blue", ref IsBlue);
+            TryChangeColor(PlayerColorState.Blue, Color.blue, PlayerColorManager.PlayerColorState.Blue, ref IsBlue);
         if (Input.GetKeyDown(KeyCode.Alpha3))
-            TryChangeColor(PlayerColorState.Green, Color.green, "Green", ref IsGreen);
+            TryChangeColor(PlayerColorState.Green, Color.green, PlayerColorManager.PlayerColorState.Green, ref IsGreen);
+
     }
 
-    private void TryChangeColor(PlayerColorState newColor, Color unityColor, string colorName, ref bool isCurrentColor)
+    private void TryChangeColor(PlayerColorState newColor, Color unityColor, PlayerColorManager.PlayerColorState colorEnum, ref bool isCurrentColor)
     {
         if (ColorPlayer == newColor) return;
-
+        if (!IsFinishColorChangeCoolTime) return;
         GetComponent<SpriteRenderer>().color = unityColor;
         IsRed = IsBlue = IsGreen = false;
         isCurrentColor = true;
 
         ColorPlayer = newColor;
-        chargeBar.ChangeCoolTime(colorName);
+        //chargeBar.ChangeCoolTime(colorEnum); // enumで呼ぶ
         IsFinishColorChangeCoolTime = false;
         IsColorChangeCoolTime = true;
     }
+
 
     private void CheckAttack()
     {
@@ -195,9 +195,9 @@ public class Playeroperate : MonoBehaviour
         isRunningHitDamageCoroutine = true;
         while ((IsRed && IstouchRed) || (IsBlue && IstouchBlue) || (IsGreen && IstouchGreen))
         {
-           
+
             PlayerHp -= HitDamageOnfloor;
-           
+
             Debug.Log($"残りHP: {PlayerHp}");
             if (PlayerHp <= 0)
             {
@@ -222,21 +222,21 @@ public class Playeroperate : MonoBehaviour
 
         Isfly = true; // 風で吹き飛ばされる状態にする
         rb2d.AddForce(new Vector2(0, flywindVerticalAmount), ForceMode2D.Impulse); // 風のダメージで上に吹き飛ばす
-       
-     GameObject wind = GameObject.FindGameObjectWithTag("Windy");
+
+        GameObject wind = GameObject.FindGameObjectWithTag("Windy");
         if (wind == null)
         {
             Debug.LogWarning("WindyAttack: Windyタグがついたオブジェクトが見つかりません。");
         }
         if (wind.transform.position.x > transform.position.x)
         {
-       
+
             Debug.Log("風が右側にいるので右方向に力を加えます。");
             rb2d.AddForce(new Vector2(-Mathf.Abs(flywindHorizontalAmount), 0), ForceMode2D.Impulse);
         }
         else
         {
-          
+
             Debug.Log("風が左側にいるので左方向に力を加えます。");
             rb2d.AddForce(new Vector2(Mathf.Abs(flywindHorizontalAmount), 0), ForceMode2D.Impulse);
         }
@@ -260,7 +260,7 @@ public class Playeroperate : MonoBehaviour
         {
             IsJump = false;
             IsGround = true;
-          
+
 
             IstouchRed = collision.CompareTag("Redfloor");
             IstouchBlue = collision.CompareTag("Bluefloor");
@@ -270,7 +270,7 @@ public class Playeroperate : MonoBehaviour
                 StartCoroutine(HitDamageGrond());
         }
 
-     
+
     }
 
     private void OnTriggerStay2D(Collider2D collision)
