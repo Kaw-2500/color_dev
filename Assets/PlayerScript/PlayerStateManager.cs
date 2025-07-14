@@ -9,7 +9,7 @@ public class PlayerStateManager : MonoBehaviour
     [SerializeField] private Talksystem talksystem;
     [SerializeField]private PlayerColorManager playerColorManager;
 
-    [SerializeField] private float playerHp;
+    [SerializeField] public float playerHp;
 
      PlayerbioState playerbioState = PlayerbioState.alive;
 

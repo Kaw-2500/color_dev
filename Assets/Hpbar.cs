@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class Hpbar : MonoBehaviour
 {
-    [SerializeField] private PlayerStateManager playerStateManager;  // Playeroperateコンポーネントの参照
+    [SerializeField] private PlayerStateManager playerStateManager; 
     [SerializeField] private Slider hpSlider;              // HPバーのSlider
 
     private float maxHp;
@@ -12,15 +12,13 @@ public class Hpbar : MonoBehaviour
     {
         if (playerStateManager == null)
         {
-            Debug.LogError("Hpbar: playerOperate がアサインされていません。");
-            enabled = false;
+            Debug.LogError("Hpbar: playerOperate がアサインされていません。");   
             return;
         }
 
         if (hpSlider == null)
         {
             Debug.LogError("Hpbar: hpSlider がアサインされていません。");
-            enabled = false;
             return;
         }
 
