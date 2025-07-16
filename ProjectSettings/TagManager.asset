@@ -12,6 +12,9 @@ TagManager:
   - Greenfloor
   - Enemy
   - Windy
+  - Chargethunder
+  - Greencross
+  - Fireball
   layers:
   - Default
   - TransparentFX

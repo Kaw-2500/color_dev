@@ -1,4 +1,5 @@
 using UnityEngine;
+using static PlayerStateManager;
 
 public class PlayerStateManager : MonoBehaviour
     //statusクラスの情報をまとめて、bool,floatなどの値を管理するクラス
@@ -8,14 +9,15 @@ public class PlayerStateManager : MonoBehaviour
     [SerializeField] private Rigidbody2D rb2d;
     [SerializeField] private Talksystem talksystem;
     [SerializeField]private PlayerColorManager playerColorManager;
+    [SerializeField] private EventManager eventManager;
 
     [SerializeField] public float playerHp;
 
-     PlayerbioState playerbioState = PlayerbioState.alive;
+ public   PlayerBioState playerBioState = PlayerBioState.Alive;
 
     TouchGroundColor touchGroundColor = TouchGroundColor.natural;
 
-    public bool IsDead => playerbioState == PlayerbioState.dead;
+    public bool IsDead => playerBioState == PlayerBioState.Dead;
 
 
     public TouchGroundColor CurrentTouchGroundColor => touchGroundColor;
@@ -29,10 +31,10 @@ public class PlayerStateManager : MonoBehaviour
     private bool isBlown = false;
     public bool IsBlown => isBlown;
 
-  public   enum PlayerbioState
+    public enum PlayerBioState
     {
-        alive,
-        dead
+        Alive,
+        Dead
     }
 
     public enum TouchGroundColor
@@ -76,13 +78,14 @@ public class PlayerStateManager : MonoBehaviour
 
         if (playerHp <= 0f)
         {
-            playerbioState = PlayerbioState.dead;
+            playerBioState = PlayerBioState.Dead;
             Debug.Log("Player is dead");
+            eventManager.Deadevent(); 
             // 死亡時の処理
         }
         else
         {
-            playerbioState = PlayerbioState.alive;
+            playerBioState = PlayerBioState.Alive;
             Debug.Log($"Player took damage, remaining HP: {playerHp}");
         }
     }
