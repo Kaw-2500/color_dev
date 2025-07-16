@@ -9,7 +9,7 @@ public class Camerapos : MonoBehaviour
     [SerializeField] float cameradistance = 5f;
     [SerializeField] float cameraSmoothTime = 0.1f;
 
-    bool dead;
+    bool Finisheddeadaction;
 
     private float smoothY;
     private float velocityY;
@@ -38,7 +38,7 @@ public class Camerapos : MonoBehaviour
 
     private void Update()
     {
-        if (!dead) return;
+        if (!Finisheddeadaction) return;
 
         transform.position = new Vector3(
             playerTransform.position.x,
@@ -110,6 +110,6 @@ public class Camerapos : MonoBehaviour
         );
         transform.position = finalPos;
         mainCamera.orthographicSize = targetOrthoSize;
-        dead = true; // 死亡時のカメラズームが完了したことを示すフラグを設定
+        Finisheddeadaction = true; // 死亡時のカメラズームが完了したことを示すフラグを設定
     }
 }

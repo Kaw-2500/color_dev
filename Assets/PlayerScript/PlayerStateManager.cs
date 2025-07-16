@@ -79,7 +79,7 @@ public class PlayerStateManager : MonoBehaviour
         if (playerHp <= 0f)
         {
             playerBioState = PlayerBioState.Dead;
-            Debug.Log("Player is dead");
+            Debug.Log("Player is Finisheddeadaction");
             eventManager.Deadevent(); 
             // Ž€–SŽž‚Ìˆ—
         }

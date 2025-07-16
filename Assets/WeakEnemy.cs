@@ -7,6 +7,8 @@ public class WeakEnemy : MonoBehaviour
 
     private PlayerRelativePosition playerRelativePosition; // 追加: enumで管理
 
+    [SerializeField] private PlayerStateManager playerStateManager; // プレイヤーの状態を管理するスクリプト
+
     public float attackRange = 1.5f; // 攻撃範囲
     [SerializeField] private float chaseRange = 20f; // 追跡範囲
     [SerializeField] private float weakEnemyMaxSpeed = 5f; // 弱い敵の最高速度
@@ -48,6 +50,8 @@ public class WeakEnemy : MonoBehaviour
 
     private void Update()
     {
+        if (playerStateManager.IsDead) return;
+
         CheckPlayerDirection();
         UpdateState();
         CheckClimbCondition();
@@ -55,6 +59,8 @@ public class WeakEnemy : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (playerStateManager.IsDead) return;
+
         MoveWeakEnemy(); // ここで物理処理
     }
 
