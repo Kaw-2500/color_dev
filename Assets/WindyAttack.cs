@@ -1,35 +1,22 @@
 using UnityEngine;
 
-// 敵が一定間隔でWindy（風弾）をプレイヤー方向へ攻撃するスクリプト
 public class WindyAttack : MonoBehaviour
 {
-    [SerializeField] private Enemy enemy;
+    private Rigidbody2D rb2d;
+    private Vector2 force;
 
-    Rigidbody2D rb2d;
-    void Start()
+    void Awake()
     {
         rb2d = GetComponent<Rigidbody2D>();
-        ShootWindy();
     }
 
-    void Update()
+    void Start()
     {
-       
+        rb2d.AddForce(force, ForceMode2D.Impulse);
     }
 
-    void ShootWindy()
+    public void SetForce(Vector2 f)
     {
-        switch (enemy.GetPlayerRelativePosition())
-        {
-            case Enemy.PlayerRelativePosition.NearRight:
-            case Enemy.PlayerRelativePosition.Right:
-                rb2d.AddForce(Vector2.right * enemy.GetNormalAttackForce(), ForceMode2D.Impulse);
-                break;
-
-            case Enemy.PlayerRelativePosition.NearLeft:
-            case Enemy.PlayerRelativePosition.Left:
-                rb2d.AddForce(Vector2.left * enemy.GetNormalAttackForce(), ForceMode2D.Impulse);
-                break;
-        }
+        force = f;
     }
 }

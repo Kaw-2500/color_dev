@@ -17,20 +17,22 @@ public class EnemyAttack : IAttackable // ◆SRP: IAttackableインターフェースを実
 
         Vector3 spawnPos = enemy.transform.position;
         float offsetX = 0f;
+        Vector2 force = Vector2.zero;
 
         switch (enemy.GetPlayerRelativePosition())
         {
             case Enemy.PlayerRelativePosition.NearRight:
             case Enemy.PlayerRelativePosition.Right:
                 offsetX = enemy.GetNormalAttackOffsetX();
+                force = Vector2.right * enemy.GetNormalAttackForce();
                 break;
             case Enemy.PlayerRelativePosition.NearLeft:
             case Enemy.PlayerRelativePosition.Left:
                 offsetX = -enemy.GetNormalAttackOffsetX();
+                force = Vector2.left * enemy.GetNormalAttackForce();
                 break;
             default:
-                offsetX = 0f;
-                Debug.LogWarning("EnemyAttack: プレイヤーの位置が不明です。攻撃位置を中央に設定します。");
+                Debug.LogWarning("EnemyAttack: プレイヤーの位置が不明");
                 break;
         }
 
@@ -38,6 +40,11 @@ public class EnemyAttack : IAttackable // ◆SRP: IAttackableインターフェースを実
 
         GameObject attackInstance = Object.Instantiate(normalAttackPrefab, spawnPos, Quaternion.identity);
 
-     
+        WindyAttack windy = attackInstance.GetComponent<WindyAttack>();
+        if (windy != null)
+        {
+            windy.SetForce(force);
+        }
     }
+
 }
