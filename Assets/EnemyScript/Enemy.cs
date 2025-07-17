@@ -27,7 +27,7 @@ public class Enemy : MonoBehaviour // MonoBehaviourを継承し、UnityのGameObjectに
 
         // ◆SRP & OOP: 具体的な実装クラス（EnemyMovement, EnemyAttack）をインスタンス化し、インターフェース型で保持
         movable = new EnemyMovement(rb2d, enemyData.moveForce, enemyData.maxSpeed);
-        attacker = new EnemyAttack();
+        attacker = new EnemyAttack(enemyData.NormalAttackPrefab,this);
 
         // ◆SRP & OOP: 状態マネージャーのインスタンス化。Enemyの状態遷移の責任を持つ
         stateManager = new EnemyStateManager(this);
@@ -91,9 +91,14 @@ public class Enemy : MonoBehaviour // MonoBehaviourを継承し、UnityのGameObjectに
     public bool IsClimbing() => isClimbing;
     public bool IsWallUnder() => isWallUnder;
     public float GetAttackRange() => enemyData.attackRange;
-
     public float GetAttackCooldown() => enemyData.attackCooldown; 
     public float GetChaseRange() => enemyData.chaseRange;
+
+    public float GetNormalAttackForce() => enemyData.normalAttackForce; 
+
+    public float GetNormalAttackOffsetX() => enemyData.normalAttackOffsetX; // 通常攻撃のXオフセットを取得
     public IMovable GetMovable() => movable;
     public IAttackable GetAttacker() => attacker;
+
+
 }
