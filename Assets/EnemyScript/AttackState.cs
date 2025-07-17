@@ -4,16 +4,15 @@ public class AttackState : IEnemyState // ŸSRP: “G‚ÌuUŒ‚vó‘Ô‚Ì‹ï‘Ì“I‚ÈƒƒWƒ
 {
     private EnemyStateManager manager;
     private Enemy enemy => manager.GetEnemy();
-    private float attackCooldown = 1f; // UŒ‚ƒN[ƒ‹ƒ_ƒEƒ“
-    private float timer = 0f; // UŒ‚ƒ^ƒCƒ}[
+
+    private float timer = 0f; // ƒNƒ‰ƒXƒtƒB[ƒ‹ƒh‚Æ‚µ‚Ä•ÛŽ
+    private float CoolDowntimer => manager.GetEnemy().GetAttackCooldown();
 
     public AttackState(EnemyStateManager manager) => this.manager = manager;
 
     public void EnterState()
     {
-        timer = 0;
         enemy.GetMovable().Stop(); // UŒ‚’†‚ÍˆÚ“®‚ð’âŽ~
-        enemy.GetAttacker().Attack(); // ŸOOP: IAttackableƒCƒ“ƒ^[ƒtƒF[ƒXŒo—R‚ÅUŒ‚‚ðŽÀs
     }
 
     public void UpdateState()
@@ -21,8 +20,13 @@ public class AttackState : IEnemyState // ŸSRP: “G‚ÌuUŒ‚vó‘Ô‚Ì‹ï‘Ì“I‚ÈƒƒWƒ
         timer += Time.deltaTime;
         float dist = Vector2.Distance(enemy.transform.position, enemy.GetPlayer().position);
 
-        if (timer > attackCooldown && dist > enemy.GetAttackRange()) // ƒN[ƒ‹ƒ_ƒEƒ“‚ªI‚í‚èAUŒ‚”ÍˆÍŠO‚Éo‚½‚ç
-            manager.SetState(new ChaseState(manager)); // ’ÇÕó‘Ô‚É–ß‚é
+        if (dist > enemy.GetAttackRange()) // ƒN[ƒ‹ƒ_ƒEƒ“‚ªI‚í‚èAUŒ‚”ÍˆÍŠO‚Éo‚½‚ç
+            manager.SetState(new ChaseState(manager)); 
+        else if (timer >= CoolDowntimer)
+        {
+            timer = 0;
+            enemy.GetAttacker().Attack(); 
+        }
     }
 
     public void ExitState() { }

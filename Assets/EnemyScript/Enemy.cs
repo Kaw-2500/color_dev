@@ -5,19 +5,12 @@ public class Enemy : MonoBehaviour // MonoBehaviourを継承し、UnityのGameObjectに
     private Rigidbody2D rb2d;
     private Transform player;
 
+    [SerializeField] EnemyData enemyData; // Enemyのデータを保持するクラス
+
     [SerializeField] private PlayerStateManager playerStateManager;
 
-    [Header("設定値")]
-    [SerializeField] private float attackRange = 1.5f;
-    [SerializeField] private float chaseRange = 20f;
-    [SerializeField] private float maxSpeed = 5f;
-    [SerializeField] private float moveForce = 10f;
 
-    [Header("登り判定")]
-    [SerializeField] private float rightRayLength = 0.5f;
-    [SerializeField] private float leftRayLength = 0.5f;
-    [SerializeField] private bool isClimbing = false;
-
+    private bool isClimbing = false;
     private bool isWallUnder;
     private EnemyStateManager stateManager; //Enemyの「状態管理」という責任をEnemyStateManagerクラスに委譲
 
@@ -33,7 +26,7 @@ public class Enemy : MonoBehaviour // MonoBehaviourを継承し、UnityのGameObjectに
         player = GameObject.FindGameObjectWithTag("Player").transform;
 
         // ◆SRP & OOP: 具体的な実装クラス（EnemyMovement, EnemyAttack）をインスタンス化し、インターフェース型で保持
-        movable = new EnemyMovement(rb2d, moveForce, maxSpeed);
+        movable = new EnemyMovement(rb2d, enemyData.moveForce, enemyData.maxSpeed);
         attacker = new EnemyAttack();
 
         // ◆SRP & OOP: 状態マネージャーのインスタンス化。Enemyの状態遷移の責任を持つ
@@ -63,7 +56,7 @@ public class Enemy : MonoBehaviour // MonoBehaviourを継承し、UnityのGameObjectに
         float distanceX = Mathf.Abs(dx);
         bool isRight = dx >= 0;
 
-        if (distanceX <= attackRange)
+        if (distanceX <= enemyData.attackRange)
             playerRelativePosition = isRight ? PlayerRelativePosition.NearRight : PlayerRelativePosition.NearLeft;
         else
             playerRelativePosition = isRight ? PlayerRelativePosition.Right : PlayerRelativePosition.Left;
@@ -77,8 +70,8 @@ public class Enemy : MonoBehaviour // MonoBehaviourを継承し、UnityのGameObjectに
         float height = 0.95f;
         Vector3 basePos = transform.position;
 
-        RaycastHit2D hitRight = Physics2D.Raycast(basePos + new Vector3(0.4f, -height / 2f), Vector2.right, rightRayLength, LayerMask.GetMask("floor"));
-        RaycastHit2D hitLeft = Physics2D.Raycast(basePos + new Vector3(-0.4f, -height / 2f), Vector2.left, leftRayLength, LayerMask.GetMask("floor"));
+        RaycastHit2D hitRight = Physics2D.Raycast(basePos + new Vector3(0.4f, -height / 2f), Vector2.right, enemyData.rightRayLength, LayerMask.GetMask("floor"));
+        RaycastHit2D hitLeft = Physics2D.Raycast(basePos + new Vector3(-0.4f, -height / 2f), Vector2.left, enemyData.leftRayLength, LayerMask.GetMask("floor"));
 
         if (playerRelativePosition == PlayerRelativePosition.Right && hitRight.collider != null)
             isClimbing = true;
@@ -88,8 +81,8 @@ public class Enemy : MonoBehaviour // MonoBehaviourを継承し、UnityのGameObjectに
         if (hitRight.collider != null || hitLeft.collider != null)
             isWallUnder = true;
 
-        Debug.DrawRay(basePos + new Vector3(0.4f, -height / 2f), Vector2.right * rightRayLength, Color.red);
-        Debug.DrawRay(basePos + new Vector3(-0.4f, -height / 2f), Vector2.left * leftRayLength, Color.blue);
+        Debug.DrawRay(basePos + new Vector3(0.4f, -height / 2f), Vector2.right * enemyData.rightRayLength, Color.red);
+        Debug.DrawRay(basePos + new Vector3(-0.4f, -height / 2f), Vector2.left * enemyData.leftRayLength, Color.blue);
     }
 
     // 状態クラス向けのアクセサ（カプセル化された情報を状態クラスに提供）
@@ -97,8 +90,10 @@ public class Enemy : MonoBehaviour // MonoBehaviourを継承し、UnityのGameObjectに
     public PlayerRelativePosition GetPlayerRelativePosition() => playerRelativePosition;
     public bool IsClimbing() => isClimbing;
     public bool IsWallUnder() => isWallUnder;
-    public float GetAttackRange() => attackRange;
-    public float GetChaseRange() => chaseRange;
+    public float GetAttackRange() => enemyData.attackRange;
+
+    public float GetAttackCooldown() => enemyData.attackCooldown; 
+    public float GetChaseRange() => enemyData.chaseRange;
     public IMovable GetMovable() => movable;
     public IAttackable GetAttacker() => attacker;
 }
