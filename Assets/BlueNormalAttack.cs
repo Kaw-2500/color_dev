@@ -1,3 +1,4 @@
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -6,6 +7,9 @@ public class BlueNormalAttack : MonoBehaviour
 
     //[SerializeField] private EventManager eventManager; // EventManagerの参照  
 
+    private bool Attacked = false;
+
+    private PlayerColorManager playerColorManager;
 
     Rigidbody2D rb2d;
     [SerializeField] bool Isfncharge = false;
@@ -28,6 +32,7 @@ public class BlueNormalAttack : MonoBehaviour
 
         Playerobj = GameObject.FindWithTag("Player"); // プレイヤーオブジェクトを取得
 
+        playerColorManager = GameObject.FindWithTag("Player").GetComponent<PlayerColorManager>();
 
         rb2d = GetComponent<Rigidbody2D>(); 
         Stucktimer = 0; // タイマーをリセット
@@ -108,7 +113,12 @@ public class BlueNormalAttack : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            Destroy(collision.gameObject);
+            Enemy enemy = collision.gameObject.GetComponent<Enemy>();
+            if (Attacked) return;
+            Debug.Log("青通常攻撃敵に当たった！");
+            enemy.ApplyDamage(playerColorManager.GetCurrentData().NormalAttackPower);
+            Attacked = true; // 一度攻撃したらフラグを立てる
+
         }
         else if (collision.gameObject.CompareTag("Player"))
         {

@@ -8,8 +8,9 @@ public class Enemy : MonoBehaviour // MonoBehaviourを継承し、UnityのGameObjectに
     [SerializeField] EnemyData enemyData; // Enemyのデータを保持するクラス
 
     [SerializeField] private PlayerStateManager playerStateManager;
+    [SerializeField] private HitDamage hitdamage;
 
-
+  
     private bool isClimbing = false;
     private bool isWallUnder;
     private EnemyStateManager stateManager; //Enemyの「状態管理」という責任をEnemyStateManagerクラスに委譲
@@ -60,6 +61,11 @@ public class Enemy : MonoBehaviour // MonoBehaviourを継承し、UnityのGameObjectに
             playerRelativePosition = isRight ? PlayerRelativePosition.NearRight : PlayerRelativePosition.NearLeft;
         else
             playerRelativePosition = isRight ? PlayerRelativePosition.Right : PlayerRelativePosition.Left;
+
+        Debug.Log($"playerRelativePosition: {playerRelativePosition}");
+        Debug.Log($"isClimbing: {isClimbing}");
+
+
     }
 
     private void UpdateClimbCondition()
@@ -73,9 +79,9 @@ public class Enemy : MonoBehaviour // MonoBehaviourを継承し、UnityのGameObjectに
         RaycastHit2D hitRight = Physics2D.Raycast(basePos + new Vector3(0.4f, -height / 2f), Vector2.right, enemyData.rightRayLength, LayerMask.GetMask("floor"));
         RaycastHit2D hitLeft = Physics2D.Raycast(basePos + new Vector3(-0.4f, -height / 2f), Vector2.left, enemyData.leftRayLength, LayerMask.GetMask("floor"));
 
-        if (playerRelativePosition == PlayerRelativePosition.Right && hitRight.collider != null)
+        if ((playerRelativePosition == PlayerRelativePosition.Right || playerRelativePosition == PlayerRelativePosition.NearRight) && hitRight.collider != null)
             isClimbing = true;
-        else if (playerRelativePosition == PlayerRelativePosition.Left && hitLeft.collider != null)
+        else if ((playerRelativePosition == PlayerRelativePosition.Left || playerRelativePosition == PlayerRelativePosition.NearLeft) && hitLeft.collider != null)
             isClimbing = true;
 
         if (hitRight.collider != null || hitLeft.collider != null)
@@ -83,6 +89,14 @@ public class Enemy : MonoBehaviour // MonoBehaviourを継承し、UnityのGameObjectに
 
         Debug.DrawRay(basePos + new Vector3(0.4f, -height / 2f), Vector2.right * enemyData.rightRayLength, Color.red);
         Debug.DrawRay(basePos + new Vector3(-0.4f, -height / 2f), Vector2.left * enemyData.leftRayLength, Color.blue);
+
+        //Debug.Log($"RightHit: {(hitRight.collider != null)} / LeftHit: {(hitLeft.collider != null)}");
+    }
+
+    public void ApplyDamage(float damage)
+    {
+        enemyData.EnemyHp -= hitdamage.HitAttackDamage(damage); 
+        Debug.Log($"敵が被弾, remaining HP: {enemyData.EnemyHp}");
     }
 
     // 状態クラス向けのアクセサ（カプセル化された情報を状態クラスに提供）

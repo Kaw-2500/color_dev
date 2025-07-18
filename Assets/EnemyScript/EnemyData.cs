@@ -15,5 +15,7 @@ public class EnemyData : ScriptableObject
     public float rightRayLength = 0.5f;
     public float leftRayLength = 0.5f;
 
+    public float EnemyHp = 100f; // “G‚ÌHP
+
     public GameObject NormalAttackPrefab;
 }

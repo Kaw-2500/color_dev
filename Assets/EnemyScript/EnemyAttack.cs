@@ -41,6 +41,10 @@ public class EnemyAttack : IAttackable // ◆SRP: IAttackableインターフェースを実
         GameObject attackInstance = Object.Instantiate(normalAttackPrefab, spawnPos, Quaternion.identity);
 
         WindyAttack windy = attackInstance.GetComponent<WindyAttack>();
+        if (windy == null)
+        {
+         Debug.LogWarning("EnemyAttack: WindyAttackコンポーネントが見つかりません。攻撃が正しく機能しない可能性があります。");
+        }
         if (windy != null)
         {
             windy.SetForce(force);

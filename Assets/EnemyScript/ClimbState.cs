@@ -20,7 +20,8 @@ public class ClimbState : IEnemyState, IEnemyPhysicsState // ◆SRP: 敵の「登り」
     public void FixedUpdateState()
     {
         if (enemy.IsWallUnder()) // 足元に壁がある場合
-            enemy.GetMovable().Move(Vector2.up * 0.15f); // ◆OOP: IMovableインターフェース経由で上方向に移動
+            enemy.GetMovable().Move(Vector2.up); // ◆OOP: IMovableインターフェース経由で上方向に移動
+        Debug.Log($"ClimbState FixedUpdateState called. isClimbing={enemy.IsClimbing()}, isWallUnder={enemy.IsWallUnder()}");
     }
 
     public void ExitState() => enemy.GetMovable().Stop(); // 状態を抜けるときに移動を停止

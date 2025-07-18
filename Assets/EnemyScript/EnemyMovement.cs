@@ -13,17 +13,27 @@ public class EnemyMovement : IMovable // ◆SRP: IMovableインターフェー�
         this.maxSpeed = maxSpeed;
     }
 
-    public void Move(Vector2 direction) // IMovableインターフェースのMoveメソッドの実装
+    public void Move(Vector2 direction)
     {
-        float speed = Mathf.Abs(rb.linearVelocity.x);
-        if (speed < maxSpeed)
-            rb.AddForce(new Vector2(force * Mathf.Sign(direction.x), 0), ForceMode2D.Force);
+           if (direction == Vector2.up)
+        {
+            rb.AddForce(Vector2.up * force * 10, ForceMode2D.Force);
+        }
 
-        // 敵の向きを移動方向に応じて変更
-        Vector3 scale = rb.transform.localScale;
-        scale.x = Mathf.Sign(direction.x);
-        rb.transform.localScale = scale;
+        // 最大速度チェック（縦 or 横）
+        if (rb.linearVelocity.magnitude < maxSpeed)
+            rb.AddForce(direction.normalized * force, ForceMode2D.Force);
+
+        // 左右移動のときだけ向きを変える
+        if (Mathf.Abs(direction.x) > 0.01f)
+        {
+            Vector3 scale = rb.transform.localScale;
+            scale.x = Mathf.Sign(direction.x);
+            rb.transform.localScale = scale;
+        }
     }
 
-    public void Stop() => rb.linearVelocity = new Vector2(rb.linearVelocity.x * 0.9f, rb.linearVelocity.y); // IMovableインターフェースのStopメソッドの実装
+
+    public void Stop() =>     rb.linearVelocity = new Vector2(rb.linearVelocity.x * 0.9f, rb.linearVelocity.y);
+
 }

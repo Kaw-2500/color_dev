@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class EnemyStateManager // ŸSRP: “G‚Ìuó‘Ô‘JˆÚv‚ÆuŒ»İ‚Ìó‘Ô‚ÌŠÇ—v‚Ì‚İ‚ÉÓ”C‚ğ‚Â
 {
     private IEnemyState currentState; // ŸOOP: ƒCƒ“ƒ^[ƒtƒF[ƒXŒ^‚Åó‘Ô‚ğ•Û‚µA‹ï‘Ì“I‚Èó‘ÔƒNƒ‰ƒX‚ÉˆË‘¶‚µ‚È‚¢
@@ -10,6 +12,7 @@ public class EnemyStateManager // ŸSRP: “G‚Ìuó‘Ô‘JˆÚv‚ÆuŒ»İ‚Ìó‘Ô‚ÌŠÇ—v‚
 
     public void SetState(IEnemyState newState) // ŸSRP: ó‘Ô‚ÌØ‚è‘Ö‚¦ƒƒWƒbƒN‚ğW–ñ
     {
+        //Debug.Log($"State changed from {currentState?.GetType().Name ?? "null"} to {newState.GetType().Name}");
         currentState?.ExitState(); // Œ»İ‚Ìó‘Ô‚ÌI—¹ˆ—‚ğŒÄ‚Ño‚·
         currentState = newState; // V‚µ‚¢ó‘Ô‚Éİ’è
         currentState.EnterState(); // V‚µ‚¢ó‘Ô‚ÌŠJnˆ—‚ğŒÄ‚Ño‚·

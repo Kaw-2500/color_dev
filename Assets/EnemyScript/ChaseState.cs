@@ -12,12 +12,15 @@ public class ChaseState : IEnemyState, IEnemyPhysicsState // ŸSRP: “G‚Ìu’ÇÕv
     public void UpdateState()
     {
         float dist = Vector2.Distance(enemy.transform.position, enemy.GetPlayer().position);
+        //Debug.Log($"ChaseState UpdateState called. dist={dist}, isClimbing={enemy.IsClimbing()}");
 
-        if (dist <= enemy.GetAttackRange()) // UŒ‚”ÍˆÍ“à‚É“ü‚Á‚½‚ç
-            manager.SetState(new AttackState(manager));
-        else if (enemy.IsClimbing()) // “o‚èğŒ‚ğ–‚½‚µ‚½‚ç
+        if (enemy.IsClimbing())
+        {
             manager.SetState(new ClimbState(manager));
-        else if (dist > enemy.GetChaseRange()) // ’ÇÕ”ÍˆÍŠO‚Éo‚½‚ç
+        }
+        else if (dist <= enemy.GetAttackRange())
+            manager.SetState(new AttackState(manager));
+        else if (dist > enemy.GetChaseRange())
             manager.SetState(new IdleState(manager));
     }
 

@@ -3,11 +3,15 @@ using UnityEngine;
 public class Fireball : MonoBehaviour
 {
 
-    [SerializeField] private EventManager eventManager; // EventManagerの参照  
+  private EventManager eventManager; // EventManagerの参照  
 
     [SerializeField]private float startxpos = 0.9f; // プレイヤーとの距離を調整するためのX座標の微調整
 
+ private PlayerColorManager playerColorManager;
+
     public float speed = 10f;
+
+    private bool Attacked = false;
 
     public float timer;
     public float destroyTime = 5f; // �΂̋ʂ̎���
@@ -21,7 +25,7 @@ public class Fireball : MonoBehaviour
 
       
 
-
+        playerColorManager = GameObject.FindWithTag("Player").GetComponent<PlayerColorManager>();
         eventManager = GameObject.Find("EventManager").GetComponent<EventManager>();
         if (eventManager == null)
         {
@@ -42,8 +46,8 @@ public class Fireball : MonoBehaviour
 
         if (timer >= destroyTime)
         {
-            timer = 0; // �^�C�}�[�����Z�b�g
-            Destroy(this.gameObject); // �w�莞�Ԍ�ɉ΂̋ʂ�����
+            timer = 0;
+            Destroy(this.gameObject); 
         }
     }
 
@@ -51,7 +55,13 @@ public class Fireball : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            Destroy(collision.gameObject);
+       Enemy enemy =  collision.gameObject.GetComponent<Enemy>();
+            if (Attacked) return;
+
+            Debug.Log("Fireball hit an enemy: " + enemy.name);
+            enemy.ApplyDamage(playerColorManager.GetCurrentData().NormalAttackPower);
+            Attacked = true; // 一度攻撃したらフラグを立てる
+
         }
         else if (collision.gameObject.CompareTag("Player"))
         {
