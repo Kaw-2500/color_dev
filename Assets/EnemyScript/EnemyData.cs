@@ -11,6 +11,8 @@ public class EnemyData : ScriptableObject
 
     public float normalAttackOffsetX = 0.5f; // 生成時のX軸オフセット
 
+    public float normalAttackOffsetY = 1.5f; 
+
     public float normalAttackForce = 5f; 
     public float rightRayLength = 0.5f;
     public float leftRayLength = 0.5f;

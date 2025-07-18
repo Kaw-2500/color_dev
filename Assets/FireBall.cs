@@ -63,10 +63,6 @@ public class Fireball : MonoBehaviour
             Attacked = true; // 一度攻撃したらフラグを立てる
 
         }
-        else if (collision.gameObject.CompareTag("Player"))
-        {
-          //何もしない
-        }
         else
         {
             Destroy(this.gameObject);

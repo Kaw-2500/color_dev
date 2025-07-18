@@ -1,22 +1,20 @@
 using UnityEngine;
 
-public class WindyAttack : MonoBehaviour
+public class WindyAttack : MonoBehaviour, IAttackComponent
 {
     private Rigidbody2D rb2d;
-    private Vector2 force;
 
-    void Awake()
+    private void Awake()
     {
         rb2d = GetComponent<Rigidbody2D>();
     }
 
-    void Start()
+    public void Init(Vector2 direction, float force, float yOffset)
     {
-        rb2d.AddForce(force, ForceMode2D.Impulse);
+        rb2d.position = new Vector2(rb2d.position.x, rb2d.position.y + yOffset);
+
+        rb2d.AddForce(direction.normalized * force, ForceMode2D.Impulse);
     }
 
-    public void SetForce(Vector2 f)
-    {
-        force = f;
-    }
+
 }

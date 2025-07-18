@@ -49,6 +49,13 @@ public class WindyFadeout : MonoBehaviour
         }
     }
 
+    private void UpYpos()//animationから呼び出す。なぜなら
+    //途中でanimationが少し大きくなるので、床に添わせるようにするためです、
+    {
+     Rigidbody2D rb2d = GetComponent<Rigidbody2D>();
+     rb2d.position = new Vector2(rb2d.position.x, rb2d.position.y + 2.8f); // Y座標を0.2上げる
+    }
+
 
     private void OnCollisionEnter2D(Collision2D collision)
     {

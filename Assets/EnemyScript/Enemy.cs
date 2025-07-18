@@ -10,6 +10,7 @@ public class Enemy : MonoBehaviour // MonoBehaviourを継承し、UnityのGameObjectに
     [SerializeField] private PlayerStateManager playerStateManager;
     [SerializeField] private HitDamage hitdamage;
 
+    private float CurrentHp;
   
     private bool isClimbing = false;
     private bool isWallUnder;
@@ -23,6 +24,8 @@ public class Enemy : MonoBehaviour // MonoBehaviourを継承し、UnityのGameObjectに
 
     void Start()
     {
+        CurrentHp = enemyData.EnemyHp; // 初期HPを設定
+
         rb2d = GetComponent<Rigidbody2D>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
 
@@ -62,8 +65,8 @@ public class Enemy : MonoBehaviour // MonoBehaviourを継承し、UnityのGameObjectに
         else
             playerRelativePosition = isRight ? PlayerRelativePosition.Right : PlayerRelativePosition.Left;
 
-        Debug.Log($"playerRelativePosition: {playerRelativePosition}");
-        Debug.Log($"isClimbing: {isClimbing}");
+        //Debug.Log($"playerRelativePosition: {playerRelativePosition}");
+        //Debug.Log($"isClimbing: {isClimbing}");
 
 
     }
@@ -95,8 +98,8 @@ public class Enemy : MonoBehaviour // MonoBehaviourを継承し、UnityのGameObjectに
 
     public void ApplyDamage(float damage)
     {
-        enemyData.EnemyHp -= hitdamage.HitAttackDamage(damage); 
-        Debug.Log($"敵が被弾, remaining HP: {enemyData.EnemyHp}");
+        CurrentHp -= hitdamage.HitAttackDamage(damage); 
+        Debug.Log($"敵が被弾, remaining HP: {CurrentHp}");
     }
 
     // 状態クラス向けのアクセサ（カプセル化された情報を状態クラスに提供）
@@ -110,6 +113,8 @@ public class Enemy : MonoBehaviour // MonoBehaviourを継承し、UnityのGameObjectに
 
     public float GetNormalAttackForce() => enemyData.normalAttackForce; 
 
+ 
+    public float GetNormalAttackOffsetY() => enemyData.normalAttackOffsetY; // 通常攻撃のYオフセットを取得   
     public float GetNormalAttackOffsetX() => enemyData.normalAttackOffsetX; // 通常攻撃のXオフセットを取得
     public IMovable GetMovable() => movable;
     public IAttackable GetAttacker() => attacker;

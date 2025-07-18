@@ -133,7 +133,6 @@ public class BlueNormalAttack : MonoBehaviour
         }
         else
         {
-            Destroy(this.gameObject);
         }
     }
 }
