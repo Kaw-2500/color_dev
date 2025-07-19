@@ -17,13 +17,11 @@ public class YellowSlashManager : MonoBehaviour , IAttackComponent
     {
         
     }
-    public void Init(Vector2 direction, float force, float yOffset)
+    public void Init(Vector2 direction, float force, float yOffset, float damage)
     {
         rb2d.position = new Vector2(rb2d.position.x, rb2d.position.y + yOffset);
-
         rb2d.AddForce(direction.normalized * force, ForceMode2D.Impulse);
-
-        Debug.Log($"yellow: YellowSlashManager initialized with direction: {direction}, force: {force}, yOffset: {yOffset}");
+            damageAmount = damage;
     }
 
 

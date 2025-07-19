@@ -19,5 +19,7 @@ public class EnemyData : ScriptableObject
 
     public float EnemyHp = 100f; // “G‚ÌHP
 
+    public float AttackPower = 10f; // “G‚ÌUŒ‚—Í
+
     public GameObject NormalAttackPrefab;
 }

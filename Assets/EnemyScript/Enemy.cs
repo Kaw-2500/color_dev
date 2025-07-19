@@ -22,6 +22,18 @@ public class Enemy : MonoBehaviour
     public enum PlayerRelativePosition { None, Right, Left, NearRight, NearLeft }
     private PlayerRelativePosition playerRelativePosition = PlayerRelativePosition.None;
 
+    private WhiteningStage whiteningStage = WhiteningStage.None;
+
+
+    public enum WhiteningStage
+    {
+        None,
+        Slight,
+        Moderate,
+        Heavy,
+        Complete
+    }
+
     void Start()
     {
         CurrentHp = enemyData.EnemyHp; // 初期HPを設定
@@ -91,11 +103,60 @@ public class Enemy : MonoBehaviour
         //Debug.Log($"RightHit: {(hitRight.collider != null)} / LeftHit: {(hitLeft.collider != null)}");
     }
 
+    private void UpdateWhiteningStage()
+    {
+        float hpRatio = CurrentHp / enemyData.EnemyHp;
+
+        if (hpRatio <= 0f)
+            whiteningStage = WhiteningStage.Complete;
+        else if (hpRatio <= 0.25f)
+            whiteningStage = WhiteningStage.Heavy;
+        else if (hpRatio <= 0.5f)
+            whiteningStage = WhiteningStage.Moderate;
+        else if (hpRatio <= 0.75f)
+            whiteningStage = WhiteningStage.Slight;
+        else
+            whiteningStage = WhiteningStage.None;
+    }
+
+    public void UpdateWhiteningEffects()
+    {
+        float speedMultiplier = whiteningStage switch
+        {
+            WhiteningStage.None => 1f,
+            WhiteningStage.Slight => 0.8f,
+            WhiteningStage.Moderate => 0.6f,
+            WhiteningStage.Heavy => 0.4f,
+            WhiteningStage.Complete => 0f,
+            _ => 1f,
+        };
+        if (movable is EnemyMovement movementImpl)
+            movementImpl.SetSpeedMultiplier(speedMultiplier);
+
+        float attackMultiplier = whiteningStage switch
+        {
+            WhiteningStage.None => 1f,
+            WhiteningStage.Slight => 0.9f,
+            WhiteningStage.Moderate => 0.7f,
+            WhiteningStage.Heavy => 0.5f,
+            WhiteningStage.Complete => 0f,
+            _ => 1f,
+        };
+        if (attacker is EnemyAttack attackImpl)
+            attackImpl.SetAttackPowerMultiplier(attackMultiplier);
+    }
+
+
     public void ApplyDamage(float damage)
     {
         CurrentHp -= damage;
         Debug.Log($"敵が被弾, remaining HP: {CurrentHp}");
+
+        UpdateWhiteningStage();
+        UpdateWhiteningEffects();
     }
+
+
 
     // 状態クラス向けのアクセサ（カプセル化された情報を状態クラスに提供）
     public Transform GetPlayer() => player;
@@ -113,6 +174,8 @@ public class Enemy : MonoBehaviour
     public float GetNormalAttackOffsetX() => enemyData.normalAttackOffsetX; // 通常攻撃のXオフセットを取得
     public IMovable GetMovable() => movable;
     public IAttackable GetAttacker() => attacker;
+
+    public float GetAttackPower() => enemyData.AttackPower; 
 
 
 }

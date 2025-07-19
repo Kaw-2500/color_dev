@@ -5,12 +5,20 @@ public class EnemyAttack : IAttackable
     private GameObject normalAttackPrefab;
     private Enemy enemy;
     private GameObject instance;
+    private float attackPowerMultiplier = 1f;
+
 
     public EnemyAttack(GameObject prefab, Enemy enemy)
     {
         this.normalAttackPrefab = prefab;
         this.enemy = enemy;
     }
+    public void SetAttackPowerMultiplier(float multiplier)
+    {
+        attackPowerMultiplier = multiplier;
+    }
+
+
 
     public void Attack()
     {
@@ -29,9 +37,13 @@ public class EnemyAttack : IAttackable
             Debug.LogWarning("IAttackComponent‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ");
             return;
         }
+        comp.Init(direction,
+                  enemy.GetNormalAttackForce(),
+                  enemy.GetNormalAttackOffsetY(),
+                  enemy.GetAttackPower() * attackPowerMultiplier);
 
-        comp.Init(direction, enemy.GetNormalAttackForce(), enemy.GetNormalAttackOffsetY());
-        Debug.Log("Enemy Attack!");
+        Debug.Log($"Enemy Attack! Power: {enemy.GetAttackPower() * attackPowerMultiplier}");
+
     }
 
     private Vector2 GetAttackDirection()

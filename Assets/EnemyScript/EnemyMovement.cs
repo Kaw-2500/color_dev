@@ -5,12 +5,19 @@ public class EnemyMovement : IMovable //  IMovableインターフェースを実
     private Rigidbody2D rb;
     private float force;
     private float maxSpeed;
+    private float speedMultiplier = 1f;
+
 
     public EnemyMovement(Rigidbody2D rb, float force, float maxSpeed) // コンストラクタで必要な依存関係
     {
         this.rb = rb;
         this.force = force;
         this.maxSpeed = maxSpeed;
+    }
+
+    public void SetSpeedMultiplier(float multiplier)
+    {
+        speedMultiplier = multiplier;
     }
 
     public void Move(Vector2 direction)
@@ -22,7 +29,7 @@ public class EnemyMovement : IMovable //  IMovableインターフェースを実
 
         // 最大速度チェック（縦 or 横）
         if (rb.linearVelocity.magnitude < maxSpeed)
-            rb.AddForce(direction.normalized * force, ForceMode2D.Force);
+            rb.AddForce(direction.normalized * force * speedMultiplier, ForceMode2D.Force);
 
         // 左右移動のときだけ向きを変える
         if (Mathf.Abs(direction.x) > 0.01f)

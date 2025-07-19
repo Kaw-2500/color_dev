@@ -5,8 +5,6 @@ public class WindyFadeout : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private float fadeDuration;
     private float timer = 0f;
-
-    [SerializeField] private float damageAmount = 10f;
     [SerializeField] private float knockbackForceX = 5f;
     [SerializeField] private float knockbackForceY = 5f;
     [SerializeField] private AnimationClip fadeAnimationClip;
@@ -70,7 +68,9 @@ public class WindyFadeout : MonoBehaviour
 
             Vector2 knockback = new Vector2(directionX * Mathf.Abs(knockbackForceX), knockbackForceY);
 
-            hitDamage.OnHitDamage(damageAmount);
+           WindyAttack windyAttack = collision.gameObject.GetComponent<WindyAttack>();
+
+            hitDamage.OnHitDamage(windyAttack.GetDamage());
             hitDamage.ApplyWindKnockback(knockback);
 
             isAttacked = true;
