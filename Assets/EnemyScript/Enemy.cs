@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Enemy : MonoBehaviour // MonoBehaviourを継承し、UnityのGameObjectにアタッチされるコンポーネント
+public class Enemy : MonoBehaviour 
 {
     private Rigidbody2D rb2d;
     private Transform player;
@@ -8,7 +8,7 @@ public class Enemy : MonoBehaviour // MonoBehaviourを継承し、UnityのGameObjectに
     [SerializeField] EnemyData enemyData; // Enemyのデータを保持するクラス
 
     [SerializeField] private PlayerStateManager playerStateManager;
-    [SerializeField] private HitDamage hitdamage;
+    [SerializeField] private EnemyHitDamage hitdamage;
 
     private float CurrentHp;
   
@@ -29,11 +29,11 @@ public class Enemy : MonoBehaviour // MonoBehaviourを継承し、UnityのGameObjectに
         rb2d = GetComponent<Rigidbody2D>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
 
-        // ◆SRP & OOP: 具体的な実装クラス（EnemyMovement, EnemyAttack）をインスタンス化し、インターフェース型で保持
+        //具体的な実装クラス（EnemyMovement, EnemyAttack）をインスタンス化し、インターフェース型で保持
         movable = new EnemyMovement(rb2d, enemyData.moveForce, enemyData.maxSpeed);
         attacker = new EnemyAttack(enemyData.NormalAttackPrefab,this);
 
-        // ◆SRP & OOP: 状態マネージャーのインスタンス化。Enemyの状態遷移の責任を持つ
+        //状態マネージャーのインスタンス化。Enemyの状態遷移の責任を持つ
         stateManager = new EnemyStateManager(this);
         stateManager.SetState(new IdleState(stateManager)); // 初期状態の設定
     }
@@ -42,16 +42,16 @@ public class Enemy : MonoBehaviour // MonoBehaviourを継承し、UnityのGameObjectに
     {
         if (playerStateManager != null && playerStateManager.IsDead) return;
 
-        // ◆SRP: 各責任（プレイヤー位置更新、登り条件更新）を個別のプライベートメソッドに分割
+        //各責任（プレイヤー位置更新、登り条件更新）を個別のプライベートメソッドに分割
         UpdatePlayerRelativePosition();
         UpdateClimbCondition();
-        stateManager.Update(); // ◆OOP: 状態マネージャーにUpdate処理を委譲
+        stateManager.Update(); //状態マネージャーにUpdate処理を委譲
     }
 
     void FixedUpdate()
     {
         if (playerStateManager != null && playerStateManager.IsDead) return;
-        stateManager.FixedUpdate(); // ◆OOP: 状態マネージャーにFixedUpdate処理を委譲
+        stateManager.FixedUpdate(); //状態マネージャーにFixedUpdate処理を委譲
     }
 
     private void UpdatePlayerRelativePosition()
@@ -64,11 +64,6 @@ public class Enemy : MonoBehaviour // MonoBehaviourを継承し、UnityのGameObjectに
             playerRelativePosition = isRight ? PlayerRelativePosition.NearRight : PlayerRelativePosition.NearLeft;
         else
             playerRelativePosition = isRight ? PlayerRelativePosition.Right : PlayerRelativePosition.Left;
-
-        //Debug.Log($"playerRelativePosition: {playerRelativePosition}");
-        //Debug.Log($"isClimbing: {isClimbing}");
-
-
     }
 
     private void UpdateClimbCondition()
@@ -98,7 +93,7 @@ public class Enemy : MonoBehaviour // MonoBehaviourを継承し、UnityのGameObjectに
 
     public void ApplyDamage(float damage)
     {
-        CurrentHp -= hitdamage.HitAttackDamage(damage); 
+        CurrentHp -= damage;
         Debug.Log($"敵が被弾, remaining HP: {CurrentHp}");
     }
 

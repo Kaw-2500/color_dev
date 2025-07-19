@@ -35,13 +35,17 @@ public class Greencross : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            Enemy enemy = collision.gameObject.GetComponent<Enemy>();
+            EnemyHitDamage enemy = collision.gameObject.GetComponent<EnemyHitDamage>();
             if (Attacked) return;
 
             Debug.Log("Fireball hit an enemy: " + enemy.name);
-            enemy.ApplyDamage(playerColorManager.GetCurrentData().NormalAttackPower);
+            enemy.HitAttackDamageOnEnemy(playerColorManager.GetCurrentData().NormalAttackPower);
             Attacked = true; // ˆê“xUŒ‚‚µ‚½‚çƒtƒ‰ƒO‚ğ—§‚Ä‚é
 
+        }
+        else
+        {
+        
         }
     }
 }

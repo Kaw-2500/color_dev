@@ -4,6 +4,7 @@ public class EnemyAttack : IAttackable
 {
     private GameObject normalAttackPrefab;
     private Enemy enemy;
+    private GameObject instance;
 
     public EnemyAttack(GameObject prefab, Enemy enemy)
     {
@@ -13,12 +14,14 @@ public class EnemyAttack : IAttackable
 
     public void Attack()
     {
-      
-
         var direction = GetAttackDirection();
         var offsetX = direction == Vector2.right ? enemy.GetNormalAttackOffsetX() : -enemy.GetNormalAttackOffsetX();
         var spawnPos = enemy.transform.position + new Vector3(offsetX, 0, 0);
-        var instance = Object.Instantiate(normalAttackPrefab, spawnPos, Quaternion.identity);
+        instance = Object.Instantiate(normalAttackPrefab, spawnPos, Quaternion.identity);
+
+        Vector3 localScale = instance.transform.localScale;
+        localScale.x = direction == Vector2.right ? 1 : -1;
+        instance.transform.localScale = localScale;   
 
         var comp = instance.GetComponent<IAttackComponent>();
         if (comp == null)

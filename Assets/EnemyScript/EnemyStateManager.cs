@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class EnemyStateManager // ŸSRP: “G‚Ìuó‘Ô‘JˆÚv‚ÆuŒ»İ‚Ìó‘Ô‚ÌŠÇ—v‚Ì‚İ‚ÉÓ”C‚ğ‚Â
+public class EnemyStateManager //“G‚Ìuó‘Ô‘JˆÚv‚ÆuŒ»İ‚Ìó‘Ô‚ÌŠÇ—v‚Ì‚İ‚ÉÓ”C‚ğ‚Â
 {
-    private IEnemyState currentState; // ŸOOP: ƒCƒ“ƒ^[ƒtƒF[ƒXŒ^‚Åó‘Ô‚ğ•Û‚µA‹ï‘Ì“I‚Èó‘ÔƒNƒ‰ƒX‚ÉˆË‘¶‚µ‚È‚¢
+    private IEnemyState currentState; //ƒCƒ“ƒ^[ƒtƒF[ƒXŒ^‚Åó‘Ô‚ğ•Û‚µA‹ï‘Ì“I‚Èó‘ÔƒNƒ‰ƒX‚ÉˆË‘¶‚µ‚È‚¢
     private Enemy enemy; // ó‘Ôƒ}ƒl[ƒWƒƒ[‚ª§Œä‚·‚éEnemyƒCƒ“ƒXƒ^ƒ“ƒX
 
     public EnemyStateManager(Enemy enemy) // ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ÅEnemyƒCƒ“ƒXƒ^ƒ“ƒX‚ğó‚¯æ‚é
@@ -10,7 +10,7 @@ public class EnemyStateManager // ŸSRP: “G‚Ìuó‘Ô‘JˆÚv‚ÆuŒ»İ‚Ìó‘Ô‚ÌŠÇ—v‚
         this.enemy = enemy;
     }
 
-    public void SetState(IEnemyState newState) // ŸSRP: ó‘Ô‚ÌØ‚è‘Ö‚¦ƒƒWƒbƒN‚ğW–ñ
+    public void SetState(IEnemyState newState) //ó‘Ô‚ÌØ‚è‘Ö‚¦ƒƒWƒbƒN‚ğW–ñ
     {
         //Debug.Log($"State changed from {currentState?.GetType().Name ?? "null"} to {newState.GetType().Name}");
         currentState?.ExitState(); // Œ»İ‚Ìó‘Ô‚ÌI—¹ˆ—‚ğŒÄ‚Ño‚·
@@ -18,11 +18,11 @@ public class EnemyStateManager // ŸSRP: “G‚Ìuó‘Ô‘JˆÚv‚ÆuŒ»İ‚Ìó‘Ô‚ÌŠÇ—v‚
         currentState.EnterState(); // V‚µ‚¢ó‘Ô‚ÌŠJnˆ—‚ğŒÄ‚Ño‚·
     }
 
-    public void Update() => currentState?.UpdateState(); // ŸOOP: Œ»İ‚Ìó‘ÔƒIƒuƒWƒFƒNƒg‚ÉXVˆ—‚ğˆÏ÷iƒ|ƒŠƒ‚[ƒtƒBƒYƒ€j
+    public void Update() => currentState?.UpdateState(); //Œ»İ‚Ìó‘ÔƒIƒuƒWƒFƒNƒg‚ÉXVˆ—‚ğˆÏ÷iƒ|ƒŠƒ‚[ƒtƒBƒYƒ€j
 
-    public void FixedUpdate() // ŸSRP: •¨—XVˆ—‚ğFixedUpdate‚É•ª—£
+    public void FixedUpdate() //•¨—XVˆ—‚ğFixedUpdate‚É•ª—£
     {
-        // ŸOOP: ƒCƒ“ƒ^[ƒtƒF[ƒX‚ÌƒLƒƒƒXƒg‚É‚æ‚èA•¨—XV‚ª•K—v‚Èó‘Ô‚Ì‚İ‚ğˆ—iƒ|ƒŠƒ‚[ƒtƒBƒYƒ€j
+        //ƒ“ƒ^[ƒtƒF[ƒX‚ÌƒLƒƒƒXƒg‚É‚æ‚èA•¨—XV‚ª•K—v‚Èó‘Ô‚Ì‚İ‚ğˆ—iƒ|ƒŠƒ‚[ƒtƒBƒYƒ€j
         if (currentState is IEnemyPhysicsState phys)
             phys.FixedUpdateState();
     }

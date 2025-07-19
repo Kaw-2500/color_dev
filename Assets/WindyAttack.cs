@@ -15,6 +15,4 @@ public class WindyAttack : MonoBehaviour, IAttackComponent
 
         rb2d.AddForce(direction.normalized * force, ForceMode2D.Impulse);
     }
-
-
 }

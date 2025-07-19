@@ -21,7 +21,9 @@ public class EventManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-         
+        Application.targetFrameRate = 100;
+
+        Debug.Log(Application.targetFrameRate);
     }
 
     // Update is called once per frame

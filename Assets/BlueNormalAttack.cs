@@ -1,4 +1,3 @@
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -41,7 +40,7 @@ public class BlueNormalAttack : MonoBehaviour
     }
     void Update()
     {
-        transform.transform.localRotation = Quaternion.Euler(0, 0, 0); // 回転をリセット
+     transform.localRotation = Quaternion.Euler(0, 0, 0); // 回転をリセット
 
         if (!Isfncharge)
         {
@@ -97,13 +96,10 @@ public class BlueNormalAttack : MonoBehaviour
             {     
                 Stucktimer = 0; // タイマーをリセット
             }
-        
-
     }
 
     void FinishCharge()
     {
-     
         Isfncharge = true;
 
         Stucktimer = 0; // これも念のためリセット  
@@ -113,15 +109,12 @@ public class BlueNormalAttack : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            Enemy enemy = collision.gameObject.GetComponent<Enemy>();
+            EnemyHitDamage enemy = collision.gameObject.GetComponent<EnemyHitDamage>();
             if (Attacked) return;
-            Debug.Log("青通常攻撃敵に当たった！");
-            enemy.ApplyDamage(playerColorManager.GetCurrentData().NormalAttackPower);
-            Attacked = true; // 一度攻撃したらフラグを立てる
 
-        }
-        else if (collision.gameObject.CompareTag("Player"))
-        {
+            Debug.Log("Fireball hit an enemy: " + enemy.name);
+            enemy.HitAttackDamageOnEnemy(playerColorManager.GetCurrentData().NormalAttackPower);
+            Attacked = true; // 一度攻撃したらフラグを立てる
 
         }
         else if (collision.gameObject.tag == "Redfloor" ||
@@ -133,6 +126,7 @@ public class BlueNormalAttack : MonoBehaviour
         }
         else
         {
+       
         }
     }
 }

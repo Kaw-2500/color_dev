@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EnemyMovement : IMovable // ◆SRP: IMovableインターフェースを実装し、「移動」の具体的なロジックのみに責任を持つ
+public class EnemyMovement : IMovable //  IMovableインターフェースを実装し、「移動」の具体的なロジックのみに責任を持つ
 {
     private Rigidbody2D rb;
     private float force;
@@ -17,7 +17,7 @@ public class EnemyMovement : IMovable // ◆SRP: IMovableインターフェー�
     {
            if (direction == Vector2.up)
         {
-            rb.AddForce(Vector2.up * force * 10, ForceMode2D.Force);
+            rb.AddForce(Vector2.up * force * 1, ForceMode2D.Force);
         }
 
         // 最大速度チェック（縦 or 横）

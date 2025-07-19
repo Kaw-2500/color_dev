@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class AttackState : IEnemyState // ŸSRP: “G‚ÌuUŒ‚vó‘Ô‚Ì‹ï‘Ì“I‚ÈƒƒWƒbƒN‚Ì‚İ‚ÉÓ”C‚ğ‚Â
+public class AttackState : IEnemyState // “G‚ÌuUŒ‚vó‘Ô‚Ì‹ï‘Ì“I‚ÈƒƒWƒbƒN‚Ì‚İ‚ÉÓ”C‚ğ‚Â
 {
     private EnemyStateManager manager;
     private Enemy enemy => manager.GetEnemy();
