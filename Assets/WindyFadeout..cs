@@ -68,7 +68,7 @@ public class WindyFadeout : MonoBehaviour
 
             Vector2 knockback = new Vector2(directionX * Mathf.Abs(knockbackForceX), knockbackForceY);
 
-           WindyAttack windyAttack = collision.gameObject.GetComponent<WindyAttack>();
+           WindyAttack windyAttack = this.GetComponent<WindyAttack>();
 
             hitDamage.OnHitDamage(windyAttack.GetDamage());
             hitDamage.ApplyWindKnockback(knockback);

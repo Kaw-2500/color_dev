@@ -30,7 +30,7 @@ public class PlayerMove : MonoBehaviour
       rb2d.gravityScale = gravityscale;
 
         rb2d.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
-        Debug.Log("PlayerMove: Player Jumped with force " + jumpForce);
+        //Debug.Log("PlayerMove: Player Jumped with force " + jumpForce);
         
     }
 }

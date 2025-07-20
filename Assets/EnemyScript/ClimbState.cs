@@ -21,7 +21,7 @@ public class ClimbState : IEnemyState, IEnemyPhysicsState //敵の「登り」状態の具
     {
         if (enemy.IsWallUnder()) // 足元に壁がある場合
             enemy.GetMovable().Move(Vector2.up); //IMovableインターフェース経由で上方向に移動
-        Debug.Log($"ClimbState FixedUpdateState called. isClimbing={enemy.IsClimbing()}, isWallUnder={enemy.IsWallUnder()}");
+        //Debug.Log($"ClimbState FixedUpdateState called. isClimbing={enemy.IsClimbing()}, isWallUnder={enemy.IsWallUnder()}");
     }
 
     public void ExitState() => enemy.GetMovable().Stop(); // 状態を抜けるときに移動を停止

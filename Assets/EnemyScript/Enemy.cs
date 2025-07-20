@@ -22,9 +22,7 @@ public class Enemy : MonoBehaviour
     public enum PlayerRelativePosition { None, Right, Left, NearRight, NearLeft }
     private PlayerRelativePosition playerRelativePosition = PlayerRelativePosition.None;
 
-    private WhiteningStage whiteningStage = WhiteningStage.None;
-
-
+    private WhiteningManager whiteningManager;
     public enum WhiteningStage
     {
         None,
@@ -48,6 +46,8 @@ public class Enemy : MonoBehaviour
         //状態マネージャーのインスタンス化。Enemyの状態遷移の責任を持つ
         stateManager = new EnemyStateManager(this);
         stateManager.SetState(new IdleState(stateManager)); // 初期状態の設定
+
+        whiteningManager = new WhiteningManager(enemyData.EnemyHp);
     }
 
     void Update()
@@ -103,57 +103,20 @@ public class Enemy : MonoBehaviour
         //Debug.Log($"RightHit: {(hitRight.collider != null)} / LeftHit: {(hitLeft.collider != null)}");
     }
 
-    private void UpdateWhiteningStage()
-    {
-        float hpRatio = CurrentHp / enemyData.EnemyHp;
-
-        if (hpRatio <= 0f)
-            whiteningStage = WhiteningStage.Complete;
-        else if (hpRatio <= 0.25f)
-            whiteningStage = WhiteningStage.Heavy;
-        else if (hpRatio <= 0.5f)
-            whiteningStage = WhiteningStage.Moderate;
-        else if (hpRatio <= 0.75f)
-            whiteningStage = WhiteningStage.Slight;
-        else
-            whiteningStage = WhiteningStage.None;
-    }
-
-    public void UpdateWhiteningEffects()
-    {
-        float speedMultiplier = whiteningStage switch
-        {
-            WhiteningStage.None => 1f,
-            WhiteningStage.Slight => 0.8f,
-            WhiteningStage.Moderate => 0.6f,
-            WhiteningStage.Heavy => 0.4f,
-            WhiteningStage.Complete => 0f,
-            _ => 1f,
-        };
-        if (movable is EnemyMovement movementImpl)
-            movementImpl.SetSpeedMultiplier(speedMultiplier);
-
-        float attackMultiplier = whiteningStage switch
-        {
-            WhiteningStage.None => 1f,
-            WhiteningStage.Slight => 0.9f,
-            WhiteningStage.Moderate => 0.7f,
-            WhiteningStage.Heavy => 0.5f,
-            WhiteningStage.Complete => 0f,
-            _ => 1f,
-        };
-        if (attacker is EnemyAttack attackImpl)
-            attackImpl.SetAttackPowerMultiplier(attackMultiplier);
-    }
-
 
     public void ApplyDamage(float damage)
     {
-        CurrentHp -= damage;
-        Debug.Log($"敵が被弾, remaining HP: {CurrentHp}");
+        CurrentHp = Mathf.Max(CurrentHp - damage, 0f);//マイナスは嫌い！！
+        whiteningManager.UpdateHp(CurrentHp);
 
-        UpdateWhiteningStage();
-        UpdateWhiteningEffects();
+        // 値を取得して反映
+        if (movable is EnemyMovement movementImpl)
+            movementImpl.SetSpeedMultiplier(whiteningManager.SpeedMultiplier);
+
+        if (attacker is EnemyAttack attackImpl)
+            attackImpl.SetAttackPowerMultiplier(whiteningManager.AttackMultiplier);
+
+        Debug.Log($"敵が被弾, remaining HP: {CurrentHp}, WhiteningStage: {whiteningManager.CurrentStage}");
     }
 
 
