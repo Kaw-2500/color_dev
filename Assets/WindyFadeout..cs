@@ -5,8 +5,6 @@ public class WindyFadeout : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private float fadeDuration;
     private float timer = 0f;
-
-    [SerializeField] private float damageAmount = 10f;
     [SerializeField] private float knockbackForceX = 5f;
     [SerializeField] private float knockbackForceY = 5f;
     [SerializeField] private AnimationClip fadeAnimationClip;
@@ -49,6 +47,13 @@ public class WindyFadeout : MonoBehaviour
         }
     }
 
+    private void UpYpos()//animationから呼び出す。なぜなら
+    //途中でanimationが少し大きくなるので、床に添わせるようにするためです、
+    {
+     Rigidbody2D rb2d = GetComponent<Rigidbody2D>();
+     rb2d.position = new Vector2(rb2d.position.x, rb2d.position.y + 2.8f); // Y座標を0.2上げる
+    }
+
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -63,7 +68,9 @@ public class WindyFadeout : MonoBehaviour
 
             Vector2 knockback = new Vector2(directionX * Mathf.Abs(knockbackForceX), knockbackForceY);
 
-            hitDamage.OnHitDamage(damageAmount);
+           WindyAttack windyAttack = this.GetComponent<WindyAttack>();
+
+            hitDamage.OnHitDamage(windyAttack.GetDamage());
             hitDamage.ApplyWindKnockback(knockback);
 
             isAttacked = true;

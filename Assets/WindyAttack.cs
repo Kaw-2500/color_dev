@@ -1,114 +1,25 @@
 using UnityEngine;
 
-// 敵が一定間隔でWindy（風弾）をプレイヤー方向へ攻撃するスクリプト
-public class WindyAttack : MonoBehaviour
+public class WindyAttack : MonoBehaviour, IAttackComponent
 {
-    [SerializeField] private WeakEnemy weakEnemy; // 参照先の敵
-    [SerializeField] private GameObject WindyPrefab; // 風弾プレハブ
-    [SerializeField] private float attackInterval = 2f; // 攻撃間隔
-    [SerializeField] private float windySpeed = 10f; // 風弾の速度
-    [SerializeField]private float InstantiatePositionX = 0f; // 風弾の生成位置X座標の微調整
-
-    private float timer = 0f;
-
-    private bool isPlayerRight = true;
-
-    void Start()
+    private Rigidbody2D rb2d;
+    public float Damage = 10f; // Default damage value
+    private void Awake()
     {
-        if (weakEnemy == null)
-        {
-            Debug.LogError("WindyAttack: weakEnemyが設定されていません。");
-        }
-        if (WindyPrefab == null)
-        {
-            Debug.LogError("WindyAttack: WindyPrefabが設定されていません。");
-        }
+        rb2d = GetComponent<Rigidbody2D>();
     }
 
-    void Update()
+    public void Init(Vector2 direction, float force, float yOffset,float damage)
     {
-        if (weakEnemy == null || WindyPrefab == null) return;
+        Damage = damage; 
 
-        timer += Time.deltaTime;
+        rb2d.position = new Vector2(rb2d.position.x, rb2d.position.y + yOffset);
 
-        if(weakEnemy.GetCurrentState() != WeakEnemy.EnemyState.Attack) return;
-
-        if (timer >= attackInterval)
-        {
-            timer = 0f;
-            AttackWindy();
-        }
+        rb2d.AddForce(direction.normalized * force, ForceMode2D.Impulse);
     }
 
-    private void AttackWindy()
+    public float GetDamage()
     {
-        CheckPlayerDirection();//Xpos微調整メソッドはこのメソッドに依存しているので必ず先に呼び出す必要があります。
-
-        // 風弾の生成
-        GameObject windyInstance = Instantiate(WindyPrefab, weakEnemy.transform.position, Quaternion.identity);
-
-        Xposfinetuning(windyInstance);
-        // プレイヤーの位置を確認して攻撃方向を決定
-
-        Rigidbody2D rb = windyInstance.GetComponent<Rigidbody2D>();
-        if (rb == null)
-        {
-            Debug.LogError("WindyAttack: WindyPrefabにRigidbody2Dがありません。");
-            Destroy(windyInstance);
-            return;
-        }
-
-        // 風弾をプレイヤー方向へ力で発射
-        Vector2 forceDirection = isPlayerRight ? Vector2.right : Vector2.left;
-        rb.AddForce(forceDirection * windySpeed, ForceMode2D.Impulse);
-
-        // フェードアウト設定
-        WindyFadeout fadeout = windyInstance.GetComponent<WindyFadeout>();
-        if (fadeout != null)
-        {
-            fadeout.SetFadeDuration();
-        }
-        else
-        {
-            Debug.LogWarning("WindyAttack: WindyPrefabにWindyFadeoutがアタッチされていません。");
-    
-            Destroy(windyInstance);
-        }
-    }
-
-    private void CheckPlayerDirection()
-    {
-        var playerPos = weakEnemy.GetPlayerRelativePosition();
-
-        if (playerPos == WeakEnemy.PlayerRelativePosition.Right ||
-            playerPos == WeakEnemy.PlayerRelativePosition.NearRight)
-        {
-            isPlayerRight = true;
-        }
-        else if (playerPos == WeakEnemy.PlayerRelativePosition.Left ||
-                 playerPos == WeakEnemy.PlayerRelativePosition.NearLeft)
-        {
-            isPlayerRight = false;
-        }
-        else
-        {
-            Debug.LogWarning("WindyAttack: プレイヤーの位置が不明です。攻撃方向を決定できません。左と仮定");
-         isPlayerRight = false; 
-        }
-    }
-
-    private void Xposfinetuning(GameObject wind)
-    {
-        wind.transform.localScale = new Vector3(isPlayerRight ? 1 : -1, 1, 1);
-
-         if (InstantiatePositionX == 0f)
-        {
-            Debug.LogWarning("WindyAttack: InstantiatePositionXが0です。Scaleが1以上と仮定します");
-            InstantiatePositionX = 1f; 
-        }
-            wind.transform.position = new Vector2(
-            wind.transform.position.x + (isPlayerRight ? InstantiatePositionX : -InstantiatePositionX),
-            wind.transform.position.y
-        );
+        return Damage;
     }
 }

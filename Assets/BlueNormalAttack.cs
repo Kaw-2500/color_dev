@@ -6,6 +6,9 @@ public class BlueNormalAttack : MonoBehaviour
 
     //[SerializeField] private EventManager eventManager; // EventManagerの参照  
 
+    private bool Attacked = false;
+
+    private PlayerColorManager playerColorManager;
 
     Rigidbody2D rb2d;
     [SerializeField] bool Isfncharge = false;
@@ -28,6 +31,7 @@ public class BlueNormalAttack : MonoBehaviour
 
         Playerobj = GameObject.FindWithTag("Player"); // プレイヤーオブジェクトを取得
 
+        playerColorManager = GameObject.FindWithTag("Player").GetComponent<PlayerColorManager>();
 
         rb2d = GetComponent<Rigidbody2D>(); 
         Stucktimer = 0; // タイマーをリセット
@@ -36,7 +40,7 @@ public class BlueNormalAttack : MonoBehaviour
     }
     void Update()
     {
-        transform.transform.localRotation = Quaternion.Euler(0, 0, 0); // 回転をリセット
+     transform.localRotation = Quaternion.Euler(0, 0, 0); // 回転をリセット
 
         if (!Isfncharge)
         {
@@ -92,13 +96,10 @@ public class BlueNormalAttack : MonoBehaviour
             {     
                 Stucktimer = 0; // タイマーをリセット
             }
-        
-
     }
 
     void FinishCharge()
     {
-     
         Isfncharge = true;
 
         Stucktimer = 0; // これも念のためリセット  
@@ -108,10 +109,12 @@ public class BlueNormalAttack : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            Destroy(collision.gameObject);
-        }
-        else if (collision.gameObject.CompareTag("Player"))
-        {
+            EnemyHitDamage enemy = collision.gameObject.GetComponent<EnemyHitDamage>();
+            if (Attacked) return;
+
+            Debug.Log("Fireball hit an enemy: " + enemy.name);
+            enemy.HitAttackDamageOnEnemy(playerColorManager.GetCurrentData().NormalAttackPower);
+            Attacked = true; // 一度攻撃したらフラグを立てる
 
         }
         else if (collision.gameObject.tag == "Redfloor" ||
@@ -123,7 +126,7 @@ public class BlueNormalAttack : MonoBehaviour
         }
         else
         {
-            Destroy(this.gameObject);
+       
         }
     }
 }

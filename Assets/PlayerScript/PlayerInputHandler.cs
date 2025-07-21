@@ -17,7 +17,7 @@ public class PlayerInputHandler : MonoBehaviour
 
         if (inputManager.NormalAttack && !playerAttackCooltimeManager.IsOnCooldown(playerColorManager.GetCurrentState()))
         {
-            playerAttack.normalAttack(playerColorManager.GetCurrentData().attackEffectPrefab);
+            playerAttack.normalAttack(playerColorManager.GetCurrentData().NormalattackPrefab);
             playerAttackCooltimeManager.StartCooldown(playerColorManager.GetCurrentState());
         }
 
@@ -33,7 +33,7 @@ public class PlayerInputHandler : MonoBehaviour
 
         if (inputManager.JumpPress && playerStateManager.IsGround)
         {
-            Debug.Log("PlayerInputHandler: Jump Pressed");
+            //Debug.Log("PlayerInputHandler: Jump Pressed");
             playerMove.PlayerJump(playerColorManager.GetCurrentData().jumpForce,playerColorManager.GetCurrentData().gravityScale);
             playerStateManager.SetJumping();
         }

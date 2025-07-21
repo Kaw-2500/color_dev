@@ -79,7 +79,10 @@ Assets/**/*.png.meta
 Assets/NonPublic/
 
 # ============================
-# PlayerScriptフォルダだけは全て追跡（除外解除）
+# （除外解除）
 # ============================
 !Assets/PlayerScript/
 !Assets/PlayerScript/**
+
+!Assets/EnemyScript/
+!Assets/EnemyScript/**
