@@ -22,7 +22,8 @@ public class Enemy : MonoBehaviour
     public enum PlayerRelativePosition { None, Right, Left, NearRight, NearLeft }
     private PlayerRelativePosition playerRelativePosition = PlayerRelativePosition.None;
 
-    private WhiteningManager whiteningManager;
+    private IReactionOnDamage damageReaction;
+
     public enum WhiteningStage
     {
         None,
@@ -47,7 +48,7 @@ public class Enemy : MonoBehaviour
         stateManager = new EnemyStateManager(this);
         stateManager.SetState(new IdleState(stateManager)); // 初期状態の設定
 
-        whiteningManager = new WhiteningManager(enemyData.EnemyHp);
+        damageReaction = GetComponent<IReactionOnDamage>(); // 白化反応が無い場合もあるのでnullチェックを行う
     }
 
     void Update()
@@ -107,16 +108,8 @@ public class Enemy : MonoBehaviour
     public void ApplyDamage(float damage)
     {
         CurrentHp = Mathf.Max(CurrentHp - damage, 0f);//マイナスは嫌い！！
-        whiteningManager.UpdateHp(CurrentHp);
 
-        // 値を取得して反映
-        if (movable is EnemyMovement movementImpl)
-            movementImpl.SetSpeedMultiplier(whiteningManager.SpeedMultiplier);
-
-        if (attacker is EnemyAttack attackImpl)
-            attackImpl.SetAttackPowerMultiplier(whiteningManager.AttackMultiplier);
-
-        Debug.Log($"敵が被弾, remaining HP: {CurrentHp}, WhiteningStage: {whiteningManager.CurrentStage}");
+        damageReaction?.OnDamaged(CurrentHp);
     }
 
 

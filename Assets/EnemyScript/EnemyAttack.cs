@@ -22,6 +22,13 @@ public class EnemyAttack : IAttackable
 
     public void Attack()
     {
+        var whiteningReaction = enemy.GetComponent<WhiteningReaction>();
+        if (whiteningReaction != null && whiteningReaction.IsAttackDisabled)
+        {
+            Debug.Log("îíâªîΩâûÇ…ÇÊÇËäÆëSèÚâªÇ≥ÇÍÇΩÇΩÇﬂÅAçUåÇÇreturn");
+            return; 
+        }
+
         var direction = GetAttackDirection();
         var offsetX = direction == Vector2.right ? enemy.GetNormalAttackOffsetX() : -enemy.GetNormalAttackOffsetX();
         var spawnPos = enemy.transform.position + new Vector3(offsetX, 0, 0);
@@ -29,7 +36,7 @@ public class EnemyAttack : IAttackable
 
         Vector3 localScale = instance.transform.localScale;
         localScale.x = direction == Vector2.right ? 1 : -1;
-        instance.transform.localScale = localScale;   
+        instance.transform.localScale = localScale;
 
         var comp = instance.GetComponent<IAttackComponent>();
         if (comp == null)
@@ -43,7 +50,6 @@ public class EnemyAttack : IAttackable
                   enemy.GetAttackPower() * attackPowerMultiplier);
 
         Debug.Log($"Enemy Attack! Power: {enemy.GetAttackPower() * attackPowerMultiplier}");
-
     }
 
     private Vector2 GetAttackDirection()

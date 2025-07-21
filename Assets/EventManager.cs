@@ -23,7 +23,8 @@ public class EventManager : MonoBehaviour
     {
         Application.targetFrameRate = 100;
 
-        Debug.Log(Application.targetFrameRate);
+   Debug.Log($"このゲームのフレームレート: {Application.targetFrameRate}");
+
     }
 
     // Update is called once per frame
