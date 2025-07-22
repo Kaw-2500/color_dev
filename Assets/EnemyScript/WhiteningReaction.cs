@@ -12,6 +12,8 @@ public class WhiteningReaction : MonoBehaviour, IReactionOnDamage
 
     [SerializeField] private EnemyData enemyData;
 
+    [SerializeField] private WhiteCompleteEffectManager whiteCompleteEffect;
+
     public bool IsAttackDisabled { get; private set; } = false; // UŒ‚–³Œø‰»ƒtƒ‰ƒO
 
     void Awake()
@@ -55,6 +57,16 @@ public class WhiteningReaction : MonoBehaviour, IReactionOnDamage
         if (attacker is EnemyAttack attackImpl)
             attackImpl.SetAttackPowerMultiplier(whiteningManager.AttackMultiplier);
 
-        Debug.Log($"[Whitening] Stage: {whiteningManager.CurrentStage}, Color: {spriteRenderer.color}");
+        if (whiteningManager.CurrentStage == WhiteningManager.WhiteningStage.Complete)
+        {
+            IsAttackDisabled = true;
+
+            if (whiteCompleteEffect != null)
+            {
+                whiteCompleteEffect.WhiteCompleteEffect(transform); // “G‚ÌˆÊ’u‚Å¶¬
+                StartCoroutine(whiteCompleteEffect.FadeOutCoroutine(spriteRenderer, gameObject)); // “G‚Ì”j‰ó
+            }
+        }
+        //Debug.Log($"[Whitening] Stage: {whiteningManager.CurrentStage}, Color: {spriteRenderer.color}");
     }
 }

@@ -1,3 +1,4 @@
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -12,14 +13,17 @@ public class BlueNormalAttack : MonoBehaviour
 
     Rigidbody2D rb2d;
     [SerializeField] bool Isfncharge = false;
-    [SerializeField] float Speed;
+   public float Speed;
     [SerializeField] float timer;
     [SerializeField] float Stucktimer;
     [SerializeField] float destroyTime = 5f;
     private GameObject Playerobj;
 
+    private float direction = 1f; // 向きの初期値
 
-    [SerializeField] float startxpos;
+    public float OffsetX;
+    private Vector2 initialPosition;
+
     bool Isstuckcheck;
     private Vector2 Lastpos;
     private Vector2 Startpos;
@@ -28,15 +32,13 @@ public class BlueNormalAttack : MonoBehaviour
 
     void Start()
     {
-
+        initialPosition = transform.position;
         Playerobj = GameObject.FindWithTag("Player"); // プレイヤーオブジェクトを取得
 
         playerColorManager = GameObject.FindWithTag("Player").GetComponent<PlayerColorManager>();
 
         rb2d = GetComponent<Rigidbody2D>(); 
-        Stucktimer = 0; // タイマーをリセット
-        transform.position = new Vector2(transform.position.x + startxpos, transform.position.y); // プレイヤーとの距離を調整  
-       
+        Stucktimer = 0; // タイマーをリセット 
     }
     void Update()
     {
@@ -44,7 +46,7 @@ public class BlueNormalAttack : MonoBehaviour
 
         if (!Isfncharge)
         {
-            FollowPlayer(); // プレイヤーを追従する関数を呼び出す
+             FollowPlayer(); // プレイヤーを追従する関数を呼び出す
             rb2d.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY; // XとYをフリーズ  
         }
 
@@ -71,7 +73,7 @@ public class BlueNormalAttack : MonoBehaviour
     void FollowPlayer()
     {
         Vector2 playerPosition = Playerobj.transform.position; // プレイヤーの位置を取得
-        transform.position = new Vector2(playerPosition.x + 1f, playerPosition.y); // プレイヤーの前に出るように位置を調整
+        transform.position = new Vector2(playerPosition.x + OffsetX * direction, playerPosition.y); // プレイヤーの前に出るように位置を調整
     }
 
     void Stuckthunder()
@@ -104,6 +106,19 @@ public class BlueNormalAttack : MonoBehaviour
 
         Stucktimer = 0; // これも念のためリセット  
     }
+
+    public void SetDirection(float newSpeed, float dir)
+    {
+        Speed = newSpeed;
+        direction = dir;
+
+        Vector3 scale = transform.localScale;
+        scale.x = Mathf.Sign(newSpeed) * Mathf.Abs(scale.x);
+        transform.localScale = scale;
+
+        transform.position = new Vector2(initialPosition.x + OffsetX * direction, initialPosition.y);
+    }
+
 
     private void OnCollisionEnter2D(Collision2D collision)
     {

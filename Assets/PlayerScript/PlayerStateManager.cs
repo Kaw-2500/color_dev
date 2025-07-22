@@ -19,6 +19,8 @@ public class PlayerStateManager : MonoBehaviour
 
     public bool IsDead => playerBioState == PlayerBioState.Dead;
 
+    public MousePozition mousePozition;
+
 
     public TouchGroundColor CurrentTouchGroundColor => touchGroundColor;
 
@@ -45,9 +47,16 @@ public class PlayerStateManager : MonoBehaviour
         green
     }
 
+    public enum MousePozition
+    {
+        Left,
+        Right
+    }
+
     void Update()
     {
         UpdateGroundStatus();
+        UpdateMouseDirection();
     }
 
     private void UpdateGroundStatus()
@@ -65,6 +74,15 @@ public class PlayerStateManager : MonoBehaviour
             IsGround = false;
         }
     }
+
+    private void UpdateMouseDirection()
+    {
+        if (checkPlayerStatus.IsMouseOnRightSide())
+            mousePozition = MousePozition.Right;
+        else
+            mousePozition = MousePozition.Left;
+    }
+
 
 
     public float GetHp() => playerHp;

@@ -1,6 +1,6 @@
 // EnemyMovement.cs
 using UnityEngine;
-
+using System.Collections;
 public class EnemyMovement : IMovable
 {
     private Rigidbody2D rb;
@@ -48,8 +48,12 @@ public class EnemyMovement : IMovable
             rb.transform.localScale = scale;
         }
     }
+    public void ResetYVelocity()
+    {
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0.3f);//yを0にすると、登り切らないときがあるので、0.3まで減速
+    }
 
 
     public void Stop() => rb.linearVelocity = Vector2.zero; // 完全に停止
-    // 必要であれば、角速度も止める rb.angularVelocity = 0f;
+
 }

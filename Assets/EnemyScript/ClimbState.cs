@@ -24,5 +24,12 @@ public class ClimbState : IEnemyState, IEnemyPhysicsState //敵の「登り」状態の具
         //Debug.Log($"ClimbState FixedUpdateState called. isClimbing={enemy.IsClimbing()}, isWallUnder={enemy.IsWallUnder()}");
     }
 
-    public void ExitState() => enemy.GetMovable().Stop(); // 状態を抜けるときに移動を停止
+    public void ExitState()
+    {
+        if (enemy.GetMovable() is EnemyMovement movementImpl)
+        {
+            movementImpl.ResetYVelocity(); // 新しいメソッドを呼び出す
+        }
+        Debug.Log("ClimbState: ExitState - Y速度をリセットしました。");
+    }
 }

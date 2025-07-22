@@ -18,7 +18,8 @@ public class InputManager : MonoBehaviour
         Horizontal = (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) ? 1f :
                      (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) ? -1f : 0f;
 
-        JumpPress = (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow));
+        JumpPress = (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) || 
+                     Input.GetKeyDown(KeyCode.Space));
 
         ChangeToRed = Input.GetKeyDown(KeyCode.Alpha1);
         ChangeToBlue = Input.GetKeyDown(KeyCode.Alpha2);

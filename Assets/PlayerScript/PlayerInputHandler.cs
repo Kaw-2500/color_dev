@@ -14,6 +14,7 @@ public class PlayerInputHandler : MonoBehaviour
     void Update()
     {
         if (playerStateManager.IsTalking) return;
+        if(playerStateManager.IsDead) return;   
 
         if (inputManager.NormalAttack && !playerAttackCooltimeManager.IsOnCooldown(playerColorManager.GetCurrentState()))
         {

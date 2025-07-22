@@ -84,7 +84,7 @@ public class Enemy : MonoBehaviour
         isClimbing = false;
         isWallUnder = false;
 
-        float height = 0.95f;
+        float height = 0.98f;
         Vector3 basePos = transform.position;
 
         RaycastHit2D hitRight = Physics2D.Raycast(basePos + new Vector3(0.4f, -height / 2f), Vector2.right, enemyData.rightRayLength, LayerMask.GetMask("floor"));
@@ -125,7 +125,9 @@ public class Enemy : MonoBehaviour
 
     public float GetNormalAttackForce() => enemyData.normalAttackForce; 
 
- 
+    public float GetRigidBody2dVelocityY() => rb2d.linearVelocity.y; 
+
+
     public float GetNormalAttackOffsetY() => enemyData.normalAttackOffsetY; // 通常攻撃のYオフセットを取得   
     public float GetNormalAttackOffsetX() => enemyData.normalAttackOffsetX; // 通常攻撃のXオフセットを取得
     public IMovable GetMovable() => movable;

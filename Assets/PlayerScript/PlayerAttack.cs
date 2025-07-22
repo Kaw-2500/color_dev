@@ -16,7 +16,23 @@ public class PlayerAttack : MonoBehaviour
 
     public void normalAttack(GameObject AttackPrefab)
     {
-        //せいせいじの処理をここで実行
-        Instantiate(AttackPrefab, transform.position, Quaternion.identity);
+        // マウスのワールド座標を取得
+        Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        Vector3 playerPos = transform.position;
+
+        GameObject attackObj = Instantiate(AttackPrefab, playerPos, Quaternion.identity);
+
+        // BlueNormalAttack の参照を取得
+        BlueNormalAttack blueAttack = attackObj.GetComponent<BlueNormalAttack>();
+
+        if (blueAttack != null)
+        {
+            float baseSpeed = Mathf.Abs(blueAttack.Speed); // 初期Speedを取得
+
+            float direction = (mouseWorldPos.x >= playerPos.x) ? 1f : -1f;
+            blueAttack.SetDirection(baseSpeed * direction,direction);
+        }
     }
+
 }

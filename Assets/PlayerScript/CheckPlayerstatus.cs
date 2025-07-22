@@ -77,5 +77,17 @@ public class CheckPlayerstatus : MonoBehaviour
 
     }
 
-   
+    public bool IsMouseOnRightSide()
+    {
+        if (playerTransform == null)
+        {
+            Debug.LogError("CheckPlayerstatus: playerTransformが未設定です");
+            return true; // デフォルトで右側扱いにする
+        }
+
+        Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        return mouseWorldPos.x >= playerTransform.position.x;
+    }
+
 }
