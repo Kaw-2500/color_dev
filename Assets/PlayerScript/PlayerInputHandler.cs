@@ -18,7 +18,7 @@ public class PlayerInputHandler : MonoBehaviour
 
         if (inputManager.NormalAttack && !playerAttackCooltimeManager.IsOnCooldown(playerColorManager.GetCurrentState()))
         {
-            playerAttack.normalAttack(playerColorManager.GetCurrentData().NormalattackPrefab);
+            playerAttack.NormalAttack(playerColorManager.GetCurrentData().NormalattackPrefab);
             playerAttackCooltimeManager.StartCooldown(playerColorManager.GetCurrentState());
         }
 

@@ -1,61 +1,86 @@
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.Rendering;
+using UnityEngine.UIElements;
 
-public class BlueNormalAttack : MonoBehaviour
+public class BlueNormalAttack : MonoBehaviour, IAttackStrategy
 {
-
-    //[SerializeField] private EventManager eventManager; // EventManagerの参照  
-
     private bool Attacked = false;
 
     private PlayerColorManager playerColorManager;
 
+    private float ScaleX; // スケールのX成分を保持するための変数
+
     Rigidbody2D rb2d;
-    [SerializeField] bool Isfncharge = false;
-   public float Speed;
+    private bool Isfncharge = false;
+    public float Speed;
     [SerializeField] float timer;
     [SerializeField] float Stucktimer;
     [SerializeField] float destroyTime = 5f;
-    private GameObject Playerobj;
+
+    private GameObject owner;
+
+    private bool IsInitial = false;
 
     private float direction = 1f; // 向きの初期値
 
-    public float OffsetX;
-    private Vector2 initialPosition;
+    [SerializeField] private float startxpos = 0.9f;
 
-    bool Isstuckcheck;
     private Vector2 Lastpos;
     private Vector2 Startpos;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
 
+    void Awake()
+    {
+        IsInitial = false; // 初期はfalseに
+        ScaleX = transform.localScale.x; // 初期スケールのX成分を保存
+    }
 
     void Start()
     {
-        initialPosition = transform.position;
-        Playerobj = GameObject.FindWithTag("Player"); // プレイヤーオブジェクトを取得
-
-        playerColorManager = GameObject.FindWithTag("Player").GetComponent<PlayerColorManager>();
-
-        rb2d = GetComponent<Rigidbody2D>(); 
+        rb2d = GetComponent<Rigidbody2D>();
         Stucktimer = 0; // タイマーをリセット 
     }
-    void Update()
+
+    public void Execute(GameObject Owner, float dir)
     {
-     transform.localRotation = Quaternion.Euler(0, 0, 0); // 回転をリセット
+        // 先にownerをセットしないとNullReferenceになる
+        owner = Owner;
+        direction = dir;
 
-        if (!Isfncharge)
+        if (owner == null)
         {
-             FollowPlayer(); // プレイヤーを追従する関数を呼び出す
-            rb2d.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY; // XとYをフリーズ  
-        }
-
-        if (!Isfncharge)
-        {
+            Debug.LogError("Executeに渡されたownerがnullです。");
             return;
         }
 
-        rb2d.linearVelocity = new Vector2(Speed, rb2d.linearVelocity.y); // X軸の速度を設定
+        playerColorManager = owner.GetComponent<PlayerColorManager>();
+        if (playerColorManager == null)
+        {
+            Debug.LogError("PlayerColorManagerが見つかりません。owner: " + owner.name);
+            return;
+        }
+
+        Vector2 newpos = new Vector2(transform.position.x + startxpos * direction, transform.position.y);
+        transform.position = newpos;
+
+        transform.localScale = new Vector3(ScaleX * direction,
+                                     transform.localScale.y,
+                                     transform.localScale.z); // 向きに応じてスケールを調整
+        IsInitial = true;  // Update処理を開始するためにフラグON
+    }
+
+    void Update()
+    {
+        if (!IsInitial) return;
+
+        transform.localRotation = Quaternion.Euler(0, 0, 0); // 回転をリセット
+
+        if (!Isfncharge)
+        {
+            FollowPlayer(); // プレイヤーを追従する関数を呼び出す
+            rb2d.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY; // XとYをフリーズ  
+            return; // ここで止める
+        }
+
+        rb2d.linearVelocity = new Vector2(Speed * direction, rb2d.linearVelocity.y); // X軸の速度を設定
 
         rb2d.constraints = RigidbodyConstraints2D.FreezePositionY; // Y のみフリーズ
         timer += Time.deltaTime;
@@ -72,53 +97,46 @@ public class BlueNormalAttack : MonoBehaviour
 
     void FollowPlayer()
     {
-        Vector2 playerPosition = Playerobj.transform.position; // プレイヤーの位置を取得
-        transform.position = new Vector2(playerPosition.x + OffsetX * direction, playerPosition.y); // プレイヤーの前に出るように位置を調整
+        if (owner == null)
+        {
+            Debug.LogError("Player not found. Make sure the player has the 'Player' tag.");
+            return;
+        }
+        Vector2 playerPosition = owner.transform.position; // プレイヤーの位置を取得
+
+        transform.position = new Vector2(playerPosition.x + startxpos * direction,
+            playerPosition.y); // プレイヤーの前に出るように位置を調整
     }
 
     void Stuckthunder()
     {
-        if (Stucktimer >= 0.5)
+        if (Stucktimer >= 0.5f)
         {
             Startpos = transform.position;
         }
 
-        if (Stucktimer <= 1) return;
-        
-            Lastpos = transform.position; // 現在の位置を取得
+        if (Stucktimer <= 1f) return;
 
-            if (Vector2.Distance(Startpos, Lastpos) < 0.02f)
-            {
+        Lastpos = transform.position; // 現在の位置を取得
 
-                Destroy(this.gameObject); // 自分を破壊
-                Debug.Log("スタックしている"); // スタックしている場合の処理を以下に記載
-                Stucktimer = 0; // タイマーをリセット
-            }
-            else
-            {     
-                Stucktimer = 0; // タイマーをリセット
-            }
+        if (Vector2.Distance(Startpos, Lastpos) < 0.02f)
+        {
+            Destroy(this.gameObject); // 自分を破壊
+            Debug.Log("スタックしている"); // スタックしている場合の処理を以下に記載
+            Stucktimer = 0; // タイマーをリセット
+        }
+        else
+        {
+            Stucktimer = 0; // タイマーをリセット
+        }
     }
 
-    void FinishCharge()
+    void FinishCharge()//animationイベントから呼び出される関数
     {
         Isfncharge = true;
 
         Stucktimer = 0; // これも念のためリセット  
     }
-
-    public void SetDirection(float newSpeed, float dir)
-    {
-        Speed = newSpeed;
-        direction = dir;
-
-        Vector3 scale = transform.localScale;
-        scale.x = Mathf.Sign(newSpeed) * Mathf.Abs(scale.x);
-        transform.localScale = scale;
-
-        transform.position = new Vector2(initialPosition.x + OffsetX * direction, initialPosition.y);
-    }
-
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -130,18 +148,6 @@ public class BlueNormalAttack : MonoBehaviour
             Debug.Log("Fireball hit an enemy: " + enemy.name);
             enemy.HitAttackDamageOnEnemy(playerColorManager.GetCurrentData().NormalAttackPower);
             Attacked = true; // 一度攻撃したらフラグを立てる
-
-        }
-        else if (collision.gameObject.tag == "Redfloor" ||
-            collision.gameObject.tag == "Bluefloor" ||
-            collision.gameObject.tag == "Greenfloor" ||
-            collision.gameObject.tag == "naturalfloor")
-        {
-
-        }
-        else
-        {
-       
         }
     }
 }

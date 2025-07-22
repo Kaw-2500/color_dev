@@ -1,74 +1,72 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
-public class Fireball : MonoBehaviour
+public class Fireball : MonoBehaviour, IAttackStrategy
 {
+    [SerializeField] private float startxpos = 0.9f;
+    [SerializeField] public float speed = 10f;
+    [SerializeField] public float destroyTime = 5f;
 
-  private EventManager eventManager; // EventManagerの参照  
-
-    [SerializeField]private float startxpos = 0.9f; // プレイヤーとの距離を調整するためのX座標の微調整
-
- private PlayerColorManager playerColorManager;
-
-    public float speed = 10f;
-
+    private float timer;
     private bool Attacked = false;
 
-    public float timer;
-    public float destroyTime = 5f; // �΂̋ʂ̎���
+    private PlayerColorManager playerColorManager;
+    private Rigidbody2D rb2d;
 
-    Rigidbody2D rb2d;
 
-    void Start()
+    private float ScaleX; // スケールのX成分を保持するための変数
+
+    void Awake()
     {
         rb2d = GetComponent<Rigidbody2D>();
-        transform.position = new Vector2(transform.position.x + startxpos, transform.position.y); // プレイヤーとの距離を調整
+        ScaleX = transform.localScale.x; // 初期スケールのX成分を保存
+    }
 
-      
-
-        playerColorManager = GameObject.FindWithTag("Player").GetComponent<PlayerColorManager>();
-        eventManager = GameObject.Find("EventManager").GetComponent<EventManager>();
-        if (eventManager == null)
+    public void Execute(GameObject owner, float dir)
+    {
+        playerColorManager = owner.GetComponent<PlayerColorManager>();
+        if (playerColorManager == null)
         {
-            Debug.LogError("EventManager not found in the scene.");
-        }
-        else
-        {
-            //eventManager.IsPlAttack = true; // プレイヤーの攻撃状態を設定
+            Debug.LogError("PlayerColorManagerが見つかりません。owner: " + owner.name);
+            return;
         }
 
+        Vector2 newpos = new Vector2(transform.position.x + startxpos * dir, transform.position.y);
+        transform.position = newpos;
+        rb2d.linearVelocity = new Vector2(speed * dir, 0);
 
+        transform.localScale = new Vector3(ScaleX * dir,
+                                     transform.localScale.y,
+                                     transform.localScale.z); // 向きに応じてスケールを調整
     }
 
     void Update()
     {
-        rb2d.linearVelocity = new Vector2(speed, 0);
         timer += Time.deltaTime;
-
         if (timer >= destroyTime)
         {
-            timer = 0;
-            Destroy(this.gameObject); 
+            Destroy(gameObject);
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Enemy"))
+        if (collision.gameObject.CompareTag("Enemy") && !Attacked)
         {
-       EnemyHitDamage enemy =  collision.gameObject.GetComponent<EnemyHitDamage>();
-            if (Attacked) return;
+            if (playerColorManager == null)
+            {
+                Debug.LogError("playerColorManager is null in OnCollisionEnter2D");
+                return;
+            }
 
-            Debug.Log("Fireball hit an enemy: " + enemy.name);
-            enemy.HitAttackDamageOnEnemy(playerColorManager.GetCurrentData().NormalAttackPower);
-            Attacked = true; // 一度攻撃したらフラグを立てる
+            var enemy = collision.gameObject.GetComponent<EnemyHitDamage>();
+            if (enemy != null)
+            {
+                enemy.HitAttackDamageOnEnemy(playerColorManager.GetCurrentData().NormalAttackPower);
+                Attacked = true;
+            }
+        }
 
-        }
-        else
-        {
-            Destroy(this.gameObject);
-        }
+        Destroy(gameObject);
     }
-
-
 }
-
