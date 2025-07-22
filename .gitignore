@@ -86,3 +86,6 @@ Assets/NonPublic/
 
 !Assets/EnemyScript/
 !Assets/EnemyScript/**
+
+!Assets/Projectile/
+!Assets/Projectile/**
