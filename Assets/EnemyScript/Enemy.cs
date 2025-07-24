@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour 
@@ -16,6 +17,8 @@ public class Enemy : MonoBehaviour
     private bool isWallUnder;
     private EnemyStateManager stateManager; //Enemyの「状態管理」という責任をEnemyStateManagerクラスに委譲
 
+    public bool Isattacking = false;
+
     private IMovable movable; //移動の振る舞いをIMovableインターフェースで抽象化
     private IAttackable attacker; //攻撃の振る舞いをIAttackableインターフェースで抽象化
 
@@ -23,6 +26,8 @@ public class Enemy : MonoBehaviour
     private PlayerRelativePosition playerRelativePosition = PlayerRelativePosition.None;
 
     private IReactionOnDamage damageReaction;
+
+    public event Action OnDamagedByPlayer;
 
     public enum WhiteningStage
     {
@@ -112,7 +117,15 @@ public class Enemy : MonoBehaviour
         damageReaction?.OnDamaged(CurrentHp);
     }
 
-
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        var attackStrategy = collision.GetComponent<IAttackStrategy>();
+        if (attackStrategy != null)
+        {
+            OnDamagedByPlayer?.Invoke();
+            Debug.Log("Enemy: プレイヤーから攻撃されたことを通知");
+        }
+    }
 
     // 状態クラス向けのアクセサ（カプセル化された情報を状態クラスに提供）
     public Transform GetPlayer() => player;

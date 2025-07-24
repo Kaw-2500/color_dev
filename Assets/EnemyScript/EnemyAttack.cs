@@ -45,8 +45,9 @@ public class EnemyAttack : IAttackable
             return;
         }
         comp.Init(direction,
-          enemy.GetNormalAttackForce(),
-          enemy.GetAttackPower() * attackPowerMultiplier);
+            enemy.GetNormalAttackForce(),
+            enemy.GetAttackPower() * attackPowerMultiplier,
+            enemy);
 
         Debug.Log($"Enemy Attack! Power: {enemy.GetAttackPower() * attackPowerMultiplier}");
     }
