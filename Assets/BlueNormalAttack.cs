@@ -144,8 +144,6 @@ public class BlueNormalAttack : MonoBehaviour, IAttackStrategy
         {
             EnemyHitDamage enemy = collision.gameObject.GetComponent<EnemyHitDamage>();
             if (Attacked) return;
-
-            Debug.Log("Fireball hit an enemy: " + enemy.name);
             enemy.HitAttackDamageOnEnemy(playerColorManager.GetCurrentData().NormalAttackPower);
             Attacked = true; // 一度攻撃したらフラグを立てる
         }

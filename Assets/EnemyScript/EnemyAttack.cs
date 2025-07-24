@@ -30,12 +30,12 @@ public class EnemyAttack : IAttackable
         }
 
         var direction = GetAttackDirection();
-        var offsetX = direction == Vector2.right ? enemy.GetNormalAttackOffsetX() : -enemy.GetNormalAttackOffsetX();
-        var spawnPos = enemy.transform.position + new Vector3(offsetX, 0, 0);
+        var offsetX = enemy.GetNormalAttackOffsetX();
+        var spawnPos = enemy.transform.position + new Vector3(offsetX * direction, 0, 0);
         instance = Object.Instantiate(normalAttackPrefab, spawnPos, Quaternion.identity);
 
         Vector3 localScale = instance.transform.localScale;
-        localScale.x = direction == Vector2.right ? 1 : -1;
+        localScale.x = localScale.x * direction; // 方向に応じてスケールを調整
         instance.transform.localScale = localScale;
 
         var comp = instance.GetComponent<IAttackComponent>();
@@ -45,25 +45,24 @@ public class EnemyAttack : IAttackable
             return;
         }
         comp.Init(direction,
-                  enemy.GetNormalAttackForce(),
-                  enemy.GetNormalAttackOffsetY(),
-                  enemy.GetAttackPower() * attackPowerMultiplier);
+          enemy.GetNormalAttackForce(),
+          enemy.GetAttackPower() * attackPowerMultiplier);
 
         Debug.Log($"Enemy Attack! Power: {enemy.GetAttackPower() * attackPowerMultiplier}");
     }
 
-    private Vector2 GetAttackDirection()
+    private float GetAttackDirection()
     {
         switch (enemy.GetPlayerRelativePosition())
         {
             case Enemy.PlayerRelativePosition.NearRight:
             case Enemy.PlayerRelativePosition.Right:
-                return Vector2.right;
+                return 1;
             case Enemy.PlayerRelativePosition.NearLeft:
             case Enemy.PlayerRelativePosition.Left:
-                return Vector2.left;
+                return -1;
             default:
-                return Vector2.zero;
+                return 1;// デフォルトは右方向
         }
     }
 }
