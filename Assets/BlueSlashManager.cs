@@ -71,17 +71,20 @@ public class BlueSlashManager : MonoBehaviour, IAttackComponent
         isCharged = false;
         parryState = ParryState.Parryable;
 
+        StartCoroutine(ParrySlowMotion(parryTime));
+
         if (cameraController != null)
         {
+            //プレイヤーが近くにいないときはカメラズームしない
+            if (enemy.playerRelativePosition == Enemy.PlayerRelativePosition.Right) return;
+            if(enemy.playerRelativePosition == Enemy.PlayerRelativePosition.Left) return;
             cameraController.StartParryZoom(parryTime);
         }
-
-        StartCoroutine(ParrySlowMotion(parryTime));
     }
 
     private IEnumerator ParrySlowMotion(float parryTime)
     {
-        Time.timeScale = 0.75f;
+        Time.timeScale = 0.3f;
 
         // 経過時間を直接計測する方式に変更
         float elapsed = 0f;
@@ -113,7 +116,7 @@ public class BlueSlashManager : MonoBehaviour, IAttackComponent
         // パリィ成功時の処理
 
         EnemyHitDamage enemyhitdamage = enemy.GetEnemyHitObject();
-        enemyhitdamage.HitParryAttack();//enemy側の処理を起動
+        enemyhitdamage.HitParryAttack(damageAmount);//enemy側の処理を起動
     }
 
     private void OnEnemyDamagedByPlayer()

@@ -23,7 +23,7 @@ public class Enemy : MonoBehaviour
     private IAttackable attacker; //攻撃の振る舞いをIAttackableインターフェースで抽象化
 
     public enum PlayerRelativePosition { None, Right, Left, NearRight, NearLeft }
-    private PlayerRelativePosition playerRelativePosition = PlayerRelativePosition.None;
+    public PlayerRelativePosition playerRelativePosition = PlayerRelativePosition.None;
 
     private IReactionOnDamage damageReaction;
 
@@ -90,6 +90,24 @@ public class Enemy : MonoBehaviour
             playerRelativePosition = isRight ? PlayerRelativePosition.Right : PlayerRelativePosition.Left;
     }
 
+    public float floatPlayerRelativePosition()
+    {
+        float a = 1;
+
+        switch (playerRelativePosition)
+        {
+            case PlayerRelativePosition.Left:
+                a = -1; break;
+            case PlayerRelativePosition.Right:
+                a = 1 ; break;
+            case PlayerRelativePosition.NearLeft:
+                a = -1 ; break;
+            case PlayerRelativePosition.NearRight:
+                a = 1 ; break;
+        }
+        return a;
+    }
+
     private void UpdateClimbCondition()
     {
         isClimbing = false;
@@ -119,7 +137,7 @@ public class Enemy : MonoBehaviour
     public void ApplyDamage(float damage)
     {
         CurrentHp = Mathf.Max(CurrentHp - damage, 0f);//マイナスは嫌い！！
-
+        Debug.Log("enemy applydamage");
         damageReaction?.OnDamaged(CurrentHp);
     }
 
@@ -136,11 +154,16 @@ public class Enemy : MonoBehaviour
     // 状態クラス向けのアクセサ（カプセル化された情報を状態クラスに提供）
     public Transform GetPlayer() => player;
     public PlayerRelativePosition GetPlayerRelativePosition() => playerRelativePosition;
+
+    public float GetPlayerRelativeFloat() => floatPlayerRelativePosition();
+
     public bool IsClimbing() => isClimbing;
     public bool IsWallUnder() => isWallUnder;
     public float GetAttackRange() => enemyData.attackRange;
     public float GetAttackCooldown() => enemyData.attackCooldown; 
     public float GetChaseRange() => enemyData.chaseRange;
+
+    public float GetEnemyLevity() => enemyData.Enemylevity;
 
     public float GetNormalAttackForce() => enemyData.normalAttackForce; 
 

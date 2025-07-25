@@ -9,6 +9,7 @@ public class Camerapos : MonoBehaviour
     [SerializeField] float cameraSmoothTime = 0.1f;
     [SerializeField] float parryDurationSeconds = 0.6f;
     [SerializeField] float zoomHeight = 1.5f;        // ズーム時の高さ補正
+
     public Transform Cameratransform;
 
     private bool isParryZooming = false;
@@ -158,8 +159,8 @@ public class Camerapos : MonoBehaviour
                 originalPos.z
             );
 
-            Debug.Log(targetCameraCenterPos);
-            Debug.Log(playerTransform.position);
+            //Debug.Log(targetCameraCenterPos);
+            //Debug.Log(playerTransform.position);
 
             // カメラの位置をoriginalPosからtargetCameraCenterPosへ補間
             Cameratransform.position = Vector3.Lerp(originalPos, targetCameraCenterPos, t);

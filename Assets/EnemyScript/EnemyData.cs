@@ -21,5 +21,7 @@ public class EnemyData : ScriptableObject
 
     public float AttackPower = 10f; // “G‚ÌUŒ‚—Í
 
+    public float Enemylevity = 20;     // ƒmƒbƒNƒoƒbƒN‚Ì‚Í‚¶‚©‚ê‚é‹­‚³(Œy‚³)(1‚Å’ÊíA1.5‚Å1.5”{‚ÌŒy‚³A0.5‚Å”¼•ª‚ÌŒy‚³)
+
     public GameObject NormalAttackPrefab;
 }
