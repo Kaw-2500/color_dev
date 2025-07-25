@@ -1,14 +1,17 @@
 using UnityEngine;
 using System.Collections;
+
 public class Camerapos : MonoBehaviour
-//Statemanagerから貰ったGroundYposと、シリアライズしたPlayerの座標と、カメラのtransformを使って、
-//Y座標と、x座標をそれぞれ計算で決めて、カメラの位置を決定するスクリプトです。
 {
     public Transform playerTransform;
     [SerializeField] float camerahight = 5f;
     [SerializeField] float cameradistance = 5f;
     [SerializeField] float cameraSmoothTime = 0.1f;
+    [SerializeField] float parryDurationSeconds = 0.6f;
+    [SerializeField] float zoomHeight = 1.5f;        // ズーム時の高さ補正
+    public Transform Cameratransform;
 
+    private bool isParryZooming = false;
     bool Finisheddeadaction;
 
     private float smoothY;
@@ -17,6 +20,10 @@ public class Camerapos : MonoBehaviour
     [SerializeField] private PlayerStateManager playerStateManager;
     public Camera mainCamera;
 
+    [SerializeField] private float parryZoomSize = 3f;
+    [SerializeField] private float parryZoomSpeed = 0.2f;
+
+    private Coroutine parryZoomCoroutine;
 
     void Start()
     {
@@ -39,17 +46,17 @@ public class Camerapos : MonoBehaviour
     private void Update()
     {
         if (!Finisheddeadaction) return;
-
-        transform.position = new Vector3(
+        if (isParryZooming) return;
+        Cameratransform.position = new Vector3(
             playerTransform.position.x,
             playerTransform.position.y,
-            transform.position.z
+            Cameratransform.position.z
         );
     }
 
     void LateUpdate()
     {
-        if (playerStateManager.IsDead)
+        if (playerStateManager.IsDead || isParryZooming)
         {
             return;
         }
@@ -70,16 +77,22 @@ public class Camerapos : MonoBehaviour
         Vector3 newPos = new Vector3(
             playerTransform.position.x + cameradistance,
             smoothY,
-            transform.position.z
+            Cameratransform.position.z
         );
 
-        transform.position = newPos;
+        Cameratransform.position = newPos;
     }
 
     public IEnumerator PanAndZoomCoroutine(float targetOrthoSize, float duration)
     {
-        Vector3 startPos = transform.position;// 現在のカメラ位置
-        float startOrtho = mainCamera.orthographicSize;// 現在のカメラのズームの強さ（映してる範囲）
+        if (parryZoomCoroutine != null)
+        {
+            StopCoroutine(parryZoomCoroutine);
+            parryZoomCoroutine = null;
+        }
+
+        Vector3 startPos = Cameratransform.position;
+        float startOrtho = mainCamera.orthographicSize;
 
         float elapsed = 0f;
 
@@ -88,28 +101,126 @@ public class Camerapos : MonoBehaviour
             elapsed += Time.unscaledDeltaTime;
 
             float t = Mathf.Clamp01(elapsed / duration);
-            t = 1f - Mathf.Pow(1f - t, 2f); //イーズアウトで最初速く
+            t = 1f - Mathf.Pow(1f - t, 2f); // イーズアウト
 
-            Vector3 targetPos = new Vector3(//プレイヤーが死亡後に移動する場合に備えて、常に追従
+            Vector3 targetPos = new Vector3(
                 playerTransform.position.x,
                 playerTransform.position.y,
-                transform.position.z
+                Cameratransform.position.z
             );
 
-            transform.position = Vector3.Lerp(startPos, targetPos, t);
+            Cameratransform.position = Vector3.Lerp(startPos, targetPos, t);
             mainCamera.orthographicSize = Mathf.Lerp(startOrtho, targetOrthoSize, t);
 
             yield return null;
         }
 
-        // 最終的にカメラはプレイヤーの現在位置に合わせる
         Vector3 finalPos = new Vector3(
             playerTransform.position.x,
             playerTransform.position.y,
-            transform.position.z
+            Cameratransform.position.z
         );
-        transform.position = finalPos;
+        Cameratransform.position = finalPos;
         mainCamera.orthographicSize = targetOrthoSize;
-        Finisheddeadaction = true; // 死亡時のカメラズームが完了したことを示すフラグを設定
+        Finisheddeadaction = true;
+    }
+
+    public void StartParryZoom(float parryTime)
+    {
+        if (parryZoomCoroutine != null)
+        {
+            StopCoroutine(parryZoomCoroutine);
+            parryZoomCoroutine = null;
+        }
+        isParryZooming = true;
+        parryZoomCoroutine = StartCoroutine(ParryZoomCoroutine(parryTime));
+    }
+
+    private IEnumerator ParryZoomCoroutine(float parryTime)
+    {
+        // コルーチン開始時のカメラの初期状態を保存
+        Vector3 originalPos = Cameratransform.position;
+        float originalOrtho = mainCamera.orthographicSize;
+
+        float elapsed = 0f;
+
+        // ズームイン処理
+        while (elapsed < parryTime * 0.2)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float t = Mathf.Clamp01(elapsed / parryZoomSpeed );
+            t = 1f - Mathf.Pow(1f - t, 2f); // イーズアウト
+
+            // カメラが到達すべき目標位置
+            Vector3 targetCameraCenterPos = new Vector3(
+                playerTransform.position.x,
+                playerTransform.position.y + zoomHeight,
+                originalPos.z
+            );
+
+            Debug.Log(targetCameraCenterPos);
+            Debug.Log(playerTransform.position);
+
+            // カメラの位置をoriginalPosからtargetCameraCenterPosへ補間
+            Cameratransform.position = Vector3.Lerp(originalPos, targetCameraCenterPos, t);
+
+            // オーソグラフィックサイズをoriginalOrthoからparryZoomSizeへ補間
+            mainCamera.orthographicSize = Mathf.Lerp(originalOrtho, parryZoomSize, t);
+
+            yield return null;
+        }
+
+        // ズームインが完全に完了した時点でのカメラの状態を確定させる
+        Cameratransform.position = new Vector3(
+            playerTransform.position.x,
+            playerTransform.position.y + zoomHeight,
+            originalPos.z
+        );
+        mainCamera.orthographicSize = parryZoomSize;
+
+
+        // パリィ時間が、ズームアウトの時間で埋まるまで待機
+        float parryElapsed = 0f;
+        while (parryElapsed < parryTime * 0.6)
+        {
+            parryElapsed += Time.unscaledDeltaTime;
+
+            // ズームインされた状態でプレイヤーに追従
+            Vector3 followPos = new Vector3(
+                playerTransform.position.x,
+                playerTransform.position.y + zoomHeight,
+                originalPos.z
+            );
+            Cameratransform.position = followPos;
+            yield return null;
+        }
+
+        // ズームアウト処理
+        elapsed = 0f;
+        // ズームアウト開始時のカメラの現在の位置とオーソグラフィックサイズを保存
+        Vector3 currentPosAtZoomOutStart = Cameratransform.position;
+        float currentOrthoAtZoomOutStart = mainCamera.orthographicSize;
+
+        while (elapsed < parryZoomSpeed * 0.2)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float t = Mathf.Clamp01(elapsed / parryZoomSpeed);
+            t = 1f - Mathf.Pow(1f - t, 2f); // イーズアウト
+
+            // currentPosAtZoomOutStartからoriginalPosへ補間
+            Cameratransform.position = Vector3.Lerp(currentPosAtZoomOutStart, originalPos, t);
+            // currentOrthoAtZoomOutStartからoriginalOrthoへ補間
+            mainCamera.orthographicSize = Mathf.Lerp(currentOrthoAtZoomOutStart, originalOrtho, t);
+
+            yield return null;
+        }
+
+        // 最終的に元の位置とサイズに確実に設定し直す
+        Cameratransform.position = originalPos;
+        mainCamera.orthographicSize = originalOrtho;
+
+        // パリィズームが終了
+        isParryZooming = false;
+        parryZoomCoroutine = null;
     }
 }

@@ -38,22 +38,28 @@ public class Enemy : MonoBehaviour
         Complete
     }
 
-    void Start()
+    private void Awake()
     {
-        CurrentHp = enemyData.EnemyHp; // 初期HPを設定
-
         rb2d = GetComponent<Rigidbody2D>();
+
         player = GameObject.FindGameObjectWithTag("Player").transform;
 
-        //具体的な実装クラス（EnemyMovement, EnemyAttack）をインスタンス化し、インターフェース型で保持
+        // ダメージを受けたときの反応（白化演出など）
+        damageReaction = GetComponent<IReactionOnDamage>();
+    }
+
+    private void Start()
+    {
+        // 初期HPの設定
+        CurrentHp = enemyData.EnemyHp;
+
+        // 動きや攻撃の具象クラスを生成。パラメータはScriptableObjectから読み込む
         movable = new EnemyMovement(rb2d, enemyData.moveForce, enemyData.maxSpeed);
-        attacker = new EnemyAttack(enemyData.NormalAttackPrefab,this);
+        attacker = new EnemyAttack(enemyData.NormalAttackPrefab, this);
 
-        //状態マネージャーのインスタンス化。Enemyの状態遷移の責任を持つ
+        // 状態マネージャーの生成と、初期状態（待機）への遷移
         stateManager = new EnemyStateManager(this);
-        stateManager.SetState(new IdleState(stateManager)); // 初期状態の設定
-
-        damageReaction = GetComponent<IReactionOnDamage>(); // 白化反応が無い場合もあるのでnullチェックを行う
+        stateManager.SetState(new IdleState(stateManager));
     }
 
     void Update()
@@ -123,7 +129,7 @@ public class Enemy : MonoBehaviour
         if (attackStrategy != null)
         {
             OnDamagedByPlayer?.Invoke();
-            Debug.Log("Enemy: プレイヤーから攻撃されたことを通知");
+            Debug.Log("Enemy.cs: プレイヤーから攻撃されたことを通知");
         }
     }
 
@@ -138,9 +144,9 @@ public class Enemy : MonoBehaviour
 
     public float GetNormalAttackForce() => enemyData.normalAttackForce; 
 
-    public float GetRigidBody2dVelocityY() => rb2d.linearVelocity.y; 
+    public float GetRigidBody2dVelocityY() => rb2d.linearVelocity.y;
 
-
+    public EnemyHitDamage GetEnemyHitObject() => hitdamage;
     public float GetNormalAttackOffsetY() => enemyData.normalAttackOffsetY; // 通常攻撃のYオフセットを取得   
     public float GetNormalAttackOffsetX() => enemyData.normalAttackOffsetX; // 通常攻撃のXオフセットを取得
     public IMovable GetMovable() => movable;

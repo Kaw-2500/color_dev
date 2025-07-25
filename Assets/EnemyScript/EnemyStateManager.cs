@@ -22,7 +22,7 @@ public class EnemyStateManager //“G‚Ìuó‘Ô‘JˆÚv‚ÆuŒ»İ‚Ìó‘Ô‚ÌŠÇ—v‚Ì‚İ‚ÉÓ”
 
     public void FixedUpdate() //•¨—XVˆ—‚ğFixedUpdate‚É•ª—£
     {
-        //ƒ“ƒ^[ƒtƒF[ƒX‚ÌƒLƒƒƒXƒg‚É‚æ‚èA•¨—XV‚ª•K—v‚Èó‘Ô‚Ì‚İ‚ğˆ—iƒ|ƒŠƒ‚[ƒtƒBƒYƒ€j
+        //ƒ“ƒ^[ƒtƒF[ƒX‚ÌƒLƒƒƒXƒg‚É‚æ‚èA•¨—XV‚ª•K—v‚Èó‘Ô‚Ì‚İ‚ğˆ—
         if (currentState is IEnemyPhysicsState phys)
             phys.FixedUpdateState();
     }

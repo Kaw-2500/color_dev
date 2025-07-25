@@ -1,9 +1,10 @@
 using UnityEngine;
 using System.Collections;
-
 public class BlueSlashManager : MonoBehaviour, IAttackComponent
 {
     [SerializeField] private float damageAmount = 10f;
+    [SerializeField] private float parryTime = 0.8f;
+    private Camerapos cameraController;
 
     private Collider2D playerCollider = null;
     private Rigidbody2D rb2d;
@@ -18,10 +19,10 @@ public class BlueSlashManager : MonoBehaviour, IAttackComponent
 
     private enum ParryState
     {
-        None,         // 初期状態：パリィ待機前
-        Parryable,    // パリィ可能時間中
-        Parried,      // パリィ成功
-        ParryFailed   // パリィ失敗（時間経過）
+        None,
+        Parryable,
+        Parried,
+        ParryFailed
     }
 
     void Awake()
@@ -30,6 +31,15 @@ public class BlueSlashManager : MonoBehaviour, IAttackComponent
         isCharged = true;
         isAttacked = false;
         parryState = ParryState.None;
+    }
+
+    void Start()
+    {
+        GameObject mainCamera = GameObject.FindWithTag("MainCamera");
+        if (mainCamera != null)
+        {
+            cameraController = mainCamera.GetComponent<Camerapos>();
+        }
     }
 
     public void Init(float direction, float force, float damage, Enemy enemy)
@@ -56,60 +66,77 @@ public class BlueSlashManager : MonoBehaviour, IAttackComponent
         }
     }
 
-    // アニメーションイベントから呼ばれる
-    public void Fncharge()
+    public void finishCharge()
     {
         isCharged = false;
+        parryState = ParryState.Parryable;
 
-        Debug.Log("パリィを開始");
-        StartCoroutine(ParryWindowCoroutine(0.4f));
+        if (cameraController != null)
+        {
+            cameraController.StartParryZoom(parryTime);
+        }
+
+        StartCoroutine(ParrySlowMotion(parryTime));
     }
 
-    private IEnumerator ParryWindowCoroutine(float duration)
+    private IEnumerator ParrySlowMotion(float parryTime)
     {
-        parryState = ParryState.Parryable;
-        yield return new WaitForSeconds(duration);
+        Time.timeScale = 0.75f;
 
+        // 経過時間を直接計測する方式に変更
+        float elapsed = 0f;
+        while (elapsed < parryTime)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        // パリィ状態の更新を先に行う
         if (parryState == ParryState.Parryable)
         {
-            Debug.Log("パリィ時間終了 → 失敗");
             parryState = ParryState.ParryFailed;
         }
-    }
 
-    // アニメーション終了イベントから呼ばれる
+        Time.timeScale = 1f;
+    }
     public void OnAnimationEnd()
     {
         Destroy(gameObject);
     }
 
-    private void StartParry()
+    private void SuccessParry()
     {
-        if (isCharged) return; // チャージ中はまだ発動しない
+        if (isCharged) return;
         if (parryState != ParryState.Parryable) return;
 
-        Debug.Log("パリィ処理を開始！");
         parryState = ParryState.Parried;
-        // パリィ成功時のエフェクトや処理をここに追加しても良い
+        // パリィ成功時の処理
+
+        EnemyHitDamage enemyhitdamage = enemy.GetEnemyHitObject();
+        enemyhitdamage.HitParryAttack();//enemy側の処理を起動
     }
 
     private void OnEnemyDamagedByPlayer()
     {
         if (parryState == ParryState.Parryable)
         {
-            Debug.Log("パリィ成功！Enemyから攻撃された時にパリィ判定を受け取りました。");
-            StartParry();
+            SuccessParry();
         }
         else
         {
-            Debug.Log("パリィ失敗：パリィ可能時間外に攻撃されました。");
+            parryState = ParryState.ParryFailed;
         }
     }
 
     private void Update()
-    { 
-
-        if (playerInTrigger && !isAttacked && !isCharged && playerCollider != null)
+    {
+        // パリィ失敗状態を優先的にチェック
+        if (parryState == ParryState.ParryFailed && playerCollider != null)
+        {
+            TryApplyDamage(playerCollider);
+            parryState = ParryState.None; // 状態リセット
+        }
+        else if (playerInTrigger && !isAttacked && !isCharged)
         {
             TryApplyDamage(playerCollider);
         }
@@ -134,9 +161,9 @@ public class BlueSlashManager : MonoBehaviour, IAttackComponent
     private void TryApplyDamage(Collider2D collision)
     {
         if (isAttacked) return;
-        if (parryState == ParryState.Parried)
+
+        if (parryState == ParryState.Parryable || parryState == ParryState.Parried)
         {
-            Debug.Log("パリィ成功中のためダメージ無効");
             return;
         }
 

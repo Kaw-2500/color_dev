@@ -5,6 +5,7 @@ public class EnemyHitDamage :MonoBehaviour
 {
 
     [SerializeField] private Enemy enemy; // EnemyÇÃéQè∆
+    Rigidbody2D rb2d;
 
     public void Awake()
     {
@@ -18,5 +19,10 @@ public class EnemyHitDamage :MonoBehaviour
     public void HitAttackDamageOnEnemy(float damage)
     {
         enemy.ApplyDamage(damage);
+    }
+
+    public void HitParryAttack()
+    {
+        
     }
 }

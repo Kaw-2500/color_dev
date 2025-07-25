@@ -38,9 +38,6 @@ public class PlayerColorManager : MonoBehaviour
         currentState = PlayerColorState.Red;
         GetCurrentData(); // 初期状態のデータを取得しておく
         ApplyColor();
-        Debug.Log("Start時のjumpForce: " + GetCurrentData().jumpForce);
-        Debug.Log("start時のgravity: " + GetCurrentData().gravityScale);
-        Debug.Log("sTARTじのJUMPFORCE: " + GetCurrentData().jumpForce);
     }
 
     public PlayerColorDataExtended GetCurrentData()//これを呼ぶと今の色のデータを返してくれる
