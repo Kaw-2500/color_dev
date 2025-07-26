@@ -9,6 +9,7 @@ public class Camerapos : MonoBehaviour
     [SerializeField] float cameraSmoothTime = 0.1f;
     [SerializeField] float parryDurationSeconds = 0.6f;
     [SerializeField] float zoomHeight = 1.5f;        // ƒY[ƒ€‚Ì‚‚³•â³
+    [SerializeField] CameraPositionManager cpm;//—ª‚µ‚Ä‚é
 
     public Transform Cameratransform;
 
