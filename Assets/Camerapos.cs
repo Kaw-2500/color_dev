@@ -18,6 +18,10 @@ public class Camerapos : MonoBehaviour
     private float smoothY;
     private float velocityY;
 
+    Vector3 parryHopeposition;
+    Vector3 deadHopeposition;
+    Vector3 followPlayerHopePosition;
+
     [SerializeField] private PlayerStateManager playerStateManager;
     public Camera mainCamera;
 
@@ -84,7 +88,7 @@ public class Camerapos : MonoBehaviour
         Cameratransform.position = newPos;
     }
 
-    public IEnumerator PanAndZoomCoroutine(float targetOrthoSize, float duration)
+    public IEnumerator DeadCameraEffect(float targetOrthoSize, float duration)
     {
         if (parryZoomCoroutine != null)
         {

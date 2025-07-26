@@ -52,7 +52,7 @@ public class EventManager : MonoBehaviour
     private IEnumerator DeadZoomSequence()
     {
         // 死亡時のカメラズーム開始（リアルタイム時間で動く）
-        yield return StartCoroutine(camerapos.PanAndZoomCoroutine(3.0f, deadcamerawaittime));
+        yield return StartCoroutine(camerapos.DeadCameraEffect(3.0f, deadcamerawaittime));
 
         // ズーム終了後に時間を戻す
         Time.timeScale = 1.0f;
