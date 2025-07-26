@@ -24,9 +24,9 @@
 # ============================
 .vs/
 .gradle/
-*.csproj
-*.unityproj
-*.sln
+# *.csproj        ← VSCode開発のために除外解除
+# *.unityproj     ← VSCode開発のために除外解除
+# *.sln           ← VSCode開発のために除外解除
 *.suo
 *.user
 *.userprefs
