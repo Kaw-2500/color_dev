@@ -11,7 +11,7 @@ public class PlayerAttackCooltimeManager : MonoBehaviour
 
     private void Awake()
     {
-        // ‘SFƒN[ƒ‹ƒ^ƒCƒ€‰Šú‰»
+        // å…¨è‰²ã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ åˆæœŸåŒ–
         foreach (PlayerColorManager.PlayerColorState color in System.Enum.GetValues(typeof(PlayerColorManager.PlayerColorState)))
         {
             isColorOnCooldown[color] = false;
@@ -29,7 +29,7 @@ public class PlayerAttackCooltimeManager : MonoBehaviour
 
         if (IsOnCooldown(color))
         {
-            //ƒN[ƒ‹ƒ^ƒCƒ€’†‚È‚ç‚±‚Ìƒƒ\ƒbƒh‚ÍŒÄ‚Î‚ê‚È‚¢‚Í‚¸‚¾‚ªAŠù‚ÉƒN[ƒ‹ƒ^ƒCƒ€’†‚È‚ç‰½‚à‚µ‚È‚¢
+            //ã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ ä¸­ãªã‚‰ã“ã®ãƒ¡ã‚½ãƒƒãƒ‰ã¯å‘¼ã°ã‚Œãªã„ã¯ãšã ãŒã€æ—¢ã«ã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ ä¸­ãªã‚‰ä½•ã‚‚ã—ãªã„
             return;
         }
 
@@ -42,7 +42,7 @@ public class PlayerAttackCooltimeManager : MonoBehaviour
         {
             StopCoroutine(cooldownCoroutines[color]);
         }
-        isColorOnCooldown[color] = false;//F‚ÌØ‚è‘Ö‚¦‚ÍƒN[ƒ‹ƒ^ƒCƒ€‚ğƒŠƒZƒbƒg‚·‚é
+        isColorOnCooldown[color] = false;//è‰²ã®åˆ‡ã‚Šæ›¿ãˆæ™‚ã¯ã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒ ã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹
     }
 
     private IEnumerator CooldownCoroutine(PlayerColorManager.PlayerColorState color, float cooldownTime)
