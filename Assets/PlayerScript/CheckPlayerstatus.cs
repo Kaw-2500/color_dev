@@ -5,21 +5,21 @@ public class CheckPlayerstatus : MonoBehaviour
 //あくまでも値のみを測定するだけで、条件分岐や、計算は他のクラスに任せます。
 //1行で終わらないif文や、数字の計算は行わないでください
 {
-    [SerializeField] private float NearGroundamount = 0.1f;
+    [SerializeField] private float NearGroundamount = 0.1f; 
 
     [SerializeField] private GameObject player;
     [SerializeField] private Transform playerTransform;
-
     void Start()
     {
         if (player == null)
             player = GameObject.FindWithTag("Player");
 
         if (player == null)
-            Debug.LogError("CheckPlayerstatus: Playerが見つかりません");
+            Debug.LogError("CheckPlayerstatus: Playerが見つかりません"); ; ; ;
 
         if (player != null)
             playerTransform = player.transform;
+        
     }
 
     public float GroundYposCheck()

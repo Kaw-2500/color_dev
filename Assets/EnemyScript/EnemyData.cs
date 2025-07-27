@@ -21,7 +21,7 @@ public class EnemyData : ScriptableObject
 
     public float AttackPower = 10f; // 敵の攻撃力
 
-    public float Enemylevity = 20;     // ノックバック時のはじかれる強さ(軽さ)(1で通常、1.5で1.5倍の軽さ、0.5で半分の軽さ)
+    public float Enemylevity = 1;     // ノックバック時のはじかれる強さ(軽さ)(1で通常、1.5で1.5倍の軽さ、0.5で半分の軽さ)
 
     public GameObject NormalAttackPrefab;
 }

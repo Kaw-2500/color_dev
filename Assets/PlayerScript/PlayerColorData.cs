@@ -21,6 +21,6 @@ public class PlayerColorDataExtended : ScriptableObject
     [Header("色特有の基本行動プレふぁぶ")]
     public GameObject NormalattackPrefab; // 攻撃エフェクトプレハブ
 
-   
-   
+
+
 }

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using DG.Tweening;
 
 public class Camerapos : MonoBehaviour
 {
@@ -30,6 +31,8 @@ public class Camerapos : MonoBehaviour
     [SerializeField] private float parryZoomSpeed = 0.2f;
 
     private Coroutine parryZoomCoroutine;
+    private Vector3 shakeOffset = Vector3.zero; // シェイク用オフセット
+    private Tween shakeTween; // DOTweenのシェイク管理用
 
     void Start()
     {
@@ -53,11 +56,11 @@ public class Camerapos : MonoBehaviour
     {
         if (!Finisheddeadaction) return;
         if (isParryZooming) return;
-        Cameratransform.position = new Vector3(
+        ApplyCameraPosition(new Vector3(
             playerTransform.position.x,
             playerTransform.position.y,
             Cameratransform.position.z
-        );
+        ));
     }
 
     void LateUpdate()
@@ -85,8 +88,7 @@ public class Camerapos : MonoBehaviour
             smoothY,
             Cameratransform.position.z
         );
-
-        Cameratransform.position = newPos;
+        ApplyCameraPosition(newPos);
     }
 
     public IEnumerator DeadCameraEffect(float targetOrthoSize, float duration)
@@ -115,7 +117,7 @@ public class Camerapos : MonoBehaviour
                 Cameratransform.position.z
             );
 
-            Cameratransform.position = Vector3.Lerp(startPos, targetPos, t);
+            ApplyCameraPosition(Vector3.Lerp(startPos, targetPos, t));
             mainCamera.orthographicSize = Mathf.Lerp(startOrtho, targetOrthoSize, t);
 
             yield return null;
@@ -126,7 +128,7 @@ public class Camerapos : MonoBehaviour
             playerTransform.position.y,
             Cameratransform.position.z
         );
-        Cameratransform.position = finalPos;
+        ApplyCameraPosition(finalPos);
         mainCamera.orthographicSize = targetOrthoSize;
         Finisheddeadaction = true;
     }
@@ -144,89 +146,104 @@ public class Camerapos : MonoBehaviour
 
     private IEnumerator ParryZoomCoroutine(float parryTime)
     {
-        // コルーチン開始時のカメラの初期状態を保存
         Vector3 originalPos = Cameratransform.position;
         float originalOrtho = mainCamera.orthographicSize;
 
         float elapsed = 0f;
 
         // ズームイン処理
-        while (elapsed < parryTime * 0.2)
+        while (elapsed < parryTime * 0.2f)
         {
             elapsed += Time.unscaledDeltaTime;
             float t = Mathf.Clamp01(elapsed / parryZoomSpeed );
             t = 1f - Mathf.Pow(1f - t, 2f); // イーズアウト
 
-            // カメラが到達すべき目標位置
             Vector3 targetCameraCenterPos = new Vector3(
                 playerTransform.position.x,
                 playerTransform.position.y + zoomHeight,
                 originalPos.z
             );
 
-            //Debug.Log(targetCameraCenterPos);
-            //Debug.Log(playerTransform.position);
-
-            // カメラの位置をoriginalPosからtargetCameraCenterPosへ補間
-            Cameratransform.position = Vector3.Lerp(originalPos, targetCameraCenterPos, t);
-
-            // オーソグラフィックサイズをoriginalOrthoからparryZoomSizeへ補間
+            ApplyCameraPosition(Vector3.Lerp(originalPos, targetCameraCenterPos, t));
             mainCamera.orthographicSize = Mathf.Lerp(originalOrtho, parryZoomSize, t);
 
             yield return null;
         }
 
-        // ズームインが完全に完了した時点でのカメラの状態を確定させる
-        Cameratransform.position = new Vector3(
+        ApplyCameraPosition(new Vector3(
             playerTransform.position.x,
             playerTransform.position.y + zoomHeight,
             originalPos.z
-        );
+        ));
         mainCamera.orthographicSize = parryZoomSize;
 
-
-        // パリィ時間が、ズームアウトの時間で埋まるまで待機
         float parryElapsed = 0f;
-        while (parryElapsed < parryTime * 0.6)
+        while (parryElapsed < parryTime * 0.6f)
         {
             parryElapsed += Time.unscaledDeltaTime;
-
-            // ズームインされた状態でプレイヤーに追従
             Vector3 followPos = new Vector3(
                 playerTransform.position.x,
                 playerTransform.position.y + zoomHeight,
                 originalPos.z
             );
-            Cameratransform.position = followPos;
+            ApplyCameraPosition(followPos);
             yield return null;
         }
 
-        // ズームアウト処理
         elapsed = 0f;
-        // ズームアウト開始時のカメラの現在の位置とオーソグラフィックサイズを保存
         Vector3 currentPosAtZoomOutStart = Cameratransform.position;
         float currentOrthoAtZoomOutStart = mainCamera.orthographicSize;
 
-        while (elapsed < parryZoomSpeed * 0.2)
+        while (elapsed < parryZoomSpeed * 0.2f)
         {
             elapsed += Time.unscaledDeltaTime;
             float t = Mathf.Clamp01(elapsed / parryZoomSpeed);
             t = 1f - Mathf.Pow(1f - t, 2f); // イーズアウト
 
-            // currentPosAtZoomOutStartからoriginalPosへ補間
-            Cameratransform.position = Vector3.Lerp(currentPosAtZoomOutStart, originalPos, t);
-            // currentOrthoAtZoomOutStartからoriginalOrthoへ補間
+            ApplyCameraPosition(Vector3.Lerp(currentPosAtZoomOutStart, originalPos, t));
             mainCamera.orthographicSize = Mathf.Lerp(currentOrthoAtZoomOutStart, originalOrtho, t);
 
             yield return null;
         }
 
-        // 最終的に元の位置とサイズに確実に設定し直す
-        Cameratransform.position = originalPos;
+        ApplyCameraPosition(originalPos);
         mainCamera.orthographicSize = originalOrtho;
 
-        // パリィズームが終了
         isParryZooming = false;
         parryZoomCoroutine = null;
+    }
+
+    private Vector3 GetBaseCameraPosition(Vector3 basePos)
+    {
+        return basePos;
+    }
+
+    private void ApplyCameraPosition(Vector3 basePos)
+    {
+        Cameratransform.position = GetBaseCameraPosition(basePos) + shakeOffset;
+    }
+
+    public void ShakeCamera(float duration = 0.3f, float strength = 0.5f, int vibrato = 20, float randomness = 90)
+    {
+        if (shakeTween != null && shakeTween.IsActive())
+        {
+            shakeTween.Kill();
+        }
+        Vector3 basePos = Cameratransform.position - shakeOffset;
+        shakeTween = DOTween.To(
+            () => shakeOffset,
+            x => shakeOffset = x,
+            Vector3.zero,
+            duration
+        ).SetId("CameraShake");
+
+        Cameratransform.DOShakePosition(duration, strength, vibrato, randomness)
+            .SetId("CameraShake")
+            .OnUpdate(() => {
+                shakeOffset = Cameratransform.position - basePos;
+            })
+            .OnComplete(() => {
+                shakeOffset = Vector3.zero;
+            });
     }
 }

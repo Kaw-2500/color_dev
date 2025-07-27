@@ -104,7 +104,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startxpos: 1
   speed: 24
-  timer: 0
   destroyTime: 0.5
 --- !u!50 &1649729245916435033
 Rigidbody2D:

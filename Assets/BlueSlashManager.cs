@@ -35,6 +35,9 @@ public class BlueSlashManager : MonoBehaviour, IAttackComponent
 
     void Start()
     {
+       enemy.canmove = false;//攻撃中は動けない
+        Debug.Log(enemy.canmove);
+
         GameObject mainCamera = GameObject.FindWithTag("MainCamera");
         if (mainCamera != null)
         {
@@ -62,11 +65,13 @@ public class BlueSlashManager : MonoBehaviour, IAttackComponent
     {
         if (enemy != null)
         {
+            enemy.canmove = true;
             enemy.OnDamagedByPlayer -= OnEnemyDamagedByPlayer;
         }
+        
     }
 
-    public void finishCharge()
+    public void finishCharge()//animから呼ばれる
     {
         isCharged = false;
         parryState = ParryState.Parryable;
@@ -113,16 +118,27 @@ public class BlueSlashManager : MonoBehaviour, IAttackComponent
         if (parryState != ParryState.Parryable) return;
 
         parryState = ParryState.Parried;
-        // パリィ成功時の処理
+
+        // 距離に関係なく必ずシェイク
+        if (cameraController != null)
+        {
+            cameraController.ShakeCamera(0.5f, 1.0f, 30, 90);
+            Debug.Log("carsor: call ShakeCamera from BlueSlashManager");
+        }
+        else if(cameraController == null)
+        {
+            Debug.Log("carsor: cameraController is null");
+        }
 
         EnemyHitDamage enemyhitdamage = enemy.GetEnemyHitObject();
-        enemyhitdamage.HitParryAttack(damageAmount);//enemy側の処理を起動
+        enemyhitdamage.HitParryAttack(damageAmount);
     }
 
     private void OnEnemyDamagedByPlayer()
     {
         if (parryState == ParryState.Parryable)
         {
+            Debug.Log("cusor:Load SuccessParry");
             SuccessParry();
         }
         else

@@ -5,7 +5,6 @@ public class AttackState : IEnemyState // 敵の「攻撃」状態の具体的なロジックのみ
     private EnemyStateManager manager;
     private Enemy enemy => manager.GetEnemy();
 
-    private float timer = 0f; // クラスフィールドとして保持
     private float CoolDowntimer => manager.GetEnemy().GetAttackCooldown();
 
     public AttackState(EnemyStateManager manager) => this.manager = manager;
@@ -17,14 +16,14 @@ public class AttackState : IEnemyState // 敵の「攻撃」状態の具体的なロジックのみ
 
     public void UpdateState()
     {
-        timer += Time.deltaTime;
+        enemy.attackCooldownTimer += Time.deltaTime;
         float dist = Vector2.Distance(enemy.transform.position, enemy.GetPlayer().position);
 
         if (dist > enemy.GetAttackRange()) // クールダウンが終わり、攻撃範囲外に出たら
             manager.SetState(new ChaseState(manager)); 
-        else if (timer >= CoolDowntimer)
+        else if (enemy.attackCooldownTimer >= CoolDowntimer)
         {
-            timer = 0;
+            enemy.attackCooldownTimer = 0;
             enemy.GetAttacker().Attack(); 
         }
     }

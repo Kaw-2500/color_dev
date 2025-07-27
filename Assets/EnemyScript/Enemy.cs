@@ -4,6 +4,8 @@ using UnityEngine;
 public class Enemy : MonoBehaviour 
 {
     private Rigidbody2D rb2d;
+
+    public bool canmove = true;
     private Transform player;
 
     [SerializeField] EnemyData enemyData; // Enemyのデータを保持するクラス
@@ -38,6 +40,8 @@ public class Enemy : MonoBehaviour
         Complete
     }
 
+    // isFrozen関連のフィールド・メソッドを削除
+
     private void Awake()
     {
         rb2d = GetComponent<Rigidbody2D>();
@@ -60,22 +64,27 @@ public class Enemy : MonoBehaviour
         // 状態マネージャーの生成と、初期状態（待機）への遷移
         stateManager = new EnemyStateManager(this);
         stateManager.SetState(new IdleState(stateManager));
+
+        canmove = true;
     }
 
     void Update()
     {
         if (playerStateManager != null && playerStateManager.IsDead) return;
-
-        //各責任（プレイヤー位置更新、登り条件更新）を個別のプライベートメソッドに分割
+        // プレイヤー位置更新・登り条件更新
         UpdatePlayerRelativePosition();
         UpdateClimbCondition();
-        stateManager.Update(); //状態マネージャーにUpdate処理を委譲
+        stateManager.Update();
     }
 
     void FixedUpdate()
     {
         if (playerStateManager != null && playerStateManager.IsDead) return;
-        stateManager.FixedUpdate(); //状態マネージャーにFixedUpdate処理を委譲
+      
+
+       if(!canmove) return;//物理判定はそのまま、動作だけさせない
+        if (isKnockback) return; // 吹き飛ばし中はAI停止
+        stateManager.FixedUpdate();
     }
 
     private void UpdatePlayerRelativePosition()
@@ -149,6 +158,34 @@ public class Enemy : MonoBehaviour
             OnDamagedByPlayer?.Invoke();
             Debug.Log("Enemy.cs: プレイヤーから攻撃されたことを通知");
         }
+        if (attackStrategy == null)
+        {
+            Debug.Log("Strategyが見つからない");
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+
+        var attackStrategy = collision.gameObject.GetComponent<IAttackStrategy>();
+        if (attackStrategy != null)
+        {
+            OnDamagedByPlayer?.Invoke();
+            Debug.Log("Enemy.cs: プレイヤーから攻撃されたことを通知（Collision）");
+        }
+        if (attackStrategy == null)
+        {
+            Debug.Log("Strategyが見つからない（Collision）");
+        }
+
+        if (isKnockback)
+        {
+            string tag = collision.gameObject.tag;
+            if (tag == "Redfloor" || tag == "Bluefloor" || tag == "Greenfloor" || tag == "naturalfloor")
+            {
+                isKnockback = false;
+            }
+        }
     }
 
     // 状態クラス向けのアクセサ（カプセル化された情報を状態クラスに提供）
@@ -175,7 +212,11 @@ public class Enemy : MonoBehaviour
     public IMovable GetMovable() => movable;
     public IAttackable GetAttacker() => attacker;
 
+    public bool CanMove() => canmove;
+
     public float GetAttackPower() => enemyData.AttackPower; 
 
+    public float attackCooldownTimer = 0f; // 追加
 
+    public bool isKnockback = false;
 }
