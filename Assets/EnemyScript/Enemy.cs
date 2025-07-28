@@ -206,6 +206,11 @@ public class Enemy : MonoBehaviour
 
     public float GetRigidBody2dVelocityY() => rb2d.linearVelocity.y;
 
+    public float GetWeaknessRed() => enemyData.weaknessRed;
+    public float GetWeaknessBlue() => enemyData.weaknesBlue;
+    public float GetWeaknessGreen() => enemyData.weaknesGreen;
+
+
     public EnemyHitDamage GetEnemyHitObject() => hitdamage;
     public float GetNormalAttackOffsetY() => enemyData.normalAttackOffsetY; // 通常攻撃のYオフセットを取得   
     public float GetNormalAttackOffsetX() => enemyData.normalAttackOffsetX; // 通常攻撃のXオフセットを取得

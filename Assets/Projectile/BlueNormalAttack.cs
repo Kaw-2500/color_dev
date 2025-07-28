@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class BlueNormalAttack : MonoBehaviour, IAttackStrategy
+public class BlueNormalAttack : MonoBehaviour, IAttackStrategy, Icolor
 {
     private bool Attacked = false;
 
@@ -138,13 +138,19 @@ public class BlueNormalAttack : MonoBehaviour, IAttackStrategy
         Stucktimer = 0; // これも念のためリセット  
     }
 
+    public ThisColor ReturnThisColor()
+    {
+        return ThisColor.Blue; // BlueNormalAttackは青属性
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
             EnemyHitDamage enemy = collision.gameObject.GetComponent<EnemyHitDamage>();
             if (Attacked) return;
-            enemy.HitAttackDamageOnEnemy(playerColorManager.GetCurrentData().NormalAttackPower);
+            Debug.Log($"BlueNormalAttack color: {ReturnThisColor()}"); // 攻撃色を出力
+            enemy.HitAttackDamageOnEnemy(playerColorManager.GetCurrentData().NormalAttackPower, ReturnThisColor());
             Attacked = true; // 一度攻撃したらフラグを立てる
         }
     }

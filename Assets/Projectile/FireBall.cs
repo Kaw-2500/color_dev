@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class Fireball : MonoBehaviour, IAttackStrategy
+public class Fireball : MonoBehaviour, IAttackStrategy, Icolor
 {
     [SerializeField] private float startxpos = 0.9f;
     [SerializeField] public float speed = 10f;
@@ -50,6 +50,11 @@ public class Fireball : MonoBehaviour, IAttackStrategy
         }
     }
 
+    public ThisColor ReturnThisColor()
+    {
+        return ThisColor.Red; // 例: Fireballは赤属性
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Enemy") && !Attacked)
@@ -63,7 +68,8 @@ public class Fireball : MonoBehaviour, IAttackStrategy
             var enemy = collision.gameObject.GetComponent<EnemyHitDamage>();
             if (enemy != null)
             {
-                enemy.HitAttackDamageOnEnemy(playerColorManager.GetCurrentData().NormalAttackPower);
+                Debug.Log($"Fireball color: {ReturnThisColor()}"); // ここで色を出力
+                enemy.HitAttackDamageOnEnemy(playerColorManager.GetCurrentData().NormalAttackPower, ReturnThisColor());
                 Attacked = true;
             }
         }

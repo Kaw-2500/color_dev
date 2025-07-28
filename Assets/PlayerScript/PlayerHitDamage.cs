@@ -61,42 +61,44 @@ public class PlayerHitDamage : MonoBehaviour
         playerStateManager.SetBlown(false);
     }
 
-    private void TryHitGroundDamage()
+   private void TryHitGroundDamage()
+{
+    if (playerStateManager.IsDead) return;
+    if (!playerStateManager.IsGround) return;
+
+    var currentColor = playerColorManager.GetCurrentState();
+    var groundColor = playerStateManager.CurrentTouchGroundColor;
+
+    bool isDamageColor = false;
+
+    switch (currentColor)
     {
-        if (playerStateManager.IsDead) return; // 死亡時はスキップ
-        if (!playerStateManager.IsGround) return;
-
-        var currentColor = playerColorManager.GetCurrentState();
-        var groundColor = playerStateManager.CurrentTouchGroundColor;
-
-        bool isSameColor = false;
-
-        switch (currentColor)
-        {
-            case PlayerColorState.Red:
-                isSameColor = groundColor == TouchGroundColor.red;
-                break;
-            case PlayerColorState.Blue:
-                isSameColor = groundColor == TouchGroundColor.blue;
-                break;
-            case PlayerColorState.Green:
-                isSameColor = groundColor == TouchGroundColor.green;
-                break;
-        }
-
-        if (!isSameColor)
-        {
-            groundDamageTimer = 0f;
-            return;
-        }
-
-        groundDamageTimer += Time.deltaTime;
-        if (groundDamageTimer < groundDamageInterval) return;
-
-        float damage = playerColorManager.GetCurrentData().hitDamageOnFloor;
-        playerStateManager.ApplyDamage(damage);
-        groundDamageTimer = 0f;
+        case PlayerColorState.Red:
+            isDamageColor = (groundColor == TouchGroundColor.blue);
+            break;
+        case PlayerColorState.Blue:
+            isDamageColor = (groundColor == TouchGroundColor.green);
+            break;
+        case PlayerColorState.Green:
+            isDamageColor = (groundColor == TouchGroundColor.red);
+            break;
     }
+
+    if (!isDamageColor)
+    {
+        groundDamageTimer = 0f;
+        Debug.Log("ダメージはゆかから食らわない");
+        return;
+    }
+
+    groundDamageTimer += Time.deltaTime;
+    if (groundDamageTimer < groundDamageInterval) return;
+
+    float damage = playerColorManager.GetCurrentData().hitDamageOnFloor;
+    playerStateManager.ApplyDamage(damage);
+    Debug.Log("床ダメ食らわせる");
+    groundDamageTimer = 0f;
+}
 
 
 }

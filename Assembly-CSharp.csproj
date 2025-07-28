@@ -74,15 +74,16 @@
     <Compile Include="Assets\WindyFadeout..cs" />
     <Compile Include="Assets\EnemyScript\EnemyStateManager.cs" />
     <Compile Include="Assets\EnemyScript\IReactionOnDamage.cs" />
-    <Compile Include="Assets\FireBall.cs" />
     <Compile Include="Assets\Setting.cs" />
     <Compile Include="Assets\Playeroperate.cs" />
+    <Compile Include="Assets\Projectile\Icolor.cs" />
     <Compile Include="Assets\npc.cs" />
     <Compile Include="Assets\PlayerScript\InputManager.cs" />
     <Compile Include="Assets\DevTool\Devbutton.cs" />
     <Compile Include="Assets\EnemyScript\EnemyAttack.cs" />
     <Compile Include="Assets\TitleSettingCloseOpen.cs" />
     <Compile Include="Assets\WeakEnemy.cs" />
+    <Compile Include="Assets\Projectile\FireBall.cs" />
     <Compile Include="Assets\Camerapos.cs" />
     <Compile Include="Assets\FirstSpeakUi.cs" />
     <Compile Include="Assets\EnemyScript\WhiteCompleteEffectManager.cs" />
@@ -98,8 +99,8 @@
     <Compile Include="Assets\PlayerScript\PlayerInputHandler.cs" />
     <Compile Include="Assets\EnemyScript\WhiteningReaction.cs" />
     <Compile Include="Assets\EnemyScript\IAttackComponent.cs" />
+    <Compile Include="Assets\Projectile\BlueNormalAttack.cs" />
     <Compile Include="Assets\Startgame.cs" />
-    <Compile Include="Assets\BlueNormalAttack.cs" />
     <Compile Include="Assets\EnemyScript\IdleState.cs" />
     <Compile Include="Assets\ChargeBar.cs" />
     <Compile Include="Assets\PlayerScript\PlayerBase.cs" />

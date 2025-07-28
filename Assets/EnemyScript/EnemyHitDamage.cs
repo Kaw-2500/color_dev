@@ -1,11 +1,10 @@
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class EnemyHitDamage :MonoBehaviour
+public class EnemyHitDamage : MonoBehaviour
 {
-
     [SerializeField] private Enemy enemy; // Enemyの参照
-    [SerializeField] private CameraShaker shaker;
+    [SerializeField] private CameraShaker shaker; // CameraShakerの参照
     [SerializeField] private Transform playertransform;
 
     [SerializeField] private float ParryAddforcePower = 10f;
@@ -15,7 +14,6 @@ public class EnemyHitDamage :MonoBehaviour
 
     public void Awake()
     {
-        // Enemyコンポーネントを取得
         enemy = GetComponent<Enemy>();
         if (enemy == null)
         {
@@ -24,18 +22,36 @@ public class EnemyHitDamage :MonoBehaviour
 
         rb2d = GetComponent<Rigidbody2D>();
     }
-    public void HitAttackDamageOnEnemy(float damage)
+
+    float ColorWeaknessDamageAmount(float damage, ThisColor color)
     {
+        switch (color)
+        {
+            case ThisColor.Red:
+                return damage * enemy.GetWeaknessRed();
+            case ThisColor.Blue:
+                return damage * enemy.GetWeaknessBlue();
+            case ThisColor.Green:
+                return damage * enemy.GetWeaknessGreen();
+            default:
+                return damage;  // どの色にも該当しなければ元ダメージを返す
+        }
+    }
+
+    public void HitAttackDamageOnEnemy(float damage, ThisColor color)
+    {
+        Debug.Log($"EnemyHitDamage: 攻撃を食らった色 = {color}");
+        damage = ColorWeaknessDamageAmount(damage, color);
+        Debug.Log("弱点倍率補正後のダメージamount:" + damage);
         enemy.ApplyDamage(damage);
     }
 
-    public void HitParryAttack(float damageAmount)
+    public void HitParryAttack()
     {
         Debug.Log("carsor: HitParryAttack");
 
         float relative = enemy.GetPlayerRelativeFloat(); // 1:プレイヤー右, -1:左
         float levity = enemy.GetEnemyLevity();
-        // ParryAddforcePower/ParryAddtorquePowerは倍率として使う
         float forcePower = levity * ParryAddforcePower;
         float torquePower = levity * ParryAddtorquePower;
 
@@ -46,5 +62,4 @@ public class EnemyHitDamage :MonoBehaviour
         Debug.Log($"relative={relative}, force={force}, torque={relative * torquePower}");
         enemy.isKnockback = true;
     }
-
 }

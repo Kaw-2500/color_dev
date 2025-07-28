@@ -144,74 +144,79 @@ public class Camerapos : MonoBehaviour
         parryZoomCoroutine = StartCoroutine(ParryZoomCoroutine(parryTime));
     }
 
-    private IEnumerator ParryZoomCoroutine(float parryTime)
+private IEnumerator ParryZoomCoroutine(float parryTime)
+{
+    Vector3 originalPos = Cameratransform.position;
+    float originalOrtho = mainCamera.orthographicSize;
+
+    // --- ズームイン ---
+    float zoomInDuration = parryTime * 0.2f;
+    float elapsed = 0f;
+    while (elapsed < zoomInDuration)
     {
-        Vector3 originalPos = Cameratransform.position;
-        float originalOrtho = mainCamera.orthographicSize;
+        elapsed += Time.unscaledDeltaTime;
+        float t = Mathf.Clamp01(elapsed / zoomInDuration);
+        t = 1f - Mathf.Pow(1f - t, 2f); // イーズアウト
 
-        float elapsed = 0f;
-
-        // ズームイン処理
-        while (elapsed < parryTime * 0.2f)
-        {
-            elapsed += Time.unscaledDeltaTime;
-            float t = Mathf.Clamp01(elapsed / parryZoomSpeed );
-            t = 1f - Mathf.Pow(1f - t, 2f); // イーズアウト
-
-            Vector3 targetCameraCenterPos = new Vector3(
-                playerTransform.position.x,
-                playerTransform.position.y + zoomHeight,
-                originalPos.z
-            );
-
-            ApplyCameraPosition(Vector3.Lerp(originalPos, targetCameraCenterPos, t));
-            mainCamera.orthographicSize = Mathf.Lerp(originalOrtho, parryZoomSize, t);
-
-            yield return null;
-        }
-
-        ApplyCameraPosition(new Vector3(
+        Vector3 targetPos = new Vector3(
             playerTransform.position.x,
             playerTransform.position.y + zoomHeight,
             originalPos.z
-        ));
-        mainCamera.orthographicSize = parryZoomSize;
+        );
 
-        float parryElapsed = 0f;
-        while (parryElapsed < parryTime * 0.6f)
-        {
-            parryElapsed += Time.unscaledDeltaTime;
-            Vector3 followPos = new Vector3(
-                playerTransform.position.x,
-                playerTransform.position.y + zoomHeight,
-                originalPos.z
-            );
-            ApplyCameraPosition(followPos);
-            yield return null;
-        }
-
-        elapsed = 0f;
-        Vector3 currentPosAtZoomOutStart = Cameratransform.position;
-        float currentOrthoAtZoomOutStart = mainCamera.orthographicSize;
-
-        while (elapsed < parryZoomSpeed * 0.2f)
-        {
-            elapsed += Time.unscaledDeltaTime;
-            float t = Mathf.Clamp01(elapsed / parryZoomSpeed);
-            t = 1f - Mathf.Pow(1f - t, 2f); // イーズアウト
-
-            ApplyCameraPosition(Vector3.Lerp(currentPosAtZoomOutStart, originalPos, t));
-            mainCamera.orthographicSize = Mathf.Lerp(currentOrthoAtZoomOutStart, originalOrtho, t);
-
-            yield return null;
-        }
-
-        ApplyCameraPosition(originalPos);
-        mainCamera.orthographicSize = originalOrtho;
-
-        isParryZooming = false;
-        parryZoomCoroutine = null;
+        ApplyCameraPosition(Vector3.Lerp(originalPos, targetPos, t));
+        mainCamera.orthographicSize = Mathf.Lerp(originalOrtho, parryZoomSize, t);
+        yield return null;
     }
+
+    // ズームイン完了状態を明示的に設定
+    Vector3 zoomedPos = new Vector3(
+        playerTransform.position.x,
+        playerTransform.position.y + zoomHeight,
+        originalPos.z
+    );
+    ApplyCameraPosition(zoomedPos);
+    mainCamera.orthographicSize = parryZoomSize;
+
+    // --- 演出維持時間 ---
+    float holdDuration = parryTime * 0.6f;
+    elapsed = 0f;
+    while (elapsed < holdDuration)
+    {
+        elapsed += Time.unscaledDeltaTime;
+        zoomedPos = new Vector3(
+            playerTransform.position.x,
+            playerTransform.position.y + zoomHeight,
+            originalPos.z
+        );
+        ApplyCameraPosition(zoomedPos);
+        yield return null;
+    }
+
+    // --- ズームアウト ---
+    float zoomOutDuration = parryTime * 0.2f;
+    Vector3 zoomOutStartPos = Cameratransform.position;
+    float zoomOutStartOrtho = mainCamera.orthographicSize;
+
+    elapsed = 0f;
+    while (elapsed < zoomOutDuration)
+    {
+        elapsed += Time.unscaledDeltaTime;
+        float t = Mathf.Clamp01(elapsed / zoomOutDuration);
+        t = 1f - Mathf.Pow(1f - t, 2f); // イーズアウト
+
+        ApplyCameraPosition(Vector3.Lerp(zoomOutStartPos, originalPos, t));
+        mainCamera.orthographicSize = Mathf.Lerp(zoomOutStartOrtho, originalOrtho, t);
+        yield return null;
+    }
+
+    // ズームアウト完了状態を明示的に設定
+    ApplyCameraPosition(originalPos);
+    mainCamera.orthographicSize = originalOrtho;
+
+    isParryZooming = false;
+    parryZoomCoroutine = null;
+}
 
     private Vector3 GetBaseCameraPosition(Vector3 basePos)
     {

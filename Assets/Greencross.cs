@@ -1,7 +1,7 @@
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-public class Greencross : MonoBehaviour, IAttackStrategy
+public class Greencross : MonoBehaviour, IAttackStrategy, Icolor
 {
     [SerializeField] private float startxpos;
 
@@ -53,6 +53,11 @@ public class Greencross : MonoBehaviour, IAttackStrategy
         Destroy(this.gameObject);
     }
 
+    public ThisColor ReturnThisColor()
+    {
+        return ThisColor.Green; // Greencrossは緑属性
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Enemy"))
@@ -60,7 +65,8 @@ public class Greencross : MonoBehaviour, IAttackStrategy
             EnemyHitDamage enemy = collision.gameObject.GetComponent<EnemyHitDamage>();
             if (Attacked) return;
 
-            enemy.HitAttackDamageOnEnemy(playerColorManager.GetCurrentData().NormalAttackPower);
+            Debug.Log($"Greencross color: {ReturnThisColor()}"); // 攻撃色を出力
+            enemy.HitAttackDamageOnEnemy(playerColorManager.GetCurrentData().NormalAttackPower, ReturnThisColor());
             Attacked = true; // 一度攻撃したらフラグを立てる
 
         }

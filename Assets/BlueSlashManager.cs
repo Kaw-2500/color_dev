@@ -131,7 +131,7 @@ public class BlueSlashManager : MonoBehaviour, IAttackComponent
         }
 
         EnemyHitDamage enemyhitdamage = enemy.GetEnemyHitObject();
-        enemyhitdamage.HitParryAttack(damageAmount);
+        enemyhitdamage.HitParryAttack();
     }
 
     private void OnEnemyDamagedByPlayer()
